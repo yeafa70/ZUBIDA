@@ -1,89 +1,1035 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="租必達 - 專業活動設備租賃。提供水冷扇、活動帳篷、發電機租賃服務，價格透明，設備優良。">
-    <title>租必達 | 專業設備租賃 - 水冷扇、活動帳篷、發電機</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>租必達｜水冷扇、活動帳篷、發電機租賃｜買樂開發企業社</title>
+  <meta name="description" content="租必達提供苗栗、竹南、頭份地區水冷扇、活動帳篷、發電機租賃服務，適合活動、工程、臨時降溫、戶外攤位與企業需求。服務專線：0920-633116。" />
+  <meta name="keywords" content="租必達,水冷扇出租,帳篷出租,發電機出租,苗栗租賃,竹南租賃,頭份租賃,買樂開發企業社" />
+
+  <style>
+    :root {
+      --primary: #0f4c81;
+      --primary-dark: #08395f;
+      --accent: #f5a623;
+      --accent-dark: #d98c13;
+      --bg: #f5f8fb;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --white: #ffffff;
+      --border: #e5e7eb;
+      --shadow: 0 16px 40px rgba(15, 76, 129, 0.15);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .top-bar {
+      background: var(--primary-dark);
+      color: var(--white);
+      font-size: 14px;
+      padding: 8px 0;
+    }
+
+    .top-bar .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: 1px;
+    }
+
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), #20a4f3);
+      color: var(--white);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(15, 76, 129, 0.25);
+    }
+
+    .logo-text strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .logo-text span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0;
+      margin-top: 2px;
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-weight: 700;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .menu a:hover {
+      color: var(--primary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-weight: 800;
+      transition: 0.2s ease;
+      cursor: pointer;
+      border: 0;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #111827;
+      box-shadow: 0 10px 24px rgba(245, 166, 35, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: var(--white);
+      color: var(--primary);
+      border: 1px solid rgba(15, 76, 129, 0.18);
+    }
+
+    .btn-outline:hover {
+      background: #eef7ff;
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top right, rgba(32, 164, 243, 0.18), transparent 32%),
+        linear-gradient(135deg, #eef7ff 0%, #ffffff 52%, #f7fbff 100%);
+      padding: 86px 0 70px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 460px;
+      height: 460px;
+      border-radius: 50%;
+      background: rgba(245, 166, 35, 0.13);
+      left: -170px;
+      bottom: -230px;
+    }
+
+    .hero-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 42px;
+      align-items: center;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(15, 76, 129, 0.08);
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 5vw, 64px);
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      color: #102a43;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      font-size: 19px;
+      color: #4b5563;
+      margin-bottom: 28px;
+      max-width: 640px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      max-width: 660px;
+    }
+
+    .point {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 8px 22px rgba(15, 76, 129, 0.08);
+      font-weight: 800;
+      color: #1f2937;
+    }
+
+    .visual-card {
+      background: var(--white);
+      border-radius: 34px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(15, 76, 129, 0.08);
+    }
+
+    .equipment-showcase {
+      display: grid;
+      gap: 14px;
+    }
+
+    .showcase-item {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 22px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+    }
+
+    .icon-box {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      background: linear-gradient(135deg, #e0f2fe, #ffffff);
+      border: 1px solid #dbeafe;
+    }
+
+    .showcase-item h3 {
+      color: var(--primary);
+      font-size: 20px;
+      margin-bottom: 3px;
+    }
+
+    .showcase-item p {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    section {
+      padding: 82px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 42px;
+    }
+
+    .section-title .sub {
+      color: var(--primary);
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(30px, 4vw, 44px);
+      line-height: 1.25;
+      color: #111827;
+      margin-bottom: 12px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0 auto;
+      font-size: 17px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: 0 14px 34px rgba(17, 24, 39, 0.08);
+      border: 1px solid var(--border);
+      transition: 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: auto -40px -50px auto;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(15, 76, 129, 0.06);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 44px rgba(17, 24, 39, 0.12);
+    }
+
+    .card-icon {
+      width: 70px;
+      height: 70px;
+      display: grid;
+      place-items: center;
+      border-radius: 22px;
+      background: #eef7ff;
+      color: var(--primary);
+      font-size: 34px;
+      margin-bottom: 20px;
+    }
+
+    .card h3 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #102a43;
+    }
+
+    .card p {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .card ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      color: #374151;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card li::before {
+      content: "✓";
+      color: var(--accent-dark);
+      font-weight: 900;
+      margin-right: 8px;
+    }
+
+    .why {
+      background: #ffffff;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .feature {
+      padding: 24px;
+      border-radius: 20px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+    }
+
+    .feature span {
+      font-size: 30px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .feature h3 {
+      color: #111827;
+      margin-bottom: 8px;
+      font-size: 19px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .process {
+      background: linear-gradient(180deg, #f5f8fb, #ffffff);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      counter-reset: step;
+    }
+
+    .step {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(17, 24, 39, 0.06);
+      position: relative;
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: "0" counter(step);
+      display: inline-flex;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary);
+      color: var(--white);
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .step h3 {
+      margin-bottom: 8px;
+      color: #102a43;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .cta {
+      padding: 0;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, var(--primary), #0b6aa2);
+      color: var(--white);
+      border-radius: 34px;
+      padding: 46px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .cta-box h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .cta-box p {
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 17px;
+    }
+
+    .contact {
+      background: #ffffff;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .contact-info,
+    .contact-form {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 30px;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .info-item {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .info-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: #e0f2fe;
+      color: var(--primary);
+      font-size: 22px;
+    }
+
+    .info-item h3 {
+      font-size: 17px;
+      margin-bottom: 2px;
+    }
+
+    .info-item p {
+      color: var(--muted);
+    }
+
+    .contact-form h3,
+    .contact-info h3.main-title {
+      font-size: 26px;
+      color: #102a43;
+      margin-bottom: 8px;
+    }
+
+    .form-note {
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: grid;
+      gap: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      background: var(--white);
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(15, 76, 129, 0.1);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .map-placeholder {
+      margin-top: 22px;
+      height: 210px;
+      border-radius: 22px;
+      border: 1px dashed #93c5fd;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.65)),
+        radial-gradient(circle at 30% 40%, #bfdbfe, transparent 28%),
+        radial-gradient(circle at 70% 55%, #fde68a, transparent 24%),
+        #eaf4ff;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--primary);
+      font-weight: 900;
+      padding: 20px;
+    }
+
+    footer {
+      background: #071f36;
+      color: rgba(255, 255, 255, 0.86);
+      padding: 34px 0;
+    }
+
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .footer-brand strong {
+      color: var(--white);
+      font-size: 22px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .float-call {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 30;
+      background: var(--accent);
+      color: #111827;
+      padding: 14px 20px;
+      border-radius: 999px;
+      font-weight: 900;
+      box-shadow: 0 12px 30px rgba(245, 166, 35, 0.42);
+    }
+
+    .float-call:hover {
+      background: var(--accent-dark);
+    }
+
+    @media (max-width: 920px) {
+      .menu {
+        display: none;
+      }
+
+      .hero-grid,
+      .contact-grid,
+      .cta-box {
+        grid-template-columns: 1fr;
+      }
+
+      .cards,
+      .feature-grid,
+      .steps {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-points {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(100% - 28px, 1120px);
+      }
+
+      .top-bar .container {
+        font-size: 13px;
+      }
+
+      .hero {
+        padding: 54px 0 50px;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .cards,
+      .feature-grid,
+      .steps,
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-box {
+        padding: 30px 24px;
+        border-radius: 26px;
+      }
+
+      .visual-card,
+      .contact-info,
+      .contact-form {
+        padding: 22px;
+      }
+
+      .float-call {
+        left: 16px;
+        right: 16px;
+        text-align: center;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="top-bar">
+    <div class="container">
+      <div>買樂開發企業社｜苗栗、竹南、頭份活動設備租賃服務</div>
+      <div>服務專線：<a href="tel:0920633116">0920-633116</a></div>
+    </div>
+  </div>
 
-    <header class="header">
-        <div class="container header-container">
-            <h1 class="logo"><a href="index.html">租必達 Zubida</a></h1>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="index.html">首頁</a></li>
-                    <li><a href="cooler.html">水冷扇租賃</a></li>
-                    <li><a href="tent.html">活動帳篷租賃</a></li>
-                    <li><a href="generator.html">發電機租賃</a></li>
-                </ul>
-            </nav>
-            <a href="tel:0920633116" class="btn btn-outline">立即來電</a>
+  <header>
+    <div class="container nav">
+      <a class="logo" href="#top" aria-label="租必達首頁">
+        <div class="logo-mark">租</div>
+        <div class="logo-text">
+          <strong>租必達</strong>
+          <span>活動設備・工程支援・臨時租賃</span>
         </div>
-    </header>
+      </a>
 
-    <main>
-        <section class="hero-section">
-            <div class="container">
-                <h2 class="hero-title">讓您的每場活動，都完美達陣</h2>
-                <p class="hero-subtitle">專業設備租賃方案，支援從戶外市集到大型展場的各項硬體需求</p>
-                <a href="#services" class="btn btn-primary">探索租賃方案</a>
+      <nav class="menu" aria-label="主選單">
+        <a href="#items">租賃品項</a>
+        <a href="#why">服務優勢</a>
+        <a href="#process">租賃流程</a>
+        <a href="#contact">聯絡我們</a>
+      </nav>
+
+      <a class="btn btn-primary" href="tel:0920633116">立即來電</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="tag">苗栗在地租賃服務｜快速、專業、好溝通</div>
+          <h1>活動設備租賃，<br><span>租必達</span> 幫你快速到位</h1>
+          <p>
+            提供水冷扇、活動帳篷、發電機租賃服務，適合戶外活動、園遊會、市集攤位、工程現場、臨時降溫與用電支援需求。由買樂開發企業社提供在地化服務，協助你把活動設備準備得更安心。
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="tel:0920633116">撥打 0920-633116</a>
+            <a class="btn btn-outline" href="#contact">索取租賃資訊</a>
+          </div>
+
+          <div class="hero-points">
+            <div class="point">✓ 活動降溫</div>
+            <div class="point">✓ 戶外遮陽</div>
+            <div class="point">✓ 臨時供電</div>
+          </div>
+        </div>
+
+        <div class="visual-card" aria-label="租賃品項展示">
+          <div class="equipment-showcase">
+            <div class="showcase-item">
+              <div class="icon-box">💨</div>
+              <div>
+                <h3>水冷扇租賃</h3>
+                <p>戶外活動、餐會、市集、工地與臨時空間降溫。</p>
+              </div>
             </div>
-        </section>
+            <div class="showcase-item">
+              <div class="icon-box">⛺</div>
+              <div>
+                <h3>活動帳篷租賃</h3>
+                <p>園遊會、擺攤、學校活動、企業活動與臨時遮蔭。</p>
+              </div>
+            </div>
+            <div class="showcase-item">
+              <div class="icon-box">⚡</div>
+              <div>
+                <h3>發電機租賃</h3>
+                <p>戶外用電、攤商設備、臨時工程與活動備援電力。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <section id="services" class="services-section">
-            <div class="container">
-                <h2 class="section-title">我們的租賃設備</h2>
-                <div class="service-grid">
-                    
-                    <div class="service-card">
-                        <div class="card-image-placeholder">水冷扇圖片區</div>
-                        <h3 class="card-title">水冷扇</h3>
-                        <p class="card-desc">開放空間的最佳通風降溫方案，促進空氣對流，帶來舒適涼感。</p>
-                        <a href="cooler.html" class="btn btn-secondary">了解更多</a>
-                    </div>
+    <section id="items">
+      <div class="container">
+        <div class="section-title">
+          <div class="sub">Rental Items</div>
+          <h2>三大租賃品項，一次滿足活動需求</h2>
+          <p>從降溫、遮陽到供電，租必達協助你快速補齊活動現場所需設備。</p>
+        </div>
 
-                    <div class="service-card">
-                        <div class="card-image-placeholder">活動帳篷圖片區</div>
-                        <h3 class="card-title">活動帳篷</h3>
-                        <p class="card-desc">防風防雨、高機動性，為您的戶外活動提供最堅實的遮蔽空間。</p>
-                        <a href="tent.html" class="btn btn-secondary">了解更多</a>
-                    </div>
+        <div class="cards">
+          <article class="card">
+            <div class="card-icon">💨</div>
+            <h3>水冷扇</h3>
+            <p>適合高溫、半戶外、戶外活動或臨時空間使用，提升現場舒適度。</p>
+            <ul>
+              <li>戶外活動降溫</li>
+              <li>市集攤位與餐會</li>
+              <li>工程現場臨時降溫</li>
+              <li>企業、學校活動支援</li>
+            </ul>
+          </article>
 
-                    <div class="service-card">
-                        <div class="card-image-placeholder">發電機圖片區</div>
-                        <h3 class="card-title">發電機</h3>
-                        <p class="card-desc">穩定、強效的電力支援，確保活動全程不斷電。</p>
-                        <a href="generator.html" class="btn btn-secondary">了解更多</a>
-                    </div>
+          <article class="card">
+            <div class="card-icon">⛺</div>
+            <h3>活動帳篷</h3>
+            <p>提供活動遮陽、避雨與攤位配置需求，讓現場規劃更完整。</p>
+            <ul>
+              <li>園遊會與校園活動</li>
+              <li>市集、攤位、展售</li>
+              <li>臨時服務站設置</li>
+              <li>戶外休息區規劃</li>
+            </ul>
+          </article>
 
+          <article class="card">
+            <div class="card-icon">⚡</div>
+            <h3>發電機</h3>
+            <p>支援戶外場地、臨時攤位與活動設備用電，降低斷電與無電源風險。</p>
+            <ul>
+              <li>戶外活動供電</li>
+              <li>攤商設備用電</li>
+              <li>臨時工程支援</li>
+              <li>緊急備援需求</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="why" id="why">
+      <div class="container">
+        <div class="section-title">
+          <div class="sub">Why Choose Us</div>
+          <h2>選擇租必達，設備租賃更省心</h2>
+          <p>活動現場最怕設備不到位、溝通不清楚、臨時狀況沒人處理。租必達以在地服務、彈性溝通與實用設備協助你順利完成活動。</p>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature">
+            <span>📍</span>
+            <h3>苗栗在地服務</h3>
+            <p>服務據點位於竹南，適合苗栗、竹南、頭份及周邊地區租賃需求。</p>
+          </div>
+          <div class="feature">
+            <span>🧰</span>
+            <h3>品項實用完整</h3>
+            <p>水冷扇、帳篷、發電機都是活動現場常用且關鍵的設備。</p>
+          </div>
+          <div class="feature">
+            <span>🤝</span>
+            <h3>需求彈性溝通</h3>
+            <p>可依活動日期、場地條件、使用情境與數量需求討論合適方案。</p>
+          </div>
+          <div class="feature">
+            <span>🚚</span>
+            <h3>適合各類活動</h3>
+            <p>校園、企業、市集、工地、婚宴、社區活動與臨時展售皆可洽詢。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="process" id="process">
+      <div class="container">
+        <div class="section-title">
+          <div class="sub">Rental Process</div>
+          <h2>租賃流程簡單清楚</h2>
+          <p>只要提供使用日期、地點、品項與數量需求，我們會協助確認適合的租賃安排。</p>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <h3>來電洽詢</h3>
+            <p>撥打 0920-633116，說明活動日期、地點與需要的設備。</p>
+          </div>
+          <div class="step">
+            <h3>確認需求</h3>
+            <p>依現場環境、使用時間、數量與用途，確認合適租賃內容。</p>
+          </div>
+          <div class="step">
+            <h3>安排租賃</h3>
+            <p>確認租賃品項、數量、日期與相關細節，降低活動前準備壓力。</p>
+          </div>
+          <div class="step">
+            <h3>活動支援</h3>
+            <p>依約定完成設備租借與使用安排，讓活動現場更順利。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <div class="cta-box">
+          <div>
+            <h2>正在準備活動、擺攤或臨時設備？</h2>
+            <p>先打電話確認檔期與數量，租必達協助你快速補齊水冷扇、活動帳篷與發電機。</p>
+          </div>
+          <a class="btn btn-primary" href="tel:0920633116">立即洽詢</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="container">
+        <div class="section-title">
+          <div class="sub">Contact</div>
+          <h2>聯絡租必達</h2>
+          <p>歡迎來電洽詢租賃日期、設備數量、活動地點與使用需求。</p>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-info">
+            <h3 class="main-title">買樂開發企業社</h3>
+            <p class="form-note">專業租賃服務：水冷扇、活動帳篷、發電機。</p>
+
+            <div class="info-list">
+              <div class="info-item">
+                <div class="info-icon">☎</div>
+                <div>
+                  <h3>服務專線</h3>
+                  <p><a href="tel:0920633116">0920-633116</a></p>
                 </div>
-            </div>
-        </section>
-    </main>
+              </div>
 
-    <footer class="footer">
-        <div class="container footer-container">
-            <div class="footer-brand">
-                <h3>租必達</h3>
-                <p>您最可靠的活動設備後盾</p>
-            </div>
-            <div class="footer-contact">
-                <h4>聯絡資訊</h4>
-                <ul>
-                    <li>營運單位：買樂開發企業社</li>
-                    <li>統一編號：26847137</li>
-                    <li>預約專線：<a href="tel:0920633116">0920633116</a></li>
-                    <li>地址：苗栗縣竹南鎮龍山路二段243-2號</li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 買樂開發企業社 版權所有.</p>
-        </div>
-    </footer>
+              <div class="info-item">
+                <div class="info-icon">📍</div>
+                <div>
+                  <h3>服務地址</h3>
+                  <p>苗栗縣竹南鎮龍山路二段243-2號</p>
+                </div>
+              </div>
 
+              <div class="info-item">
+                <div class="info-icon">📦</div>
+                <div>
+                  <h3>租賃品項</h3>
+                  <p>水冷扇、活動帳篷、發電機</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="map-placeholder">
+              苗栗縣竹南鎮龍山路二段243-2號<br>
+              可於正式上線時嵌入 Google 地圖
+            </div>
+          </div>
+
+          <div class="contact-form">
+            <h3>快速需求表</h3>
+            <p class="form-note">此表單為前端展示版；正式上線可串接 Google 表單、LINE 官方帳號或 Email 寄送功能。</p>
+
+            <form action="#" method="post">
+              <div class="form-row">
+                <input type="text" name="name" placeholder="您的姓名 / 單位名稱" required>
+                <input type="tel" name="phone" placeholder="聯絡電話" required>
+              </div>
+
+              <div class="form-row">
+                <select name="item" required>
+                  <option value="">選擇租賃品項</option>
+                  <option value="水冷扇">水冷扇</option>
+                  <option value="活動帳篷">活動帳篷</option>
+                  <option value="發電機">發電機</option>
+                  <option value="多項設備">多項設備</option>
+                </select>
+                <input type="date" name="date" aria-label="租賃日期">
+              </div>
+
+              <input type="text" name="location" placeholder="活動 / 使用地點">
+              <textarea name="message" placeholder="請簡單描述需求，例如：活動日期、預計人數、租借數量、使用時間、是否戶外等。"></textarea>
+
+              <button class="btn btn-primary" type="submit">送出需求</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <strong>租必達｜買樂開發企業社</strong>
+        <span>水冷扇・活動帳篷・發電機租賃服務</span>
+      </div>
+      <div class="footer-links">
+        <a href="#items">租賃品項</a>
+        <a href="#why">服務優勢</a>
+        <a href="#process">租賃流程</a>
+        <a href="#contact">聯絡資訊</a>
+      </div>
+      <div>© 2026 租必達. All Rights Reserved.</div>
+    </div>
+  </footer>
+
+  <a class="float-call" href="tel:0920633116">☎ 立即來電 0920-633116</a>
 </body>
 </html>
