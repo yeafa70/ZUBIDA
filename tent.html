@@ -13,6 +13,20 @@
   <meta property="og:url" content="https://yeafa70.github.io/ZUBIDA/tent.html">
   <meta property="og:image" content="https://yeafa70.github.io/ZUBIDA/pics/og-image.png">
   <meta name="theme-color" content="#1e3a8a">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1e3a8a',
+            secondary: '#3b82f6',
+            accent: '#f59e0b'
+          }
+        }
+      }
+    }
+  </script>
   <link rel="stylesheet" href="style.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-F5CL3D5FT1"></script>
   <script>
@@ -33,8 +47,8 @@
   ],
   "url": "https://yeafa70.github.io/ZUBIDA/",
   "telephone": "+886920633116",
-  "priceRange": "依租賃品項、數量、租期與運送地點報價",
   "image": "https://yeafa70.github.io/ZUBIDA/pics/og-image.png",
+  "priceRange": "依租賃品項、數量、租期與運送地點報價",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "龍山路二段243-2號",
@@ -55,7 +69,7 @@
   "description": "租必達提供水冷扇、活動帳篷、發電機租賃服務，適合戶外活動、市集、園遊會、工程、臨時降溫與臨時供電需求。"
 }
 </script>
-  <script type="application/ld+json">
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -75,7 +89,7 @@
   ]
 }
 </script>
-  <script type="application/ld+json">
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Service",
@@ -96,14 +110,14 @@
   "description": "租必達提供活動帳篷租賃服務，適合苗栗、竹南、頭份市集、園遊會、校園活動、企業活動、臨時遮陽與戶外展售空間。"
 }
 </script>
-  <script type="application/ld+json">
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "活動帳篷適合哪些場合？",
+      "name": "活動帳篷適合什麼場合？",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "活動帳篷適合園遊會、市集、展售攤位、報到處、服務站、社區活動、企業活動與臨時遮陽需求。"
@@ -111,271 +125,264 @@
     },
     {
       "@type": "Question",
-      "name": "帳篷可以防雨嗎？",
+      "name": "帳篷可以防大雨或強風嗎？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "一般活動帳篷可阻擋一般雨勢，但若遇強風、豪雨或颱風等極端天氣，需以安全為優先，不建議搭設。"
+        "text": "一般活動帳篷可阻擋一般雨勢，若預期有強風建議加配重或沙包；若遇颱風或極端天氣，為安全起見不建議搭設。"
       }
     },
     {
       "@type": "Question",
-      "name": "可以搭配水冷扇或發電機嗎？",
+      "name": "可以另外加裝邊布或搭配其他設備嗎？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "可以，活動現場常會同時需要帳篷、水冷扇與發電機，可一起規劃較方便。"
+        "text": "可依需求討論邊布、配重、水冷扇、發電機等搭配方式，讓活動現場更完整。"
       }
     }
   ]
 }
 </script>
 </head>
-<body>
-  <div class="topbar">
-    <div class="container">
-      <a class="phone" href="tel:0920633116" data-ga-event="click_phone" data-ga-label="topbar_phone">☎ 服務專線：0920-633-116</a>
-      <a class="line" href="https://lin.ee/XM7224r" target="_blank" rel="noopener" data-ga-event="click_line" data-ga-label="topbar_line">LINE 線上諮詢</a>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased flex flex-col min-h-screen scroll-smooth">
+  <div class="bg-gray-900 text-white text-sm py-2">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center gap-2">
+      <a href="tel:0920633116" class="flex items-center gap-2 hover:text-accent transition font-bold tracking-wider" data-ga-event="click_phone" data-ga-label="top_bar_phone">☎ 服務專線：0920-633-116</a>
+      <a href="https://lin.ee/XM7224r" target="_blank" rel="noopener" class="flex items-center gap-2 text-[#06C755] hover:text-green-300 transition font-bold" data-ga-event="click_line" data-ga-label="top_bar_line">LINE 線上諮詢</a>
     </div>
   </div>
-  <header class="header">
-    <div class="container nav">
-      <a href="index.html" class="logo" aria-label="租必達首頁">
-        <span class="logo-icon">租</span>
-        <span>租必達</span>
-      </a>
-      <nav class="menu" aria-label="主選單">
-        <a href="index.html">首頁</a>
-        <a href="cooler.html">水冷扇</a>
-        <a href="tent.html" class="active">活動帳篷</a>
-        <a href="generator.html">發電機</a>
-        <a href="index.html#contact">線上詢價</a>
-      </nav>
-      <div class="nav-actions">
-        <a class="btn btn-primary" href="tel:0920633116" data-ga-event="click_phone" data-ga-label="nav_phone">立即來電</a>
-      </div>
-      <button class="mobile-btn" aria-label="開啟選單">☰</button>
-    </div>
-    <div class="mobile-menu">
-      <div class="container">
-        <a href="index.html">首頁</a>
-        <a href="cooler.html">水冷扇</a>
-        <a href="tent.html">活動帳篷</a>
-        <a href="generator.html">發電機</a>
-        <a href="index.html#contact">線上詢價</a>
+
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-20">
+        <div class="flex items-center">
+          <a href="index.html" class="flex items-center gap-3 text-2xl font-black text-primary tracking-wide">
+            <span class="w-11 h-11 rounded-xl bg-primary text-white grid place-items-center shadow-lg">租</span>
+            租必達
+          </a>
+        </div>
+        <div class="hidden md:flex items-center space-x-8 font-bold">
+          <a href="index.html" class="text-gray-700 hover:text-primary py-6">首頁</a>
+          <a href="cooler.html" class="text-gray-700 hover:text-primary py-6">水冷扇</a>
+          <a href="tent.html" class="text-primary border-b-4 border-accent py-6">活動帳篷</a>
+          <a href="generator.html" class="text-gray-700 hover:text-primary py-6">發電機</a>
+          <a href="index.html#contact" class="text-gray-700 hover:text-primary py-6">線上詢價</a>
+          <a href="tel:0920633116" class="bg-primary text-white px-5 py-3 rounded-lg hover:bg-secondary transition shadow-lg" data-ga-event="click_phone" data-ga-label="nav_phone">立即來電</a>
+        </div>
+        <div class="flex items-center md:hidden">
+          <button id="mobile-menu-btn" class="text-gray-700 hover:text-primary focus:outline-none text-2xl">☰</button>
+        </div>
       </div>
     </div>
-  </header>
-  <main>
-    <section class="page-hero">
-      <div class="container page-hero-inner">
-        <div>
-          <div class="kicker">活動帳篷出租｜遮陽避雨與攤位規劃</div>
-          <h1>活動帳篷租賃，讓戶外空間更完整</h1>
-          <p>活動帳篷是戶外活動最常見也最實用的設備，可用於遮陽避雨、攤位配置、報到處、服務站、休息區與臨時展售空間。</p>
-          <div class="hero-actions">
-            <a class="btn btn-accent" href="index.html#contact" data-ga-event="click_to_form" data-ga-label="tent_quote">索取報價</a>
-            <a class="btn btn-white" href="tel:0920633116" data-ga-event="click_phone" data-ga-label="tent_phone">直接來電</a>
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+      <div class="px-4 pt-2 pb-4 space-y-1">
+        <a href="index.html" class="block px-3 py-3 rounded-md font-bold text-gray-700 hover:text-primary hover:bg-gray-50">首頁</a>
+        <a href="cooler.html" class="block px-3 py-3 rounded-md font-bold text-gray-700 hover:text-primary hover:bg-gray-50">水冷扇</a>
+        <a href="tent.html" class="block px-3 py-3 rounded-md font-bold text-gray-700 hover:text-primary hover:bg-gray-50">活動帳篷</a>
+        <a href="generator.html" class="block px-3 py-3 rounded-md font-bold text-gray-700 hover:text-primary hover:bg-gray-50">發電機</a>
+        <a href="index.html#contact" class="block px-3 py-3 rounded-md font-bold text-primary">線上詢價</a>
+      </div>
+    </div>
+  </nav>
+  <main class="flex-grow">
+    <section class="bg-gray-50 py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row items-center gap-12 mb-16">
+          <div class="lg:w-1/2">
+            <span class="text-accent font-bold tracking-wider uppercase text-sm">無懼風雨的戶外空間</span>
+            <h1 class="text-4xl font-black text-gray-900 mt-2 mb-6">活動帳篷租賃</h1>
+            <p class="text-lg text-gray-600 mb-6">活動帳篷適合戶外活動、園遊會、市集攤位、企業活動、臨時服務站與展售空間。可讓活動現場更整齊，也能提供遮陽、避雨與攤位識別效果。</p>
+            <a href="index.html#contact" class="bg-primary text-white font-bold px-8 py-3 rounded-md hover:bg-secondary transition shadow-md mb-8 inline-block" data-ga-event="click_to_form" data-ga-label="tent_quote">預約帳篷會勘</a>
+          </div>
+          <div class="lg:w-1/2 flex justify-center">
+            <iframe class="w-full embed-wide rounded-xl shadow-2xl border-4 border-white" src="https://www.youtube.com/embed/BebBmdm_dsU" title="活動帳篷搭設教學" frameborder="0" allowfullscreen></iframe>
           </div>
         </div>
-        <div class="product-photo">
-          <img src="pics/tent-main.png" alt="租必達活動帳篷出租展示圖">
+        
+      </div>
+    </section>
+
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <img src="pics/tent-main.png" alt="租必達活動帳篷租賃展示圖" class="w-full rounded-xl shadow-2xl img-soft">
+          </div>
+          <div>
+            <h2 class="text-3xl font-black text-gray-900 mb-5">活動帳篷租賃重點說明</h2>
+            <p class="text-gray-600 mb-6">活動帳篷適合戶外活動、園遊會、市集攤位、企業活動、臨時服務站與展售空間。可讓活動現場更整齊，也能提供遮陽、避雨與攤位識別效果。</p>
+            <ul class="space-y-3 text-gray-700 font-semibold">
+              <li>✓ 可依活動日期、地點與數量需求討論</li>
+              <li>✓ 可搭配其他活動設備一起規劃</li>
+              <li>✓ 建議提早確認檔期與進退場條件</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section section-white">
-      <div class="container content-grid">
-        <div class="panel">
-          <h2>活動帳篷租賃重點</h2>
-          <p>帳篷可讓活動現場更有秩序，也能讓攤位、服務區與等待區更清楚。建議洽詢時提供搭設地點、數量、使用日期與是否需要邊布、配重或搭配其他設備。</p>
-          <ul class="checklist">
-            <li>可與其他活動設備一起規劃</li>
-            <li>建議提早確認活動日期與數量</li>
-            <li>可依場地條件討論租賃安排</li>
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-black text-center text-gray-900 mb-12">活動帳篷應用場景</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div class="text-center">
+      <img src="pics/case-tent-school-fair.jpg" onerror="this.src='https://placehold.co/400x300/3b82f6/fff?text=園遊會攤位'" class="w-full rounded-lg shadow-sm mb-3 img-soft" alt="園遊會攤位">
+      <h4 class="font-bold">園遊會攤位</h4>
+    </div>
+<div class="text-center">
+      <img src="pics/case-tent-registration.jpg" onerror="this.src='https://placehold.co/400x300/3b82f6/fff?text=工商展覽報到處'" class="w-full rounded-lg shadow-sm mb-3 img-soft" alt="工商展覽報到處">
+      <h4 class="font-bold">工商展覽報到處</h4>
+    </div>
+<div class="text-center">
+      <img src="pics/case-tent-wedding.jpg" onerror="this.src='https://placehold.co/400x300/3b82f6/fff?text=戶外浪漫婚禮'" class="w-full rounded-lg shadow-sm mb-3 img-soft" alt="戶外浪漫婚禮">
+      <h4 class="font-bold">戶外浪漫婚禮</h4>
+    </div>
+<div class="text-center">
+      <img src="pics/case-tent-community.jpg" onerror="this.src='https://placehold.co/400x300/3b82f6/fff?text=社區中秋晚會'" class="w-full rounded-lg shadow-sm mb-3 img-soft" alt="社區中秋晚會">
+      <h4 class="font-bold">社區中秋晚會</h4>
+    </div>
+<div class="text-center">
+      <img src="pics/case-tent-medical.jpg" onerror="this.src='https://placehold.co/400x300/3b82f6/fff?text=運動會醫護/檢錄站'" class="w-full rounded-lg shadow-sm mb-3 img-soft" alt="運動會醫護/檢錄站">
+      <h4 class="font-bold">運動會醫護/檢錄站</h4>
+    </div>
+<div class="text-center">
+      <img src="pics/case-tent-worksite.jpg" onerror="this.src='https://placehold.co/400x300/3b82f6/fff?text=臨時工程遮蔽'" class="w-full rounded-lg shadow-sm mb-3 img-soft" alt="臨時工程遮蔽">
+      <h4 class="font-bold">臨時工程遮蔽</h4>
+    </div>
+<div class="text-center">
+      <img src="pics/case-tent-temple.jpg" onerror="this.src='https://placehold.co/400x300/3b82f6/fff?text=普渡法會祭典'" class="w-full rounded-lg shadow-sm mb-3 img-soft" alt="普渡法會祭典">
+      <h4 class="font-bold">普渡法會祭典</h4>
+    </div>
+<div class="text-center">
+      <img src="pics/case-tent-popup.jpg" onerror="this.src='https://placehold.co/400x300/3b82f6/fff?text=汽車展售快閃店'" class="w-full rounded-lg shadow-sm mb-3 img-soft" alt="汽車展售快閃店">
+      <h4 class="font-bold">汽車展售快閃店</h4>
+    </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-gray-50">
+      <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-3xl font-black text-center mb-10">活動帳篷租賃常見問題</h2>
+        <div class="space-y-4"><details class="bg-white rounded-lg shadow-sm border border-gray-200 group">
+      <summary class="font-bold text-lg p-5 cursor-pointer flex justify-between items-center text-gray-800">
+        活動帳篷適合什麼場合？
+        <span class="faq-icon text-gray-400">⌄</span>
+      </summary>
+      <div class="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-3">活動帳篷適合園遊會、市集、展售攤位、報到處、服務站、社區活動、企業活動與臨時遮陽需求。</div>
+    </details>
+<details class="bg-white rounded-lg shadow-sm border border-gray-200 group">
+      <summary class="font-bold text-lg p-5 cursor-pointer flex justify-between items-center text-gray-800">
+        帳篷可以防大雨或強風嗎？
+        <span class="faq-icon text-gray-400">⌄</span>
+      </summary>
+      <div class="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-3">一般活動帳篷可阻擋一般雨勢，若預期有強風建議加配重或沙包；若遇颱風或極端天氣，為安全起見不建議搭設。</div>
+    </details>
+<details class="bg-white rounded-lg shadow-sm border border-gray-200 group">
+      <summary class="font-bold text-lg p-5 cursor-pointer flex justify-between items-center text-gray-800">
+        可以另外加裝邊布或搭配其他設備嗎？
+        <span class="faq-icon text-gray-400">⌄</span>
+      </summary>
+      <div class="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-3">可依需求討論邊布、配重、水冷扇、發電機等搭配方式，讓活動現場更完整。</div>
+    </details></div>
+      </div>
+    </section>
+
+    <section id="contact" class="bg-secondary py-20 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 relative z-10">
+      <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-12">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-black text-gray-900 mb-2">取得專屬設備報價</h2>
+          <p class="text-gray-600 mb-6">強烈建議直接來電，溝通最快速準確。</p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+            <a href="tel:0920633116" class="bg-gray-900 text-white font-bold px-8 py-4 rounded-xl hover:bg-gray-800 transition shadow-lg text-lg flex items-center justify-center gap-4 w-full sm:w-auto" data-ga-event="click_phone" data-ga-label="contact_phone">
+              <span class="text-3xl text-accent">☎</span>
+              <div class="text-left leading-tight"><span class="block text-xs text-gray-300 font-normal">一通電話，快速評估</span>0920-633-116</div>
+            </a>
+            <a href="https://lin.ee/XM7224r" target="_blank" rel="noopener" class="bg-[#06C755] text-white font-bold px-8 py-4 rounded-xl hover:bg-green-600 transition shadow-lg text-lg flex items-center justify-center gap-4 w-full sm:w-auto" data-ga-event="click_line" data-ga-label="contact_line">
+              <span class="text-3xl">LINE</span>
+              <div class="text-left leading-tight"><span class="block text-xs text-green-100 font-normal">點擊加入官方好友</span>LINE 諮詢</div>
+            </a>
+          </div>
+          <div class="flex items-center my-8">
+            <div class="flex-grow border-t border-gray-200"></div>
+            <span class="px-4 text-gray-400 text-sm">或填寫線上表單，由專人回覆</span>
+            <div class="flex-grow border-t border-gray-200"></div>
+          </div>
+        </div>
+
+        <form id="rentalForm" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">聯絡人姓名 *</label>
+              <input type="text" id="entryName" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">聯絡電話 *</label>
+              <input type="tel" id="entryPhone" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">主要需求設備</label>
+              <select id="entryService" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary">
+                <option value="水冷扇">水冷扇</option>
+                <option value="活動帳篷">活動帳篷</option>
+                <option value="發電機">發電機</option>
+                <option value="多項設備混搭">多項設備綜合規劃</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">預計活動日期</label>
+              <input type="date" id="entryDate" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">活動地點與需求備註</label>
+            <textarea id="entryMsg" rows="4" placeholder="請告訴我們活動縣市、數量需求或特殊場地狀況..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary"></textarea>
+          </div>
+
+          <button type="submit" id="submitBtn" class="w-full bg-primary text-white font-bold py-3 rounded-md hover:bg-blue-900 transition flex justify-center items-center gap-2">
+            <span>送出詢問表單</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+  </main>
+  <footer class="bg-gray-900 text-gray-300 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-3 text-2xl font-black text-white mb-4">
+            <span class="w-10 h-10 rounded-xl bg-secondary text-white grid place-items-center">租</span> 租必達
+          </div>
+          <p class="text-sm text-gray-400 mb-4">提供苗栗及周邊地區活動設備租賃服務，包含水冷扇、活動帳篷與發電機。用心服務，使命必達。</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold text-white mb-4">聯絡資訊</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="tel:0920633116" class="text-xl font-black text-white hover:text-accent transition" data-ga-event="click_phone" data-ga-label="footer_phone">☎ 0920-633-116</a></li>
+            <li><a href="https://lin.ee/XM7224r" target="_blank" rel="noopener" class="text-[#06C755] hover:text-green-300 font-bold" data-ga-event="click_line" data-ga-label="footer_line">LINE 線上諮詢</a></li>
+            <li>苗栗縣竹南鎮龍山路二段243-2號</li>
+            <li><a href="https://www.google.com/maps/search/?api=1&query=苗栗縣竹南鎮龍山路二段243-2號" target="_blank" rel="noopener" class="text-secondary hover:text-blue-300" data-ga-event="click_map" data-ga-label="footer_map">開啟 Google 地圖</a></li>
           </ul>
         </div>
-        <div class="panel">
-          <h2>租賃資訊</h2>
-          <table class="spec-table"><tbody><tr><th>租賃品項</th><td>活動帳篷、攤位帳篷等尺寸可洽詢</td></tr>
-<tr><th>適合場景</th><td>市集、園遊會、校園活動、企業活動、戶外婚禮、社區活動</td></tr>
-<tr><th>洽詢建議</th><td>請提供日期、地點、帳篷數量、是否需要邊布、配重或搭設協助</td></tr>
-<tr><th>服務區域</th><td>苗栗、竹南、頭份及周邊地區可洽詢</td></tr></tbody></table>
+        <div>
+          <h4 class="text-lg font-bold text-white mb-4">設備快速分類</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="cooler.html" class="hover:text-secondary transition">水冷扇租賃</a></li>
+            <li><a href="tent.html" class="hover:text-secondary transition">活動帳篷租賃</a></li>
+            <li><a href="generator.html" class="hover:text-secondary transition">發電機租賃</a></li>
+            <li><a href="index.html#faq" class="hover:text-secondary transition">常見問題</a></li>
+          </ul>
         </div>
       </div>
-    </section>
-
-    <section class="section section-gray">
-      <div class="container">
-        <div class="title">
-          <div class="eyebrow">Use Cases</div>
-          <h2>活動帳篷租賃適合哪些場景？</h2>
-          <p>你可以將自己的案例照片放到 pics 資料夾，再把下方圖片檔名改成你的實際照片。</p>
-        </div>
-        <div class="scene-grid">
-          <div class="scene">
-          <img src="pics/case-tent-school-fair.jpg" alt="活動帳篷租賃應用場景：園遊會攤位" onerror="this.src='pics/tent-main.png'">
-          <h3>園遊會攤位</h3>
-        </div>
-<div class="scene">
-          <img src="pics/case-tent-registration.jpg" alt="活動帳篷租賃應用場景：工商報到處" onerror="this.src='pics/tent-main.png'">
-          <h3>工商報到處</h3>
-        </div>
-<div class="scene">
-          <img src="pics/case-tent-wedding.jpg" alt="活動帳篷租賃應用場景：戶外婚禮" onerror="this.src='pics/tent-main.png'">
-          <h3>戶外婚禮</h3>
-        </div>
-<div class="scene">
-          <img src="pics/case-tent-community.jpg" alt="活動帳篷租賃應用場景：社區晚會" onerror="this.src='pics/tent-main.png'">
-          <h3>社區晚會</h3>
-        </div>
-<div class="scene">
-          <img src="pics/case-tent-medical.jpg" alt="活動帳篷租賃應用場景：醫護檢錄站" onerror="this.src='pics/tent-main.png'">
-          <h3>醫護檢錄站</h3>
-        </div>
-<div class="scene">
-          <img src="pics/case-tent-worksite.jpg" alt="活動帳篷租賃應用場景：臨時工程遮蔽" onerror="this.src='pics/tent-main.png'">
-          <h3>臨時工程遮蔽</h3>
-        </div>
-<div class="scene">
-          <img src="pics/case-tent-temple.jpg" alt="活動帳篷租賃應用場景：宮廟普渡法會" onerror="this.src='pics/tent-main.png'">
-          <h3>宮廟普渡法會</h3>
-        </div>
-<div class="scene">
-          <img src="pics/case-tent-popup.jpg" alt="活動帳篷租賃應用場景：快閃展售" onerror="this.src='pics/tent-main.png'">
-          <h3>快閃展售</h3>
-        </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-white">
-      <div class="container">
-        <div class="title">
-          <div class="eyebrow">FAQ</div>
-          <h2>活動帳篷租賃常見問題</h2>
-          <p>這些問答能協助客戶快速理解，也有助於搜尋引擎與 AI 摘要辨識頁面重點。</p>
-        </div>
-        <div class="faq-list">
-          <details>
-        <summary>活動帳篷適合哪些場合？</summary>
-        <div class="faq-answer">活動帳篷適合園遊會、市集、展售攤位、報到處、服務站、社區活動、企業活動與臨時遮陽需求。</div>
-      </details>
-<details>
-        <summary>帳篷可以防雨嗎？</summary>
-        <div class="faq-answer">一般活動帳篷可阻擋一般雨勢，但若遇強風、豪雨或颱風等極端天氣，需以安全為優先，不建議搭設。</div>
-      </details>
-<details>
-        <summary>可以搭配水冷扇或發電機嗎？</summary>
-        <div class="faq-answer">可以，活動現場常會同時需要帳篷、水冷扇與發電機，可一起規劃較方便。</div>
-      </details>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-gray">
-      <div class="container">
-        <div class="title">
-          <div class="eyebrow">Related Items</div>
-          <h2>也可以搭配這些設備</h2>
-          <p>活動現場常會同時需要降溫、遮陽與臨時供電，可一起洽詢更方便。</p>
-        </div>
-        <div class="related">
-          <a class="related-card" href="cooler.html" data-ga-event="click_related_page" data-ga-label="水冷扇租賃">
-          <img src="pics/cooler-main.png" alt="水冷扇租賃">
-          <div><h3>水冷扇租賃</h3><p>了解更多設備租賃用途與適合情境。</p><strong style="color:var(--primary)">查看介紹 →</strong></div>
-        </a>
-<a class="related-card" href="generator.html" data-ga-event="click_related_page" data-ga-label="發電機租賃">
-          <img src="pics/generator-main.png" alt="發電機租賃">
-          <div><h3>發電機租賃</h3><p>了解更多設備租賃用途與適合情境。</p><strong style="color:var(--primary)">查看介紹 →</strong></div>
-        </a>
-        </div>
-      </div>
-    </section>
-
-    
-<section class="section contact" id="contact">
-  <div class="container">
-    <div class="contact-card">
-      <div class="title" style="margin-bottom:24px">
-        <div class="eyebrow">Contact</div>
-        <h2>取得專屬設備報價</h2>
-        <p>若活動日期接近，建議直接來電，最快確認檔期、數量與現場需求。</p>
-      </div>
-
-      <div class="contact-actions">
-        <a class="contact-action contact-phone" href="tel:0920633116" data-ga-event="click_phone" data-ga-label="contact_phone">
-          <span>☎</span><span><small>快速評估</small>0920-633-116</span>
-        </a>
-        <a class="contact-action contact-line" href="https://lin.ee/XM7224r" target="_blank" rel="noopener" data-ga-event="click_line" data-ga-label="contact_line">
-          <span>LINE</span><span><small>加入官方好友</small>線上諮詢</span>
-        </a>
-      </div>
-
-      <form id="rentalForm">
-        <div class="form-grid">
-          <div>
-            <label for="entryName">聯絡人姓名 *</label>
-            <input type="text" id="entryName" required>
-          </div>
-          <div>
-            <label for="entryPhone">聯絡電話 *</label>
-            <input type="tel" id="entryPhone" required>
-          </div>
-          <div>
-            <label for="entryService">主要需求設備</label>
-            <select id="entryService">
-              <option value="水冷扇">水冷扇</option>
-              <option value="活動帳篷">活動帳篷</option>
-              <option value="發電機">發電機</option>
-              <option value="多項設備混搭">多項設備綜合規劃</option>
-            </select>
-          </div>
-          <div>
-            <label for="entryDate">預計活動日期</label>
-            <input type="date" id="entryDate">
-          </div>
-          <div class="full">
-            <label for="entryMsg">活動地點與需求備註</label>
-            <textarea id="entryMsg" placeholder="請告訴我們活動縣市、數量需求、使用時間、是否需要運送或特殊場地狀況。"></textarea>
-          </div>
-        </div>
-        <button class="btn btn-primary" type="submit" style="width:100%;margin-top:18px">送出詢問表單</button>
-      </form>
-
-      <div class="note">
-        表單預設為模擬送出。若要真正收到表單，請到 <strong>js/main.js</strong> 貼上 Google Apps Script 網頁應用程式網址。
-      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-500">© 2026 租必達 ZUBIDA. All rights reserved.</div>
     </div>
-  </div>
-</section>
-  </main>
-  <footer class="footer">
-    <div class="container footer-grid">
-      <div>
-        <h3>租必達｜買樂開發企業社</h3>
-        <p>提供苗栗、竹南、頭份及周邊地區活動設備租賃服務。水冷扇、活動帳篷、發電機皆可來電洽詢。</p>
-      </div>
-      <div>
-        <h4>聯絡資訊</h4>
-        <ul>
-          <li><a href="tel:0920633116" data-ga-event="click_phone" data-ga-label="footer_phone">☎ 0920-633-116</a></li>
-          <li><a href="https://lin.ee/XM7224r" target="_blank" rel="noopener" data-ga-event="click_line" data-ga-label="footer_line">LINE 線上諮詢</a></li>
-          <li>苗栗縣竹南鎮龍山路二段243-2號</li>
-          <li><a href="https://www.google.com/maps/search/?api=1&query=苗栗縣竹南鎮龍山路二段243-2號" target="_blank" rel="noopener" data-ga-event="click_map" data-ga-label="footer_map">開啟 Google 地圖</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>租賃品項</h4>
-        <ul>
-          <li><a href="cooler.html">水冷扇租賃</a></li>
-          <li><a href="tent.html">活動帳篷租賃</a></li>
-          <li><a href="generator.html">發電機租賃</a></li>
-          <li><a href="index.html#faq">常見問題</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="container copyright">© 2026 租必達 ZUBIDA. All Rights Reserved.</div>
   </footer>
-  <a class="float-call" href="tel:0920633116" data-ga-event="click_phone" data-ga-label="float_phone">☎ 立即來電 0920-633-116</a>
+  <a href="tel:0920633116" class="fixed right-4 bottom-4 z-50 bg-accent text-white font-black px-5 py-3 rounded-full shadow-xl hover:bg-yellow-600 transition" data-ga-event="click_phone" data-ga-label="float_phone">☎ 立即來電</a>
   <script src="js/main.js"></script>
 </body>
 </html>

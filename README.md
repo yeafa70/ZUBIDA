@@ -1,52 +1,32 @@
 # ZUBIDA 租必達網站
 
-這是可直接上傳到 GitHub Pages 的靜態網站版本。
+這版以你提供的新版 Tailwind 風格為主，不混入之前另一套設計。
 
-## 主要網址
+## 主要頁面
+- index.html：首頁
+- cooler.html：水冷扇
+- tent.html：活動帳篷
+- generator.html：發電機
 
-- 首頁：https://yeafa70.github.io/ZUBIDA/
-- 水冷扇：https://yeafa70.github.io/ZUBIDA/cooler.html
-- 活動帳篷：https://yeafa70.github.io/ZUBIDA/tent.html
-- 發電機：https://yeafa70.github.io/ZUBIDA/generator.html
+## 舊網址導向
+- event-tent.html → tent.html
+- water-cooler.html → cooler.html
 
-## 檔案說明
+## 圖片資料夾
+圖片放在 pics/
 
-- `index.html`：首頁
-- `cooler.html`：水冷扇主頁
-- `tent.html`：活動帳篷主頁
-- `generator.html`：發電機主頁
-- `event-tent.html`：舊網址導向 `tent.html`
-- `water-cooler.html`：舊網址導向 `cooler.html`
-- `style.css`：全站樣式
-- `js/main.js`：GA4 事件、手機選單、表單送出模擬
-- `pics/`：圖片資料夾
-- `sitemap.xml`：網站地圖
-- `robots.txt`：搜尋引擎爬蟲設定
-- `llms.txt`：AI 搜尋摘要友善說明
-
-## GA4
-
-已加入 GA4 測量 ID：
-
-```text
-G-F5CL3D5FT1
-```
-
-## 修改圖片
-
-將圖片放進 `pics/` 資料夾，再到 HTML 修改：
-
+範例：
 ```html
 <img src="pics/你的圖片.jpg" alt="圖片說明">
 ```
 
-## 表單
+## GA4
+已加入：G-F5CL3D5FT1
 
-目前表單是模擬送出。
-若要正式收單，請到 `js/main.js` 找到：
-
-```js
-const GAS_URL = "請貼上你的_Google_Apps_Script_網頁應用程式網址";
-```
-
-改成你的 GAS 網頁應用程式網址。
+## YouTube
+已保留原本嵌入影片：
+- 水冷扇：pJVwMVOivgY
+- 活動帳篷：BebBmdm_dsU
+- 發電機宣傳：Rvb_vlOQS6E
+- 靜音發電機：DWpq_R9HAFU
+- 一般發電機：stypYlFgz-0

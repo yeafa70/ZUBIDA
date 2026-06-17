@@ -12,8 +12,8 @@
 - LINE：https://lin.ee/XM7224r
 - 地址：苗栗縣竹南鎮龍山路二段243-2號
 
-## 網站重要頁面
+## 重要頁面
 - 首頁：https://yeafa70.github.io/ZUBIDA/
-- 水冷扇租賃：https://yeafa70.github.io/ZUBIDA/cooler.html
-- 活動帳篷租賃：https://yeafa70.github.io/ZUBIDA/tent.html
-- 發電機租賃：https://yeafa70.github.io/ZUBIDA/generator.html
+- 水冷扇：https://yeafa70.github.io/ZUBIDA/cooler.html
+- 活動帳篷：https://yeafa70.github.io/ZUBIDA/tent.html
+- 發電機：https://yeafa70.github.io/ZUBIDA/generator.html
