@@ -1,16 +1,15 @@
 
-.page-hero-bg{
-  background:
-    linear-gradient(135deg, rgba(30,58,138,.96), rgba(37,99,235,.88)),
-    radial-gradient(circle at 80% 15%, rgba(245,158,11,.25), transparent 28%);
-}
-.brand-shadow{box-shadow:0 18px 45px rgba(30,58,138,.20)}
-.fade-in{animation:fadeIn .45s ease both}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.page-section{animation:fadeIn .35s ease-in-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 details>summary{list-style:none}
 details>summary::-webkit-details-marker{display:none}
+.faq-icon{transition:transform .25s ease}
 details[open] summary .faq-icon{transform:rotate(180deg)}
-.faq-icon{transition:.25s ease}
-.embed-vertical{aspect-ratio:9/16}
-.embed-wide{aspect-ratio:16/9}
-.img-soft{background:#e5e7eb}
+.video-vertical,.video-wide{display:block;width:100%;height:auto;margin-inline:auto;background:#111;object-fit:cover}
+.video-vertical{aspect-ratio:9/16;max-width:min(100%,320px);max-height:560px}
+.video-wide{aspect-ratio:16/9;max-width:720px}
+.feature-video.video-wide{max-width:100%}
+.feature-video.video-vertical{max-width:min(100%,360px);max-height:640px}
+@media (max-width:640px){.video-vertical{max-width:min(100%,280px);max-height:500px}.video-wide{max-width:100%}}
+.product-img,.hero-img,.scene-img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:#e5e7eb}
+.h-64.overflow-hidden.relative{height:auto;aspect-ratio:1/1}
