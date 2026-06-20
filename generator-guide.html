@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>發電機出租怎麼選？瓦數、容量、安全與活動用電指南｜租必達</title>
+  <meta name="description" content="租必達發電機出租知識篇，整理活動、市集、攤商、工程與停電備援常見用電需求，說明發電機瓦數怎麼估、額定瓦數與啟動瓦數差異、kW/kVA、靜音款與一般款、安全距離、延長線與雨天使用注意事項。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yeafa70.github.io/ZUBIDA/generator-guide.html">
+
+  <meta property="og:title" content="發電機出租怎麼選？瓦數、容量、安全與活動用電指南｜租必達">
+  <meta property="og:description" content="租必達發電機出租指南，快速看懂活動、市集、工程與臨時用電如何估算發電機容量，並掌握安全使用重點。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://yeafa70.github.io/ZUBIDA/generator-guide.html">
+  <meta property="og:image" content="https://yeafa70.github.io/ZUBIDA/pics/generator-main.jpg">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { primary:'#1e3a8a', secondary:'#3b82f6', accent:'#f59e0b' }}}}
+  </script>
+  <link rel="stylesheet" href="style.css">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F5CL3D5FT1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F5CL3D5FT1', { page_path: location.pathname });
+  </script>
+
+  <style>
+    .guide-card{background:#fff;border:1px solid #e5e7eb;border-radius:1rem;box-shadow:0 8px 24px rgba(15,23,42,.06)}
+    .guide-table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:.9rem;border:1px solid #e5e7eb;background:#fff}
+    .guide-table th{background:#1e3a8a;color:white;text-align:left;font-weight:700}
+    .guide-table th,.guide-table td{padding:14px 16px;border-bottom:1px solid #e5e7eb;vertical-align:top}
+    .guide-table tr:last-child td{border-bottom:0}
+    .guide-table td:first-child{font-weight:700;color:#111827}
+    .keyword-pill{display:inline-block;margin:4px 6px 4px 0;padding:6px 10px;border-radius:999px;background:#eff6ff;color:#1e3a8a;font-size:13px;font-weight:700;line-height:1.35;white-space:nowrap}
+    .toc a{display:block;padding:.6rem .8rem;border-radius:.6rem;color:#374151;font-weight:700}
+    .toc a:hover{background:#eff6ff;color:#1e3a8a}
+    .note-box{border-left:5px solid #f59e0b;background:#fffbeb}
+    .danger-box{border-left:5px solid #dc2626;background:#fef2f2}
+    .ok-box{border-left:5px solid #2563eb;background:#eff6ff}
+    html{scroll-padding-top:96px}
+  </style>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://yeafa70.github.io/ZUBIDA/#localbusiness","name":"租必達｜買樂開發企業社","alternateName":["ZUBIDA","zubida.go"],"url":"https://yeafa70.github.io/ZUBIDA/","telephone":"+886920633116","address":{"@type":"PostalAddress","streetAddress":"龍山路二段243-2號","addressLocality":"竹南鎮","addressRegion":"苗栗縣","addressCountry":"TW"},"areaServed":["苗栗縣","竹南鎮","頭份市","新竹市","新竹縣","桃園市","台中市"],"description":"租必達提供水冷扇、活動帳篷、發電機出租服務。"}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首頁","item":"https://yeafa70.github.io/ZUBIDA/"},{"@type":"ListItem","position":2,"name":"發電機出租","item":"https://yeafa70.github.io/ZUBIDA/generator.html"},{"@type":"ListItem","position":3,"name":"發電機出租指南","item":"https://yeafa70.github.io/ZUBIDA/generator-guide.html"}]}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"發電機出租怎麼選？瓦數、容量、安全與活動用電指南","description":"整理發電機出租前常見的容量估算、瓦數單位、安全距離、延長線與活動用電問題。","author":{"@type":"Organization","name":"租必達"},"publisher":{"@type":"Organization","name":"租必達｜買樂開發企業社"},"mainEntityOfPage":"https://yeafa70.github.io/ZUBIDA/generator-guide.html"}
+  </script>
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"我要租多大的發電機？","acceptedAnswer":{"@type":"Answer","text":"建議先列出同時使用的設備與瓦數，再保留 1.2 到 1.5 倍安全餘裕。若有冰箱、馬達、水冷扇、音響等設備，還要考慮啟動瞬間負載。"}},{"@type":"Question","name":"發電機額定瓦數和最大瓦數差在哪？","acceptedAnswer":{"@type":"Answer","text":"額定瓦數是可長時間穩定輸出的容量；最大瓦數通常是短時間峰值。活動用電應以額定瓦數為主，不建議長時間接近滿載使用。"}},{"@type":"Question","name":"發電機可以放在帳篷裡面嗎？","acceptedAnswer":{"@type":"Answer","text":"不建議。汽油發電機運轉會產生廢氣與一氧化碳，應放在戶外通風處，遠離帳篷、門窗、進風口與人群主要動線。"}},{"@type":"Question","name":"發電機可以接延長線嗎？","acceptedAnswer":{"@type":"Answer","text":"可以，但需使用容量足夠且狀況良好的延長線，並避免線材過細、過長、捲在線盤上高負載使用或讓線材泡水。"}},{"@type":"Question","name":"發電機雨天可以使用嗎？","acceptedAnswer":{"@type":"Answer","text":"需要視現場條件評估。發電機、插座與線材應避免淋雨與積水，並注意防水、絕緣、接地與人員安全；豪雨、積水或強風不建議硬性使用。"}},{"@type":"Question","name":"一般款和靜音款發電機哪個比較適合活動？","acceptedAnswer":{"@type":"Answer","text":"一般款適合較開闊、較不在意音量的市集、工程與臨時照明；靜音款適合演講、社區活動、婚禮、報到服務台附近或音量較敏感的場地。"}},{"@type":"Question","name":"租發電機前，我要先準備什麼資料？","acceptedAnswer":{"@type":"Answer","text":"建議提供活動日期、地點、使用時間、設備清單、每項設備數量、是否有音響燈光或冷藏設備，以及是否要同時搭配水冷扇與活動帳篷。"}},{"@type":"Question","name":"苗栗、竹南、頭份可以租發電機嗎？","acceptedAnswer":{"@type":"Answer","text":"可以。租必達主要服務苗栗、竹南、頭份及周邊活動需求，可依活動地點、用電設備與進退場條件協助評估。"}}]}</script>
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans antialiased flex flex-col min-h-screen scroll-smooth">
+
+<div class="bg-gray-900 text-white text-sm py-2">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center gap-2">
+    <a href="tel:0920633116" class="flex items-center gap-2 hover:text-accent transition font-bold tracking-wider" data-ga-event="click_phone" data-ga-label="top_bar_phone">服務專線：0920-633-116</a>
+    <a href="https://lin.ee/XM7224r" target="_blank" rel="noopener" class="flex items-center gap-2 text-[#06C755] hover:text-green-300 transition font-bold" data-ga-event="click_line" data-ga-label="top_bar_line">LINE 線上諮詢</a>
+  </div>
+</div>
+
+<nav class="bg-white shadow-md sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-20">
+      <div class="flex items-center">
+        <a href="index.html" class="flex items-center gap-3 text-2xl font-bold text-primary">
+          <span class="w-11 h-11 rounded-xl bg-primary text-white grid place-items-center shadow-lg">租</span>租必達
+        </a>
+      </div>
+      <div class="hidden md:flex items-center space-x-8 font-bold">
+        <a href="index.html" class="text-gray-600 hover:text-primary py-6">首頁</a>
+        <a href="cooler.html" class="text-gray-600 hover:text-primary py-6">水冷扇</a>
+        <a href="tent.html" class="text-gray-600 hover:text-primary py-6">活動帳篷</a>
+        <a href="generator.html" class="text-gray-600 hover:text-primary py-6">發電機</a>
+        <a href="generator-guide.html" class="text-primary border-b-4 border-accent py-6" data-ga-event="click_internal_link" data-ga-label="desktop_generator_guide">發電機出租指南</a><a href="index.html#contact" class="text-gray-600 hover:text-primary py-6">線上詢價</a>
+        <a href="tel:0920633116" class="bg-primary text-white px-5 py-2 rounded-md hover:bg-secondary transition shadow-md" data-ga-event="click_phone" data-ga-label="nav_phone">立即來電</a>
+      </div>
+      <div class="flex items-center md:hidden"><button type="button" id="mobile-menu-btn" class="text-gray-600 hover:text-primary focus:outline-none text-2xl">☰</button></div>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+    <div class="px-4 pt-2 pb-4 space-y-1">
+      <a href="index.html" class="block px-3 py-3 rounded-md font-bold text-gray-700 hover:text-primary hover:bg-gray-50">首頁</a>
+      <a href="cooler.html" class="block px-3 py-3 rounded-md font-bold text-gray-700 hover:text-primary hover:bg-gray-50">水冷扇</a>
+      <a href="tent.html" class="block px-3 py-3 rounded-md font-bold text-gray-700 hover:text-primary hover:bg-gray-50">活動帳篷</a>
+      <a href="generator.html" class="block px-3 py-3 rounded-md font-bold text-gray-700 hover:text-primary hover:bg-gray-50">發電機</a>
+      <a href="generator-guide.html" class="block px-3 py-3 rounded-md font-bold text-primary hover:bg-gray-50">發電機出租指南</a><a href="index.html#contact" class="block px-3 py-3 rounded-md font-bold text-primary">線上詢價</a>
+    </div>
+  </div>
+</nav>
+
+<main class="flex-grow">
+
+<section class="bg-slate-900 text-white py-16 md:py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-7">
+        <p class="text-accent font-bold mb-4 tracking-wider">GENERATOR RENTAL GUIDE｜活動、市集、工程、停電備援用電</p>
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-6">發電機出租怎麼選？瓦數、容量與安全使用完整指南</h1>
+        <p class="text-lg text-slate-200 mb-8">很多人租發電機時只問「幾千瓦」，但真正會影響現場穩不穩的，是設備總瓦數、啟動瞬間功率、延長線規格、擺放通風與使用時間。本篇整理租發電機前最常見的知識，協助你快速判斷活動現場需要什麼樣的臨時電力。</p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="generator.html" class="bg-accent text-white font-bold px-8 py-4 rounded-lg hover:bg-yellow-600 transition shadow-lg text-center">查看發電機出租服務</a>
+          <a href="#contact" class="bg-white text-primary font-bold px-8 py-4 rounded-lg hover:bg-gray-100 transition shadow-lg text-center">直接詢問容量評估</a>
+        </div>
+      </div>
+      <div class="lg:col-span-5">
+        <img src="pics/generator-main.jpg" alt="發電機出租容量評估與活動用電指南" class="w-full rounded-2xl shadow-2xl product-img border-4 border-slate-700">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-10 bg-white border-b border-gray-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <aside class="guide-card p-5 toc lg:sticky lg:top-28 h-fit">
+        <h2 class="text-lg font-bold text-gray-900 mb-3">指南篇目錄</h2>
+        <a href="#quick-summary">快速重點</a>
+        <a href="#scenes">適用場景</a>
+        <a href="#rating">瓦數與容量</a>
+        <a href="#estimate">容量估算表</a>
+        <a href="#equipment">常見設備用電</a>
+        <a href="#types">一般款 vs 靜音款</a>
+        <a href="#safety">安全注意事項</a>
+        <a href="#package-planning">整合規劃</a>
+        <a href="#keywords">租前需求整理</a>
+        <a href="#faq">FAQ</a>
+      </aside>
+
+      <article class="lg:col-span-3 space-y-12">
+
+        <section id="quick-summary" class="guide-card p-6 md:p-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-5">先講結論：租發電機前要確認 5 件事</h2>
+          <div class="overflow-x-auto"><table class="guide-table"><thead><tr><th>檢查項目</th><th>你要準備的資訊</th><th>為什麼重要</th></tr></thead><tbody><tr><td>設備清單</td><td>要接什麼設備、幾台、每台幾瓦</td><td>決定發電機容量大小，避免過載或跳電。</td></tr><tr><td>啟動負載</td><td>是否有冰箱、馬達、抽水機、冷氣壓縮機</td><td>這類設備啟動瞬間可能需要比運轉更高的功率。</td></tr><tr><td>使用時間</td><td>連續使用幾小時、是否夜間活動</td><td>影響油量、補油、噪音與現場管理安排。</td></tr><tr><td>擺放位置</td><td>戶外通風處、排氣方向、離人群與門窗距離</td><td>燃油發電機會排放廢氣，通風與排氣方向是安全重點。</td></tr><tr><td>延長線需求</td><td>距離多遠、會不會跨人行動線、是否戶外使用</td><td>線材規格不足可能發熱，戶外也要注意防水與絆倒風險。</td></tr></tbody></table></div>
+          <div class="note-box mt-6 p-5 rounded-lg"><p class="font-bold text-gray-900">租必達建議：</p><p class="text-gray-700 mt-2">不確定瓦數時，不要只說「我要租一台發電機」。請直接提供「設備名稱＋數量＋大約使用時間」，我們比較能協助判斷適合的發電機出租方案。</p></div>
+        </section>
+
+        <section id="scenes" class="guide-card p-6 md:p-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-5">什麼情況適合租發電機？</h2>
+          <p class="text-gray-600 mb-6">發電機主要用在沒有固定電源、現場電力不足、需要臨時分區供電或需要停電備援的場景。對活動主辦、攤商、工程現場來說，發電機不是只有「有電」而已，更關係到燈光、音響、收銀、冷藏與現場動線是否穩定。</p>
+          <div class="overflow-x-auto"><table class="guide-table"><thead><tr><th>使用場景</th><th>常見用電設備</th><th>租用重點</th><th>常見詢問情境</th></tr></thead><tbody><tr><td>市集 / 夜市攤商</td><td>招牌燈、LED 燈、小冰箱、收銀設備、電扇</td><td>確認每攤設備數量，避免多攤共用造成過載。</td><td>
+      <span class="keyword-pill">市集發電機出租</span>
+      <span class="keyword-pill">攤商發電機出租</span>
+      <span class="keyword-pill">夜市發電機出租</span>
+    </td></tr><tr><td>戶外活動 / 音樂會</td><td>音響、麥克風、燈光、投影、工作人員設備</td><td>音響與燈光負載變動大，建議預留容量。</td><td>
+      <span class="keyword-pill">活動發電機出租</span>
+      <span class="keyword-pill">戶外活動發電機出租</span>
+      <span class="keyword-pill">音響發電機出租</span>
+    </td></tr><tr><td>宮廟慶典 / 普渡</td><td>照明、擴音、臨時攤位、服務台設備</td><td>人潮多，需注意線材走線與排氣方向。</td><td>
+      <span class="keyword-pill">宮廟活動發電機出租</span>
+      <span class="keyword-pill">普渡發電機出租</span>
+    </td></tr><tr><td>工程 / 施工現場</td><td>電動工具、臨時照明、抽水設備</td><td>馬達與工具啟動電流高，容量不可抓太緊。</td><td>
+      <span class="keyword-pill">工程發電機出租</span>
+      <span class="keyword-pill">施工發電機出租</span>
+      <span class="keyword-pill">臨時用電發電機出租</span>
+    </td></tr><tr><td>露營 / 戶外營區</td><td>照明、小家電、充電設備、簡易廚房設備</td><td>若靠近休息區，需評估噪音與擺放距離。</td><td>
+      <span class="keyword-pill">露營發電機出租</span>
+      <span class="keyword-pill">靜音發電機出租</span>
+    </td></tr><tr><td>停電備援</td><td>必要照明、冰箱、網路設備、臨時辦公設備</td><td>優先列出「不能斷電」設備，不建議全部設備都接。</td><td>
+      <span class="keyword-pill">停電備援發電機出租</span>
+      <span class="keyword-pill">緊急發電機出租</span>
+    </td></tr></tbody></table></div>
+        </section>
+
+        <section id="rating" class="guide-card p-6 md:p-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-5">發電機容量怎麼看？先看「額定瓦數」，不要只看最大瓦數</h2>
+          <p class="text-gray-600 mb-6">發電機規格常見「額定輸出、最大輸出、啟動瓦數、峰值瓦數」等名詞。實際出租與使用時，最應該重視的是可以長時間穩定供電的能力，也就是額定瓦數或連續輸出。</p>
+          <div class="overflow-x-auto"><table class="guide-table"><thead><tr><th>名詞</th><th>意思</th><th>實務判斷</th></tr></thead><tbody><tr><td>W / 瓦</td><td>電器用電量最常見的單位。</td><td>小型設備常用 W 標示，例如 50W、500W。</td></tr><tr><td>kW / 千瓦</td><td>1kW = 1000W。</td><td>發電機容量常用 kW 表示，例如 2kW、3kW。</td></tr><tr><td>額定瓦數 / 運轉瓦數</td><td>可以長時間穩定輸出的功率。</td><td>選發電機時應以這個數字為主。</td></tr><tr><td>最大瓦數 / 峰值瓦數</td><td>短時間可承受的最高輸出。</td><td>不可把最大瓦數當作長時間使用容量。</td></tr><tr><td>啟動瓦數</td><td>某些設備啟動瞬間需要的額外功率。</td><td>冰箱、馬達、抽水機、壓縮機要特別注意。</td></tr><tr><td>kVA</td><td>視在功率，常見於發電設備或電力設備規格。</td><td>一般客戶不必自己換算，提供設備清單即可協助評估。</td></tr></tbody></table></div>
+          <div class="ok-box mt-6 p-5 rounded-lg"><p class="font-bold text-primary">簡單理解：</p><p class="text-gray-700 mt-2">活動現場要穩，不能只問「最大幾瓦」。比較安全的問法是：「這台發電機長時間穩定輸出多少？我的設備總共要多少運轉瓦數？有沒有啟動瞬間高負載？」</p></div>
+        </section>
+
+        <section id="estimate" class="guide-card p-6 md:p-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-5">發電機容量估算方式：先加總，再預留餘裕</h2>
+          <p class="text-gray-600 mb-6">以下是活動現場快速估算方式，適合初步溝通使用。實際仍需依設備銘牌、現場距離、線材、啟動負載與機型規格判斷。</p>
+          <div class="bg-gray-900 text-white rounded-xl p-6 mb-6"><p class="text-accent font-bold mb-2">簡易估算公式</p><p class="text-2xl font-extrabold">建議發電機容量 ≧ 所有設備運轉瓦數合計 × 1.2～1.5</p><p class="text-gray-300 mt-3">若有冰箱、馬達、抽水機、冷氣壓縮機等設備，需再考慮啟動瞬間功率，不能只用運轉瓦數估算。</p></div>
+          <div class="overflow-x-auto"><table class="guide-table"><thead><tr><th>案例</th><th>設備組合</th><th>粗估合計</th><th>建議判斷</th></tr></thead><tbody><tr><td>小型市集攤位</td><td>LED 燈 6 盞、小風扇 1 台、手機/收銀設備</td><td>約 500～1000W</td><td>可評估小型發電機，但仍需看實際設備瓦數。</td></tr><tr><td>夜間攤商</td><td>招牌燈、工作燈、小冰箱、電扇</td><td>約 1000～2500W</td><td>冰箱有啟動負載，容量不宜抓太緊。</td></tr><tr><td>戶外音響活動</td><td>音響、麥克風、控制器、簡易燈光</td><td>約 1500～4000W+</td><td>音響峰值變動大，建議提供器材規格評估。</td></tr><tr><td>工程臨時用電</td><td>電鑽、切割機、抽水機、臨時照明</td><td>差異很大</td><td>馬達與電動工具啟動電流高，建議逐項確認。</td></tr><tr><td>停電備援</td><td>冰箱、照明、網路、小型辦公設備</td><td>約 1500～3500W+</td><td>先接必要設備，不建議把全場所有設備一起接。</td></tr></tbody></table></div>
+        </section>
+
+        <section id="equipment" class="guide-card p-6 md:p-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-5">常見設備用電量參考表</h2>
+          <p class="text-gray-600 mb-6">下表是用於詢價溝通的概略參考，不同品牌、大小與運轉模式差異很大。最準確仍以設備標籤、說明書或現場設備銘牌為準。</p>
+          <div class="overflow-x-auto"><table class="guide-table"><thead><tr><th>設備類型</th><th>常見功率區間</th><th>是否需注意啟動負載</th><th>備註</th></tr></thead><tbody><tr><td>LED 燈 / 工作燈</td><td>約 20～200W / 盞</td><td>低</td><td>數量多時要加總。</td></tr><tr><td>電風扇 / 循環扇</td><td>約 50～200W / 台</td><td>中</td><td>馬達啟動瞬間可能略高。</td></tr><tr><td>小型冰箱 / 冷藏設備</td><td>約 100～800W+</td><td>高</td><td>壓縮機啟動瞬間負載較高。</td></tr><tr><td>音響設備</td><td>約 500～3000W+</td><td>中到高</td><td>依擴大機、喇叭與音量差異很大。</td></tr><tr><td>投影機</td><td>約 200～800W</td><td>低到中</td><td>需搭配音響與播放設備一起估。</td></tr><tr><td>電鑽 / 切割機</td><td>約 500～2000W+</td><td>高</td><td>啟動與施工瞬間負載變動大。</td></tr><tr><td>抽水機 / 馬達</td><td>差異很大</td><td>高</td><td>需看馬力、電壓與啟動方式。</td></tr><tr><td>移動式冷氣 / 壓縮機設備</td><td>約 1000W～數千 W</td><td>高</td><td>需特別確認啟動電流與電壓需求。</td></tr></tbody></table></div>
+          <div class="note-box mt-6 p-5 rounded-lg"><p class="font-bold text-gray-900">詢價時最快的方法：</p><p class="text-gray-700 mt-2">直接拍下要接電器的規格貼紙，或把「設備名稱、數量、瓦數」傳給租必達，我們會比只憑活動類型更容易判斷。</p></div>
+        </section>
+
+        <section id="types" class="guide-card p-6 md:p-8"><h2 class="text-3xl font-bold text-gray-900 mb-5">一般款發電機 vs 靜音款發電機怎麼選？</h2><p class="text-gray-600 mb-6">發電機不是只比瓦數，也要看使用環境。若活動靠近人群、主持台、露營區或需要長時間溝通，噪音會直接影響體驗；若是工程或遠離人群的臨時用電，則可優先看功率與成本。</p><div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+  <figure class="bg-gray-50 rounded-2xl p-4 border border-gray-200 shadow-sm">
+    <img src="pics/generator-main.jpg" alt="一般款汽油發電機出租，適合市集、工程與戶外臨時供電" class="w-full rounded-xl product-img" loading="lazy">
+    <figcaption class="mt-4"><h3 class="font-black text-gray-900 text-lg">一般款汽油發電機</h3><p class="text-gray-600 text-sm mt-1">適合較開闊、較不在意音量的市集、工程、攤商與臨時照明用電。</p></figcaption>
+  </figure>
+  <figure class="bg-gray-50 rounded-2xl p-4 border border-gray-200 shadow-sm">
+    <img src="pics/portable-generator-main.jpg" alt="靜音款發電機出租，適合演講、社區活動與音量敏感場地" class="w-full rounded-xl product-img" loading="lazy">
+    <figcaption class="mt-4"><h3 class="font-black text-gray-900 text-lg">靜音款發電機</h3><p class="text-gray-600 text-sm mt-1">適合演講、社區活動、婚禮、報到服務台附近與音量較敏感的活動空間。</p></figcaption>
+  </figure>
+</div><div class="overflow-x-auto"><table class="guide-table"><thead><tr><th>類型</th><th>優點</th><th>適合場景</th><th>注意事項</th></tr></thead><tbody><tr><td>一般款汽油發電機</td><td>實用、成本通常較低、適合臨時供電</td><td>工程、照明、距離人群較遠的攤商或戶外作業</td><td>噪音較明顯，擺放位置要遠離主持台、用餐區與休息區。</td></tr><tr><td>靜音款汽油發電機</td><td>噪音較低、較適合活動現場</td><td>市集、露營、社區活動、演講、音響活動、婚禮周邊</td><td>仍會有運轉聲，並非完全無聲；仍需戶外通風。</td></tr></tbody></table></div></section>
+
+        <section id="safety" class="guide-card p-6 md:p-8"><h2 class="text-3xl font-bold text-gray-900 mb-5">發電機安全使用注意事項</h2><p class="text-gray-600 mb-6">燃油發電機同時有「廢氣、熱源、燃料、電力」四種風險。安全擺放與正確接線，比單純租到夠大台的發電機更重要。</p><div class="danger-box p-5 rounded-lg mb-6"><p class="font-bold text-red-700 text-lg">最重要：發電機不可放在室內、帳篷內、車庫、地下室或半封閉空間。</p><p class="text-gray-700 mt-2">汽油或柴油發電機會排放一氧化碳。請放在戶外通風處，排氣口不要朝向人群、門窗、帳篷、攤位內部或建築進風口。國外安全建議常以距離門窗約 20 英尺（約 6 公尺）作為保守參考，但實際仍要依現場通風、風向與安全動線調整。</p></div><div class="overflow-x-auto"><table class="guide-table"><thead><tr><th>安全項目</th><th>建議做法</th><th>錯誤做法</th></tr></thead><tbody><tr><td>通風與排氣</td><td>戶外通風，排氣口避開人群與門窗。</td><td>放室內、車庫、帳篷內、騎樓深處或通風不良處。</td></tr><tr><td>雨天使用</td><td>保持乾燥並使用合適遮蔽，遮蔽必須通風且不能悶住排氣與散熱。</td><td>直接淋雨、用帆布完全包住運轉中的發電機。</td></tr><tr><td>延長線</td><td>使用足夠規格、適合戶外的延長線，避免過長與過載。</td><td>細線接高功率設備、多條延長線串接、線盤未完全放開。</td></tr><tr><td>負載管理</td><td>先啟動發電機，穩定後再逐步接上設備。</td><td>所有設備同時開啟，造成瞬間負載過高。</td></tr><tr><td>補油</td><td>停機並待機體冷卻後再補油，燃料遠離火源。</td><td>運轉中或高溫時補油。</td></tr><tr><td>居家備援</td><td>如要接入建築物電路，應由合格電氣人員評估轉換開關。</td><td>把發電機直接插入家中插座回送電，可能造成回送電危險。</td></tr></tbody></table></div></section>
+        <section id="keywords" class="guide-card p-6 md:p-8">
+          <p class="text-accent font-bold tracking-wider uppercase mb-3">Rental Tips｜租前快速判斷</p>
+          <h2 class="text-3xl font-bold text-gray-900 mb-5">租發電機前，先用「地點、場景、設備」三步驟整理需求</h2>
+          <p class="text-gray-600 mb-6">不論是苗栗、竹南、頭份的市集攤商、戶外活動、宮廟慶典，或是臨時工程與停電備援，發電機出租最重要的不是先問價格，而是先確認「在哪裡用、要接什麼、要用多久」。資料越清楚，越容易評估需要一般款、靜音款，或是否要預留更大的發電機容量。</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            <div class="ok-box p-5 rounded-xl">
+              <h3 class="font-bold text-primary text-xl mb-2">1. 先說地點</h3>
+              <p class="text-gray-700">例如苗栗市、竹南鎮、頭份市、新竹周邊或戶外偏遠場地。地點會影響配送、進退場、發電機擺放位置與線路距離。</p>
+            </div>
+            <div class="note-box p-5 rounded-xl">
+              <h3 class="font-bold text-gray-900 text-xl mb-2">2. 再說場景</h3>
+              <p class="text-gray-700">市集發電機出租、攤商臨時用電、夜間照明、音響活動、工程施工或停電備援，評估重點都不一樣。</p>
+            </div>
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-xl">
+              <h3 class="font-bold text-gray-900 text-xl mb-2">3. 列出設備</h3>
+              <p class="text-gray-700">請列出燈具、音響、冰箱、風扇、投影機、電動工具等設備數量與瓦數，若有馬達或壓縮機設備也要特別註明。</p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-blue-100 rounded-2xl p-5 mb-8">
+            <h3 class="text-xl font-bold text-gray-900 mb-3">常見需求可以這樣描述</h3>
+            <p class="text-gray-600 mb-4">以下是客戶最常見的詢問方向。你不需要懂專業電力名詞，只要接近其中一種情境，就可以直接傳給租必達協助評估。</p>
+            <div>
+              <span class="keyword-pill">苗栗發電機出租</span>
+              <span class="keyword-pill">竹南發電機出租</span>
+              <span class="keyword-pill">頭份發電機出租</span>
+              <span class="keyword-pill">市集發電機出租</span>
+              <span class="keyword-pill">攤商發電機出租</span>
+              <span class="keyword-pill">活動發電機出租</span>
+              <span class="keyword-pill">工程發電機出租</span>
+              <span class="keyword-pill">靜音發電機出租</span>
+              <span class="keyword-pill">汽油發電機出租</span>
+              <span class="keyword-pill">發電機容量怎麼選</span>
+              <span class="keyword-pill">發電機幾瓦才夠</span>
+              <span class="keyword-pill">發電機安全距離</span>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto mb-6">
+            <table class="guide-table">
+              <thead>
+                <tr><th>你的使用情況</th><th>建議先提供的資料</th><th>租必達會協助確認</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>市集、夜市、園遊會攤商</td><td>攤位數、燈具數量、是否有冰箱或電熱設備、使用時間</td><td>攤商發電機容量、延長線距離、是否需要多台分區供電</td></tr>
+                <tr><td>戶外活動、音響、舞台</td><td>音響規格、燈光數量、主持台位置、是否靠近觀眾</td><td>是否建議靜音發電機、擺放距離、音響啟動與峰值負載</td></tr>
+                <tr><td>工程現場、臨時施工</td><td>電動工具、抽水機、切割機、施工時段與使用頻率</td><td>馬達啟動負載、線材規格、過載與安全擺放</td></tr>
+                <tr><td>停電備援、臨時營業</td><td>哪些設備不能斷電、冰箱或網路設備數量、預計使用幾小時</td><td>必要設備優先順序、容量餘裕、補油與安全通風</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="bg-slate-900 text-white rounded-2xl p-6">
+            <h3 class="text-2xl font-bold mb-3">詢價時可以直接這樣傳</h3>
+            <p class="text-slate-200 leading-relaxed">「我在竹南辦戶外市集，需要攤商發電機出租，預計晚上 5 點到 10 點使用。會接 LED 燈 10 盞、小冰箱 1 台、收銀設備 1 組、風扇 2 台，想請你們協助評估發電機幾瓦才夠，以及發電機要放在哪裡比較安全。」</p>
+          </div>
+        </section>
+
+
+        <section id="package-planning" class="guide-card p-6 md:p-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-5">把發電機和帳篷、水冷扇一起規劃，現場更穩</h2>
+          <p class="text-gray-600 mb-6">很多戶外活動不只是只有「供電」問題，而是遮陽、降溫、攤位配置、照明、音響與動線要一起看。若你同時需要活動帳篷、水冷扇與發電機，租必達可以協助把設備位置、用電線路與現場動線一起討論，減少活動當天臨時追加與重拉線的麻煩。</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="ok-box p-6 rounded-xl">
+              <h3 class="text-xl font-bold text-primary mb-3">市集攤位</h3>
+              <p class="text-gray-700">帳篷規劃攤位，水冷扇改善悶熱，發電機支援照明與基本用電。</p>
+            </div>
+            <div class="ok-box p-6 rounded-xl">
+              <h3 class="text-xl font-bold text-primary mb-3">園遊會活動</h3>
+              <p class="text-gray-700">依攤位分區、舞台區與休息區，討論供電與降溫配置。</p>
+            </div>
+            <div class="ok-box p-6 rounded-xl">
+              <h3 class="text-xl font-bold text-primary mb-3">戶外音響</h3>
+              <p class="text-gray-700">音響設備、照明與活動時間一起評估，避免臨場供電不足。</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="faq" class="guide-card p-6 md:p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">發電機出租常見問題 FAQ</h2><div class="space-y-4"><details class="bg-white rounded-lg shadow-sm border border-gray-200 group" open><summary class="font-bold text-lg p-5 cursor-pointer flex justify-between items-center text-gray-800">我要租多大的發電機？<span class="faq-icon text-gray-400 text-xl">⌄</span></summary><div class="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-3">先列出所有要接的設備、數量與每台瓦數，再用總運轉瓦數乘以約 1.2～1.5 作為安全餘裕。若有冰箱、馬達、抽水機或壓縮機設備，還要另外考量啟動瞬間功率。</div></details><details class="bg-white rounded-lg shadow-sm border border-gray-200 group"><summary class="font-bold text-lg p-5 cursor-pointer flex justify-between items-center text-gray-800">發電機額定瓦數和最大瓦數差在哪？<span class="faq-icon text-gray-400 text-xl">⌄</span></summary><div class="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-3">額定瓦數是長時間可穩定輸出的能力，最大瓦數通常是短時間峰值。租用時應以額定瓦數為主，不建議把最大瓦數當成長時間可用容量。</div></details><details class="bg-white rounded-lg shadow-sm border border-gray-200 group"><summary class="font-bold text-lg p-5 cursor-pointer flex justify-between items-center text-gray-800">發電機可以放在帳篷裡面嗎？<span class="faq-icon text-gray-400 text-xl">⌄</span></summary><div class="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-3">不可以。燃油發電機會排放廢氣，應放在戶外通風處，排氣口避開人群、門窗、帳篷與攤位內部。</div></details><details class="bg-white rounded-lg shadow-sm border border-gray-200 group"><summary class="font-bold text-lg p-5 cursor-pointer flex justify-between items-center text-gray-800">發電機可以接延長線嗎？<span class="faq-icon text-gray-400 text-xl">⌄</span></summary><div class="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-3">可以，但要使用足夠規格、適合戶外的延長線，避免細線接高功率設備、避免串接太多延長線，也要注意線材不要跨越主要動線造成絆倒。</div></details><details class="bg-white rounded-lg shadow-sm border border-gray-200 group"><summary class="font-bold text-lg p-5 cursor-pointer flex justify-between items-center text-gray-800">發電機雨天可以使用嗎？<span class="faq-icon text-gray-400 text-xl">⌄</span></summary><div class="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-3">雨天需特別注意防水、漏電與散熱。若需要遮蔽，遮蔽物必須通風、耐熱且不能阻擋排氣，不可用帆布把運轉中的發電機完全包住。</div></details><details class="bg-white rounded-lg shadow-sm border border-gray-200 group"><summary class="font-bold text-lg p-5 cursor-pointer flex justify-between items-center text-gray-800">一般款和靜音款發電機哪個比較適合活動？<span class="faq-icon text-gray-400 text-xl">⌄</span></summary><div class="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-3">如果靠近人群、主持台、露營區、市集攤位或演講活動，建議優先考慮靜音款；如果是工程、照明或距離人群較遠的臨時用電，可依功率與預算評估一般款。</div></details><details class="bg-white rounded-lg shadow-sm border border-gray-200 group"><summary class="font-bold text-lg p-5 cursor-pointer flex justify-between items-center text-gray-800">租發電機前，我要先準備什麼資料？<span class="faq-icon text-gray-400 text-xl">⌄</span></summary><div class="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-3">請提供活動日期、地點、使用時間、要接的設備名稱與數量、每台瓦數、是否有冰箱或馬達類設備、發電機預計擺放位置、是否需要延長線與是否為夜間活動。</div></details><details class="bg-white rounded-lg shadow-sm border border-gray-200 group"><summary class="font-bold text-lg p-5 cursor-pointer flex justify-between items-center text-gray-800">苗栗、竹南、頭份可以租發電機嗎？<span class="faq-icon text-gray-400 text-xl">⌄</span></summary><div class="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-3">可以洽詢租必達。租必達位於苗栗竹南，提供苗栗、竹南、頭份與周邊區域活動設備出租服務，實際配送與檔期需依日期、數量與地點確認。</div></details></div></section>
+
+        <section class="guide-card p-6 md:p-8"><h2 class="text-3xl font-bold text-gray-900 mb-5">資料檢驗與安全說明</h2><p class="text-gray-600 mb-4">本頁內容以一般發電機出租與活動用電實務整理，瓦數表為概略參考；不同機型、品牌、電壓、線材、負載類型都會影響實際可用容量。</p><ul class="list-disc pl-6 text-gray-600 space-y-2"><li>「約 20 英尺 / 約 6 公尺」為國外常見發電機一氧化碳安全距離參考，不是台灣法規數字；實際仍應依現場通風、風向、排氣口與人流動線判斷。</li><li>容量估算的 1.2～1.5 倍是活動用電初步溝通的保守抓法，不代表所有設備都適用。</li><li>若涉及建築配電盤、轉換開關、三相電、特殊高功率設備，應由合格電氣人員評估。</li></ul></section>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="bg-secondary py-20 relative overflow-hidden">
+  <div class="max-w-4xl mx-auto px-4 relative z-10">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-12">
+      <div class="text-center mb-10"><h2 class="text-3xl font-bold text-gray-900 mb-2">不確定要租幾瓦？直接把設備清單傳給我們</h2><p class="text-gray-600 mb-6">提供活動日期、地點、設備清單與使用時間，租必達協助你初步判斷發電機容量與現場注意事項。</p><div class="flex flex-col sm:flex-row justify-center gap-4 mb-8"><a href="tel:0920633116" class="bg-gray-900 text-white font-bold px-8 py-4 rounded-xl hover:bg-gray-800 transition shadow-lg text-lg flex items-center justify-center gap-4 w-full sm:w-auto" data-ga-event="click_phone" data-ga-label="generator_guide_contact_phone"><span class="text-3xl text-accent">☎</span><div class="text-left leading-tight"><span class="block text-xs text-gray-300 font-normal">一通電話，快速評估</span>0920-633-116</div></a><a href="https://lin.ee/XM7224r" target="_blank" rel="noopener" class="bg-[#06C755] text-white font-bold px-8 py-4 rounded-xl hover:bg-green-600 transition shadow-lg text-lg flex items-center justify-center gap-4 w-full sm:w-auto" data-ga-event="click_line" data-ga-label="generator_guide_contact_line"><span class="text-3xl">LINE</span><div class="text-left leading-tight"><span class="block text-xs text-green-100 font-normal">點擊加入官方好友</span>LINE 諮詢</div></a></div></div>
+      <form id="rentalForm" class="space-y-6"><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label class="block text-sm font-medium text-gray-700 mb-1">聯絡人姓名 *</label><input type="text" id="entryName" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary"></div><div><label class="block text-sm font-medium text-gray-700 mb-1">聯絡電話 *</label><input type="tel" id="entryPhone" name="phone" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary"></div></div><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label class="block text-sm font-medium text-gray-700 mb-1">主要需求設備</label><select id="entryService" name="service" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary">
+  <option value="發電機">發電機</option>
+  <option value="水冷扇">水冷扇</option>
+  <option value="活動帳篷">活動帳篷</option>
+  <option value="水冷扇+發電機">水冷扇 + 發電機</option>
+  <option value="水冷扇+活動帳篷">水冷扇 + 活動帳篷</option>
+  <option value="活動帳篷+發電機">活動帳篷 + 發電機</option>
+  <option value="三項設備綜合規劃">三項設備綜合規劃</option>
+</select></div><div><label class="block text-sm font-medium text-gray-700 mb-1">預計活動日期</label><input type="date" id="entryDate" name="date" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary"></div></div><div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div><label class="block text-sm font-medium text-gray-700 mb-1">活動類型</label><select id="guideEventType" data-form-extra="活動類型" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary"><option value="">請選擇</option><option>市集/攤商活動</option><option>園遊會/校園活動</option><option>戶外音響/舞台活動</option><option>工程臨時用電</option><option>停電備援</option><option>其他活動</option></select></div>
+  <div><label class="block text-sm font-medium text-gray-700 mb-1">發電機偏好</label><select id="guideGeneratorType" data-form-extra="發電機偏好" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary"><option value="">請選擇</option><option>一般款</option><option>靜音款</option><option>不確定，請協助建議</option></select></div>
+  <div><label class="block text-sm font-medium text-gray-700 mb-1">用電狀況</label><select id="guidePowerNeed" data-form-extra="用電狀況" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary"><option value="">請選擇</option><option>只有基本照明</option><option>照明+音響</option><option>攤商設備/冷藏設備</option><option>水冷扇一起使用</option><option>設備較多，需要協助估算</option></select></div>
+</div><div><label class="block text-sm font-medium text-gray-700 mb-1">活動地點與需求備註</label><textarea id="entryMsg" name="message" rows="4" placeholder="請告訴我們活動縣市、設備清單、數量、使用時間與是否有冰箱/馬達/音響..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-secondary focus:border-secondary"></textarea></div><button type="submit" id="submitBtn" class="w-full bg-primary text-white font-bold py-3 rounded-md hover:bg-blue-900 transition flex justify-center items-center gap-2"><span>送出詢問表單</span></button></form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="bg-gray-900 text-gray-300 py-12"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><div><div class="flex items-center gap-3 text-2xl font-bold text-white mb-4"><span class="w-10 h-10 rounded-xl bg-secondary text-white grid place-items-center">租</span>租必達</div><p class="text-sm text-gray-400 mb-4">提供苗栗及周邊各式展場活動、市集、婚禮、校園活動所需的專業硬體設備出租。</p></div><div><h4 class="text-lg font-bold text-white mb-4">聯絡資訊</h4><ul class="space-y-3 text-sm"><li><a href="tel:0920633116" class="text-xl font-bold text-white tracking-wider hover:text-accent transition" data-ga-event="click_phone" data-ga-label="footer_phone">0920-633-116</a></li><li><a href="https://lin.ee/XM7224r" target="_blank" rel="noopener" class="text-[#06C755] font-bold hover:text-green-300" data-ga-event="click_line" data-ga-label="footer_line">LINE 線上諮詢</a></li><li><a href="https://www.facebook.com/zubida.go" target="_blank" rel="noopener" class="text-blue-300 font-bold hover:text-white transition" data-ga-event="click_facebook" data-ga-label="footer_facebook">Facebook 粉專</a></li><li>苗栗縣竹南鎮龍山路二段243-2號</li><li><a href="https://www.google.com/maps/search/?api=1&query=苗栗縣竹南鎮龍山路二段243-2號" target="_blank" rel="noopener" class="text-secondary hover:text-blue-300 transition" data-ga-event="click_map" data-ga-label="footer_map">開啟 Google 導航</a></li></ul></div><div><h4 class="text-lg font-bold text-white mb-4">設備快速分類</h4><ul class="space-y-2 text-sm"><li><a href="cooler.html" class="hover:text-secondary transition">水冷扇出租</a></li><li><a href="tent.html" class="hover:text-secondary transition">活動帳篷出租</a></li><li><a href="generator.html" class="hover:text-secondary transition">發電機出租</a></li><li><a href="generator-guide.html" class="hover:text-secondary transition">發電機出租指南</a></li></ul></div></div><div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-500">© 2026 租必達. All rights reserved.</div></div></footer>
+
+<a href="tel:0920633116" class="fixed right-5 bottom-5 z-50 bg-primary text-white font-bold px-5 py-3 rounded-xl shadow-2xl hover:bg-secondary transition flex items-center gap-2 border border-white/20" data-ga-event="click_phone" data-ga-label="float_phone" aria-label="立即撥打租必達服務專線"><span class="inline-flex w-7 h-7 rounded-lg bg-white/15 items-center justify-center">☎</span><span class="hidden sm:inline">立即洽詢</span></a>
+<script src="js/main.js?v=20260620-guide"></script>
+</body>
+</html>
+
