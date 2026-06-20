@@ -1,4 +1,4 @@
-var GAS_URL = 'https://script.google.com/macros/s/AKfycbw6sS6qFtJUgIzg0rs3vuSBv7eb8LHnoEKOOwVMtHiJAbDnq35sAMLaweF5RnZgMqAg/exec';
+﻿var GAS_URL = 'https://script.google.com/macros/s/AKfycbw6sS6qFtJUgIzg0rs3vuSBv7eb8LHnoEKOOwVMtHiJAbDnq35sAMLaweF5RnZgMqAg/exec';
 
 function trackEvent(eventName, eventParams) {
   if (typeof gtag === 'function') {
@@ -19,6 +19,16 @@ function addHiddenField(form, name, value) {
   form.appendChild(input);
 }
 
+function collectExtraFormNotes() {
+  var fields = document.querySelectorAll('[data-form-extra]');
+  var notes = [];
+  for (var i = 0; i < fields.length; i += 1) {
+    var label = fields[i].getAttribute('data-form-extra') || fields[i].name || fields[i].id;
+    var value = fields[i].value ? fields[i].value.replace(/^\s+|\s+$/g, '') : '';
+    if (value) notes.push(label + '：' + value);
+  }
+  return notes;
+}
 function initMobileMenu() {
   var btn = document.getElementById('mobile-menu-btn');
   var menu = document.getElementById('mobile-menu');
@@ -82,6 +92,10 @@ function submitRentalForm(event) {
   var service = getFieldValue('entryService');
   var date = getFieldValue('entryDate');
   var message = getFieldValue('entryMsg');
+  var extraNotes = collectExtraFormNotes();
+  if (extraNotes.length) {
+    message = (message ? message + '\n\n' : '') + extraNotes.join('\n');
+  }
   var leadEventParams = {
     event_category: 'lead',
     service: service,
@@ -184,3 +198,5 @@ document.addEventListener('DOMContentLoaded', function () {
   initGaClickEvents();
   initRentalForm();
 });
+
+
