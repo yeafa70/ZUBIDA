@@ -99,6 +99,7 @@ function getMarketingTracking() {
 function getPageName(pathname) {
   var path = pathname || '';
   if (path.indexOf('generator-guide') !== -1) return '發電機出租指南';
+  if (path.indexOf('cooler-guide') !== -1) return '水冷扇降溫指南';
   if (path.indexOf('generator') !== -1) return '發電機';
   if (path.indexOf('cooler') !== -1 || path.indexOf('water-cooler') !== -1) return '水冷扇';
   if (path.indexOf('tent') !== -1 || path.indexOf('event-tent') !== -1) return '活動帳篷';
