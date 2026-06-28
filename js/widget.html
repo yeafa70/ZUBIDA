@@ -1,288 +1,305 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>租必達專屬 AI 助理</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>租必達 AI 助理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <style>
-    /* ===== ZUBIDA 品牌配色與基礎樣式大修 ===== */
     :root {
-      --brand: #295b9a;        /* 租必達專業藍 */
-      --brand-accent: #f48e3e; /* 租必達亮眼橙 */
-      --brand-hover: #1e4577;  /* 藍色懸停深 */
-      --brand-dim: #5c85ba;    /* 淡藍背景 */
-      
-      --ink: #2c3e50;         /* 文字黑 */
-      --ink-sub: #7f8c8d;     /* 副標灰 */
-      --ink-on-brand: #ffffff;
-      
-      --surface: #ffffff;     /* 卡片白 */
-      --bg: #f4f6f8;          /* 底色灰 */
-      --input-bg: #e4e9ef;    /* 輸入框灰 */
-      
-      --shadow: 0 12px 36px rgba(0,0,0,.15);
-      --ease: cubic-bezier(0.23, 1, 0.32, 1);
+      --brand: #1e3a8a;
+      --brand-2: #3b82f6;
+      --accent: #f59e0b;
+      --accent-2: #f97316;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --surface: #ffffff;
+      --soft: #eff6ff;
+      --border: rgba(148,163,184,.35);
+      --shadow: 0 14px 38px rgba(15,23,42,.22);
     }
-    
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { 
-      margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       background: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
       color: var(--ink);
-      -webkit-font-smoothing: antialiased;
     }
-    
-    #stage { position: relative; width: 100%; height: 100%; background: transparent; }
-
-    /* ===== 控制列（下方操作區）大修 ===== */
-    #control-bar {
-      position: absolute; left: 0; bottom: 0; width: 100%;
-      padding: 10px 14px;
-      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%);
-      pointer-events: none;
-      transition: opacity .3s var(--ease), transform .3s var(--ease);
-      z-index: 10;
+    #widget {
+      width: 100%;
+      height: 100%;
+      border-radius: 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(59,130,246,.16), transparent 28%),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      position: relative;
+      display: flex;
+      flex-direction: column;
     }
-    
-    .dock-row {
-      display: flex; gap: 8px; align-items: center; justify-content: flex-end;
-      width: 100%; margin-top: 8px; pointer-events: auto;
+    .topbar {
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: white;
+      padding: 12px 12px 14px;
+      position: relative;
     }
-    
-    /* 大修：隱藏不必要的按鈕 (大腦與角色切換) */
-    #btn-llm, #btn-engine, .dock-row:first-child .ctrl.primary { display: none !important; }
-    
-    /* 大修：讓送出按鈕 (➤) 恢復顯示在打字框右邊 */
-    .dock-row:first-child .ctrl.primary#btn-send { display: flex !important; }
-
-    /* 大修：調整打字輸入框 */
-    #type-input {
-      flex: 1; min-width: 0; height: 38px;
-      padding: 0 14px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px;
-      background: rgba(0,0,0,.6); color: #fff; font-size: 14px;
-      outline: none; transition: background .15s;
+    .brand-row { display: flex; align-items: center; gap: 10px; padding-right: 42px; }
+    .avatar-mark {
+      width: 42px; height: 42px; border-radius: 16px;
+      background: rgba(255,255,255,.16);
+      display: grid; place-items: center;
+      border: 1px solid rgba(255,255,255,.22);
+      font-size: 22px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+      flex: 0 0 auto;
     }
-    #type-input::placeholder { color: rgba(255,255,255,.6); }
-    #type-input:focus { border-color: rgba(255,255,255,.4); background: rgba(0,0,0,.7); }
-
-    /*按鈕基礎樣式大修 */
-    .ctrl {
-      appearance: none; cursor: pointer; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      width: 38px; height: 38px; padding: 0;
-      border: 1px solid rgba(255,255,255,.2); border-radius: 999px;
-      background: rgba(0,0,0,.6); color: #fff; font-size: 17px;
-      transition: background .15s, transform .1s var(--ease), box-shadow .15s;
-    }
-    .ctrl:hover { background: rgba(0,0,0,.75); border-color: rgba(255,255,255,.3); }
-    .ctrl:active { transform: scale(.96); }
-    
-    /* 特大主要按鈕（🎤） */
-    .ctrl.primary { background: var(--brand); font-weight: 600; border: none; font-size: 14px; gap: 4px; padding: 0 16px; width: auto; height: 38px;}
-    .ctrl.primary:hover { background: var(--brand-hover); }
-    
-    /* 大修：✕ 按鈕改為醒目的租必達橙色 */
+    .brand-title { font-size: 17px; font-weight: 900; line-height: 1.1; letter-spacing: .02em; }
+    .brand-sub { margin-top: 4px; font-size: 12px; opacity: .88; line-height: 1.35; }
     #btn-close {
-      border: 2px solid #fff;
-      box-shadow: 0 3px 10px rgba(0,0,0,.25);
-      background: var(--brand-accent); color: #fff;
+      position: absolute; right: 10px; top: 10px;
+      width: 34px; height: 34px;
+      border: 2px solid rgba(255,255,255,.75); border-radius: 999px;
+      background: var(--accent-2); color: #fff; cursor: pointer;
+      font-size: 18px; font-weight: 900; line-height: 1;
+      box-shadow: 0 4px 12px rgba(15,23,42,.25);
     }
-    #btn-close:hover { background: #e07d32; }
-
-    /* 大修：隱藏不需使用的按鈕的狀態標示 (Mute, Speed) */
-    .ctrl.active { background: var(--brand-dim); color: #fff; border-color: var(--brand-dim); }
-
-    /* ===== 對話泡泡樣式大修 ===== */
-    #bubble {
-      position: absolute; right: 14px; top: 14px; left: 14px;
-      background: var(--surface); color: var(--ink); border-radius: 16px;
-      padding: 11px 14px; font-size: 14px; line-height: 1.55;
-      box-shadow: 0 10px 30px rgba(0,0,0,.18), inset 0 0 0 1px rgba(0,0,0,.05);
-      opacity: 0; transform: translateY(-8px) scale(.98); transform-origin: top center;
-      transition: opacity .22s var(--ease), transform .22s var(--ease);
-      pointer-events: none;
+    #btn-close:hover { filter: brightness(.96); }
+    .chat {
+      flex: 1 1 auto; padding: 12px; overflow: auto;
+      display: flex; flex-direction: column; gap: 9px; min-height: 0;
+      scroll-behavior: smooth;
     }
-    #bubble::after { /* 泡泡小尾巴 */
-      content: ""; position: absolute; right: 38px; bottom: -7px;
-      width: 14px; height: 14px; background: var(--surface); transform: rotate(45deg);
+    .msg {
+      max-width: 92%; border-radius: 16px; padding: 10px 12px;
+      font-size: 14px; line-height: 1.55; word-break: break-word; white-space: pre-wrap;
     }
-    #bubble.show { opacity: 1; transform: none; }
-
-    /* ===== 大修：專屬租賃提示清單 ===== */
-    #suggestions {
-      position: absolute; left: 10px; right: 10px; bottom: 104px;
-      display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
-      pointer-events: auto;
+    .msg.bot {
+      align-self: flex-start; background: white; border: 1px solid var(--border);
+      box-shadow: 0 4px 14px rgba(15,23,42,.06);
     }
-    #suggestions .sg-label { /* 「我能為您解答：」 */
-      width: 100%; text-align: center; font-size: 12px; font-weight: 600;
-      color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.5);
-      margin-bottom: 2px;
+    .msg.user {
+      align-self: flex-end; background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: white; box-shadow: 0 6px 16px rgba(30,58,138,.2);
     }
+    .suggestions { padding: 0 12px 10px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .sg-label { width: 100%; font-size: 12px; color: var(--muted); font-weight: 800; text-align: center; margin-bottom: 2px; }
     .sugg {
-      appearance: none; cursor: pointer; white-space: nowrap;
-      background: rgba(255,255,255,.95); color: var(--brand);
-      border: 1px solid rgba(0,0,0,.1); border-radius: 999px;
-      font-size: 12px; font-weight: 600; padding: 6px 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,.16);
-      transition: transform .12s var(--ease), background .15s;
+      appearance: none; border: 1px solid rgba(30,58,138,.18); background: white; color: var(--brand);
+      border-radius: 999px; padding: 7px 10px; font-size: 12px; font-weight: 800; cursor: pointer;
+      box-shadow: 0 3px 10px rgba(15,23,42,.06);
     }
-    .sugg:hover { background: #fff; transform: translateY(-1px); }
-    .sugg:active { transform: scale(.96); }
-
-    /* 手機版適配 */
-    @media (pointer: coarse) {
-      .dock-row { gap: 6px; }
-      #type-input, .ctrl, .sugg { height: 38px; font-size: 14px; }
-      .ctrl.primary { font-size: 14px; padding: 0 14px; height: 38px; }
-      .sugg { padding: 6px 12px; height: 32px; font-size: 12px;}
+    .sugg:hover { background: var(--soft); }
+    .inputbar {
+      flex: 0 0 auto; display: flex; gap: 7px; padding: 10px;
+      border-top: 1px solid rgba(148,163,184,.25);
+      background: rgba(255,255,255,.85); backdrop-filter: blur(8px);
     }
-
-    /* 無反應警告提示 */
-    #direct-warn { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.85); color: #fff; font-size: 15px; text-align: center; padding: 24px; }
+    #type-input {
+      flex: 1; min-width: 0; height: 40px; border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.45); outline: none;
+      padding: 0 13px; font-size: 14px; color: var(--ink); background: white;
+    }
+    #type-input:focus { border-color: rgba(59,130,246,.7); box-shadow: 0 0 0 3px rgba(59,130,246,.12); }
+    #btn-send {
+      width: 44px; height: 40px; border: 0; border-radius: 999px; cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white; font-size: 18px; font-weight: 900;
+      box-shadow: 0 6px 14px rgba(249,115,22,.25); flex: 0 0 auto;
+    }
+    .footer-actions { display: flex; gap: 6px; padding: 0 10px 10px; background: rgba(255,255,255,.85); }
+    .footer-actions a {
+      flex: 1; text-align: center; text-decoration: none; border-radius: 999px;
+      padding: 8px 9px; font-size: 12px; font-weight: 900;
+    }
+    .phone { background: var(--brand); color: #fff; }
+    .line { background: #06C755; color: #fff; }
+    @media (max-width: 360px) {
+      .brand-title { font-size: 16px; }
+      .brand-sub { font-size: 11px; }
+      .msg { font-size: 13px; }
+      .sugg { font-size: 11px; padding: 6px 8px; }
+    }
   </style>
 </head>
 <body>
-  <div id="stage">
-    <div id="bubble"></div>
-    
-    <div id="suggestions"></div>
-    
-    <div id="control-bar">
-      <div class="dock-row">
-        <input id="type-input" type="text" maxlength="200" placeholder="詢問租賃設備，我為您規劃..." aria-label="輸入設備諮詢" />
-        <button class="ctrl primary" id="btn-send" aria-label="送出問題">
-          <span aria-hidden="true">➤</span>
-        </button>
+  <section id="widget" aria-label="租必達 AI 助理">
+    <header class="topbar">
+      <button id="btn-close" type="button" aria-label="收合助理">×</button>
+      <div class="brand-row">
+        <div class="avatar-mark" aria-hidden="true">租</div>
+        <div>
+          <div class="brand-title">租必達 AI 助理</div>
+          <div class="brand-sub">水冷扇｜活動帳篷｜發電機，先幫您快速整理方向</div>
+        </div>
       </div>
-      
-      <div class="dock-row" role="toolbar" aria-label="設備助理控制列">
-        <button class="ctrl primary" id="btn-mic" aria-label="開始語音諮詢">
-          <span aria-hidden="true">🎤</span> 點我對話
-        </button>
-        <button class="ctrl" id="btn-engine" style="display:none">2D／3D</button>
-        <button class="ctrl" id="btn-llm" style="display:none">🧠</button>
-        <button class="ctrl" id="btn-mute" style="display:none">🔊</button>
-        <button class="ctrl" id="btn-speed" style="display:none">1.0×</button>
-        <button class="ctrl" id="btn-close" aria-label="收起助理">
-          <span aria-hidden="true">✕</span>
-        </button>
-      </div>
+    </header>
+
+    <main id="chat" class="chat" aria-live="polite"></main>
+
+    <div id="suggestions" class="suggestions"></div>
+
+    <div class="inputbar">
+      <input id="type-input" type="text" maxlength="200" placeholder="輸入租賃設備問題..." aria-label="輸入設備諮詢">
+      <button id="btn-send" type="button" aria-label="送出問題">➤</button>
     </div>
-  </div>
-  
-  <div id="direct-warn">請透過 <code>embed.js</code> 載入此元件。</div>
+
+    <div class="footer-actions">
+      <a class="phone" href="tel:0920633116" target="_parent">直接來電</a>
+      <a class="line" href="https://lin.ee/XM7224r" target="_blank" rel="noopener">LINE 詢問</a>
+    </div>
+  </section>
 
   <script>
-    /* ===================================================================== *
-     * widget.html 底層邏輯大修
-     * ===================================================================== */
-    (function(){
-      let ui, speech;
-      
-      // ===== DOM 元素大修 =====
-      const els = {
-        stage: document.getElementById('stage'),
-        controlBar: document.getElementById('control-bar'),
-        typeInput: document.getElementById('type-input'),
-        btnSend: document.getElementById('btn-send'),
-        btnMic: document.getElementById('btn-mic'),
-        btnClose: document.getElementById('btn-close'),
-        bubble: document.getElementById('bubble'),
+    (function () {
+      'use strict';
+
+      var CFG = new URLSearchParams(location.search);
+      var KNOWLEDGE_URL = CFG.get('knowledge') || 'knowledge.js?v=202606-ai-fix';
+      var WELCOME_TEXT = CFG.get('text') || '您好，我是租必達 AI 助理。您可以問我租金怎麼算、有哪些設備、水冷扇適合場景、發電機怎麼挑，或直接點下方快速問題。';
+
+      var els = {
+        chat: document.getElementById('chat'),
         suggestions: document.getElementById('suggestions'),
-      };
-      
-      // ===== 大修：核心開關 (隱藏功能) =====
-      const config = {
-        use_kb: true,          // 啟用知識庫
-        use_llm: false,        // 大修：禁用 LLM 大腦模式
-        use_speech: false,     // 大修：禁用 TTS (因需付費且預設用瀏覽器原生)
+        input: document.getElementById('type-input'),
+        send: document.getElementById('btn-send'),
+        close: document.getElementById('btn-close')
       };
 
-      // ===== 大修：租賃專屬劇本初始化 =====
-      // ===== 這裡的 defaultSuggestions 和 this.say 將被用作 ZUBIDA 劇本 =====
-      class ZubidaWidget {
-        constructor() {
-          this.boot();
-          this.kb = window.KB || []; // 取得知識庫
-        }
+      var defaultSuggestions = [
+        '請問租金怎麼算？',
+        '有出租哪些設備？',
+        '水冷扇適合用在什麼地方？',
+        '發電機型號怎麼挑？',
+        '可以自載自搭嗎？'
+      ];
 
-        boot() {
-          this.initSuggestions();
-          this.initListeners();
-          
-          // 大修：打招呼台詞換成你的指定台詞！
-          this.say("按右下角 ✕ 即可暫時把我隱藏，有需要再點我唷！");
-        }
-
-        // 大修：換成租必達的專屬快速問答劇本
-        initSuggestions() {
-          const defaultSuggestions = ["請問租金怎麼算？", "有出租哪些設備？", "水冷扇適合用在什麼地方？", "發電機型號怎麼挑？", "可以自載自搭嗎？"];
-          
-          els.suggestions.innerHTML = '<div class="sg-label">👋 💬 我能為您解答：</div>' + 
-            defaultSuggestions.map(s => `<button class="sugg">${s}</button>`).join('');
-            
-          // 快速按鈕點擊監聽
-          els.suggestions.addEventListener('click', (e) => {
-            const btn = e.target.closest('.sugg');
-            if(btn) {
-              const q = btn.innerText;
-              els.bubble.innerText = q;
-              els.bubble.classList.add('show');
-              els.controlBar.style.transform = 'translateY(110px)';
-              window.postMessage({ type: 'ask_text', text: q }, '*'); // 送出問題
-            }
-          });
-        }
-
-        // 監聽器與打字送出
-        initListeners() {
-          // ✕ 按鈕
-          els.btnClose.addEventListener('click', () => {
-            window.parent.postMessage({ type: 'hide_widget' }, '*'); // 收起視窗
-          });
-
-          // 打字送出
-          const send = () => {
-            const q = els.typeInput.value.trim();
-            if(q) {
-              els.typeInput.value = '';
-              els.bubble.innerText = q;
-              els.bubble.classList.add('show');
-              window.postMessage({ type: 'ask_text', text: q }, '*'); // 送出問題
-            }
-          };
-          els.btnSend.addEventListener('click', send);
-          els.typeInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') send(); });
-        }
-
-        say(text) {
-          els.bubble.innerText = text;
-          els.bubble.classList.add('show');
-          
-          // 5秒後收起泡泡和控制列
-          clearTimeout(this.bubbleT);
-          clearTimeout(this.ctrlBarT);
-          this.bubbleT = setTimeout(() => els.bubble.classList.remove('show'), 5000);
-          this.ctrlBarT = setTimeout(() => els.controlBar.style.transform = 'translateY(110px)', 5000); // 收起控制列
-        }
+      function normalize(text) {
+        return String(text || '').toLowerCase().replace(/[？?，,。！!\s]+/g, '');
       }
 
-      // ===== 收聽訊息並與網頁連線 =====
-      // 如果 3 秒後沒收到 embed.js 訊息，顯示警告
-      const directWarn = setTimeout(() => document.getElementById('direct-warn').style.display = 'flex', 3000);
-      
-      window.addEventListener('message', (event) => {
-        const msg = event.data;
-        if(msg.type === 'init_widget') {
-          clearTimeout(directWarn);
-          ui = new ZubidaWidget();
-        } else if(msg.type === 'say_text') { // 從知識庫吐出來的答案
-          ui.say(msg.text);
+      function escapeHtml(text) {
+        return String(text || '').replace(/[&<>"']/g, function (ch) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+        });
+      }
+
+      function addMessage(role, text) {
+        var div = document.createElement('div');
+        div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+        div.innerHTML = escapeHtml(text);
+        els.chat.appendChild(div);
+        els.chat.scrollTop = els.chat.scrollHeight;
+      }
+
+      function getKeywords(item) {
+        var result = [];
+        if (item.q) result.push(item.q);
+        if (item.kw) {
+          String(item.kw).split(/\s+/).forEach(function (kw) {
+            if (kw) result.push(kw);
+          });
         }
-      });
-      
+        return result;
+      }
+
+      function fallbackAnswer() {
+        return '這個問題我先幫您記下來。租金、檔期、配送與設備數量會依活動地點、日期與現場條件不同，建議直接來電 0920-633-116 或加入 LINE，租必達會協助您快速評估。';
+      }
+
+      function findAnswer(question) {
+        var qNorm = normalize(question);
+        var kb = window.KB || [];
+
+        for (var i = 0; i < kb.length; i += 1) {
+          var item = kb[i] || {};
+          var words = getKeywords(item);
+          for (var j = 0; j < words.length; j += 1) {
+            var kw = normalize(words[j]);
+            if (!kw) continue;
+            if (qNorm.indexOf(kw) !== -1 || kw.indexOf(qNorm) !== -1) {
+              return item.a || fallbackAnswer();
+            }
+          }
+        }
+        return fallbackAnswer();
+      }
+
+      function handleQuestion(question) {
+        var q = String(question || '').trim();
+        if (!q) return;
+        addMessage('user', q);
+        window.setTimeout(function () {
+          addMessage('bot', findAnswer(q));
+        }, 420);
+      }
+
+      function initSuggestions() {
+        els.suggestions.innerHTML = '<div class="sg-label">👋 我能為您解答：</div>';
+        defaultSuggestions.forEach(function (text) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'sugg';
+          btn.textContent = text;
+          btn.addEventListener('click', function () { handleQuestion(text); });
+          els.suggestions.appendChild(btn);
+        });
+      }
+
+      function loadKnowledge(callback) {
+        if (Array.isArray(window.KB)) {
+          callback();
+          return;
+        }
+        var script = document.createElement('script');
+        script.src = KNOWLEDGE_URL;
+        script.onload = function () { callback(); };
+        script.onerror = function () {
+          window.KB = [];
+          callback();
+          window.parent.postMessage({
+            ns: 'avatar-widget',
+            type: 'error',
+            message: 'knowledge.js 載入失敗，已改用預設回覆。'
+          }, '*');
+        };
+        document.head.appendChild(script);
+      }
+
+      function initWidget() {
+        initSuggestions();
+        addMessage('bot', WELCOME_TEXT);
+
+        els.close.addEventListener('click', function () {
+          window.parent.postMessage({ ns: 'avatar-widget', type: 'close' }, '*');
+        });
+
+        els.send.addEventListener('click', function () {
+          var q = els.input.value.trim();
+          els.input.value = '';
+          handleQuestion(q);
+          els.input.focus();
+        });
+
+        els.input.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter' && !event.isComposing) {
+            event.preventDefault();
+            els.send.click();
+          }
+        });
+
+        window.addEventListener('message', function (event) {
+          var data = event.data || {};
+          if (data.ns !== 'avatar-widget-host') return;
+          if (data.type === 'say') addMessage('bot', String(data.text || ''));
+        });
+
+        window.parent.postMessage({ ns: 'avatar-widget', type: 'ready' }, '*');
+      }
+
+      loadKnowledge(initWidget);
     })();
   </script>
 </body>
