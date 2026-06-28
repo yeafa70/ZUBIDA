@@ -1,32 +1,32 @@
 /* =====================================================================
- * embed.js — ZUBIDA AI 助理嵌入載入器（穩定輕量版）
+ * embed.js — ZUBIDA AI 人物語音助理嵌入載入器
  * - 建立右下角 iframe widget
  * - 支援 data-width / data-height / data-bottom / data-open
- * - 預設收合，避免擋住手機畫面與右下角電話 CTA
+ * - 預設收合，避免擋住手機畫面
  * ===================================================================== */
 (function () {
   'use strict';
 
   var me = document.currentScript || (function () {
-    var ss = document.getElementsByTagName('script');
-    for (var i = ss.length - 1; i >= 0; i -= 1) {
-      if (/embed\.js(\?|$)/.test(ss[i].src || '')) return ss[i];
+    var scripts = document.getElementsByTagName('script');
+    for (var i = scripts.length - 1; i >= 0; i -= 1) {
+      if (/embed\.js(\?|$)/.test(scripts[i].src || '')) return scripts[i];
     }
     return null;
   })();
 
   function attr(name, fallback) {
     if (!me) return fallback;
-    var value = me.getAttribute(name);
-    return value === null || value === '' ? fallback : value;
+    var v = me.getAttribute(name);
+    return v === null || v === '' ? fallback : v;
   }
 
   var base = me ? me.src.replace(/[^/]*$/, '') : '';
   var widgetUrl = attr('data-widget', base + 'widget.html');
 
-  var expandedWidth = parseInt(attr('data-width', '300'), 10) || 300;
-  var expandedHeight = parseInt(attr('data-height', '420'), 10) || 420;
-  var bottomOffset = parseInt(attr('data-bottom', '92'), 10) || 92;
+  var expandedWidth = parseInt(attr('data-width', '280'), 10) || 280;
+  var expandedHeight = parseInt(attr('data-height', '390'), 10) || 390;
+  var bottomOffset = parseInt(attr('data-bottom', '16'), 10) || 16;
   var rightOffset = parseInt(attr('data-right', '16'), 10) || 16;
   var startOpen = attr('data-open', 'false') === 'true';
 
@@ -36,7 +36,7 @@
   })();
 
   var cfg = new URLSearchParams();
-  ['knowledge', 'text'].forEach(function (key) {
+  ['knowledge', 'model', 'text'].forEach(function (key) {
     var value = attr('data-' + key, '');
     if (value) cfg.set(key, value);
   });
@@ -51,7 +51,7 @@
     '#avatar-widget-root .aw-bubble:active{transform:scale(.96);}' +
     '#avatar-widget-root .aw-bubble::after{content:"";position:absolute;inset:0;border-radius:50%;animation:awpulse 2.3s ease-out infinite;pointer-events:none;}' +
     '@keyframes awpulse{0%{box-shadow:0 0 0 0 rgba(30,58,138,.45);}70%{box-shadow:0 0 0 14px rgba(30,58,138,0);}100%{box-shadow:0 0 0 0 rgba(30,58,138,0);}}' +
-    '@media (max-width:480px){#avatar-widget-root{right:12px!important;bottom:86px!important;}}';
+    '@media (max-width:480px){#avatar-widget-root{right:12px!important;bottom:14px!important;}}';
   (document.head || document.documentElement).appendChild(style);
 
   var root = document.createElement('div');
@@ -59,7 +59,7 @@
 
   var iframe = document.createElement('iframe');
   iframe.src = iframeSrc;
-  iframe.title = '租必達 AI 助理';
+  iframe.title = '租必達 AI 人物語音助理';
   iframe.setAttribute('allow', 'microphone; autoplay');
   iframe.setAttribute('allowtransparency', 'true');
   iframe.style.cssText = 'width:100%;height:100%;border:0;background:transparent;color-scheme:normal;display:block;';
@@ -70,37 +70,29 @@
   bubble.setAttribute('aria-label', '開啟租必達 AI 助理');
   bubble.innerHTML = '<span style="font-size:25px;line-height:1">💬</span>';
   bubble.style.cssText = [
-    'position:absolute',
-    'right:0',
-    'bottom:0',
-    'width:62px',
-    'height:62px',
-    'border:0',
-    'border-radius:999px',
-    'cursor:pointer',
-    'background:linear-gradient(135deg,#1e3a8a,#3b82f6)',
-    'color:#fff',
+    'position:absolute','right:0','bottom:0','width:62px','height:62px',
+    'border:0','border-radius:999px','cursor:pointer',
+    'background:linear-gradient(135deg,#1e3a8a,#3b82f6)','color:#fff',
     'box-shadow:0 10px 24px rgba(15,23,42,.28)',
-    'display:none',
-    'align-items:center',
-    'justify-content:center'
+    'display:none','align-items:center','justify-content:center'
   ].join(';');
 
   root.appendChild(iframe);
   root.appendChild(bubble);
   (document.body || document.documentElement).appendChild(root);
 
-  function clampForMobile() {
+  function getOpenSize() {
     var vw = window.innerWidth || document.documentElement.clientWidth || 360;
     var vh = window.innerHeight || document.documentElement.clientHeight || 640;
-    var w = Math.min(expandedWidth, Math.max(280, vw - 24));
-    var h = Math.min(expandedHeight, Math.max(340, vh - 130));
-    return { w: w, h: h };
+    return {
+      w: Math.min(expandedWidth, Math.max(270, vw - 24)),
+      h: Math.min(expandedHeight, Math.max(340, vh - 110))
+    };
   }
 
   function setOpen(open) {
     if (open) {
-      var size = clampForMobile();
+      var size = getOpenSize();
       root.style.width = size.w + 'px';
       root.style.height = size.h + 'px';
       iframe.style.display = 'block';
@@ -119,14 +111,8 @@
     if (widgetOrigin !== '*' && event.origin !== widgetOrigin) return;
     var data = event.data || {};
     if (data.ns !== 'avatar-widget') return;
-
     if (data.type === 'close') setOpen(false);
-    if (data.type === 'ready') {
-      // 保留擴充點：widget ready 後可觸發歡迎語或 GA 事件。
-    }
-    if (data.type === 'error' && window.console) {
-      console.warn('[ZUBIDA AI widget]', data.message || data);
-    }
+    if (data.type === 'error' && window.console) console.warn('[ZUBIDA AI widget]', data.message || data);
   });
 
   window.addEventListener('resize', function () {
