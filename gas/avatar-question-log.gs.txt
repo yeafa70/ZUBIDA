@@ -1,0 +1,111 @@
+﻿/**
+ * ZUBIDA AI avatar question logger for Google Apps Script.
+ * 1. Paste this file into Apps Script.
+ * 2. Set AVATAR_LOG_SPREADSHEET_ID to your spreadsheet ID, or bind this script to a Sheet and leave it blank.
+ * 3. Deploy as Web app: Execute as Me, Who has access: Anyone.
+ */
+const AVATAR_LOG_SPREADSHEET_ID = '';
+const AVATAR_LOG_SHEET_NAME = 'avatar_question_log';
+
+const AVATAR_LOG_HEADERS = [
+  'timestamp',
+  'source',
+  'event_type',
+  'page_url',
+  'widget_url',
+  'input_method',
+  'question_text',
+  'question_length',
+  'question_category',
+  'matched_faq',
+  'has_answer',
+  'is_sensitive',
+  'has_phone',
+  'has_email',
+  'has_line_id',
+  'user_agent',
+  'created_at'
+];
+
+function doPost(e) {
+  try {
+    const data = parseAvatarLogPayload_(e);
+    const sheet = getAvatarLogSheet_();
+    ensureAvatarLogHeaders_(sheet);
+
+    sheet.appendRow([
+      data.timestamp || Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyy/MM/dd HH:mm:ss'),
+      data.source || 'zubida_avatar',
+      data.event_type || 'question_submit',
+      data.page_url || '',
+      data.widget_url || '',
+      data.input_method || '',
+      data.question_text || '',
+      data.question_length || String(data.question_text || '').length,
+      data.question_category || 'general',
+      data.matched_faq || '',
+      toBool_(data.has_answer),
+      toBool_(data.is_sensitive),
+      toBool_(data.has_phone),
+      toBool_(data.has_email),
+      toBool_(data.has_line_id),
+      data.user_agent || '',
+      data.created_at || Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyy/MM/dd HH:mm:ss')
+    ]);
+
+    return jsonOutput_({ ok: true });
+  } catch (error) {
+    return jsonOutput_({ ok: false, message: error.message });
+  }
+}
+
+function doGet() {
+  return ContentService
+    .createTextOutput('ZUBIDA avatar question log endpoint is running.')
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+function parseAvatarLogPayload_(e) {
+  if (!e) return {};
+
+  const raw = e.postData && e.postData.contents ? e.postData.contents : '';
+  if (raw) {
+    try {
+      return JSON.parse(raw);
+    } catch (error) {
+      // Fall back to form parameters below.
+    }
+  }
+
+  return e.parameter || {};
+}
+
+function getAvatarLogSheet_() {
+  const ss = AVATAR_LOG_SPREADSHEET_ID
+    ? SpreadsheetApp.openById(AVATAR_LOG_SPREADSHEET_ID)
+    : SpreadsheetApp.getActiveSpreadsheet();
+
+  if (!ss) throw new Error('找不到試算表，請設定 AVATAR_LOG_SPREADSHEET_ID 或將 Apps Script 綁定到試算表。');
+
+  return ss.getSheetByName(AVATAR_LOG_SHEET_NAME) || ss.insertSheet(AVATAR_LOG_SHEET_NAME);
+}
+
+function ensureAvatarLogHeaders_(sheet) {
+  const range = sheet.getRange(1, 1, 1, AVATAR_LOG_HEADERS.length);
+  const values = range.getValues()[0];
+  const hasHeaders = values.some(function(value) { return String(value || '').trim() !== ''; });
+  if (!hasHeaders) {
+    range.setValues([AVATAR_LOG_HEADERS]);
+    sheet.setFrozenRows(1);
+  }
+}
+
+function toBool_(value) {
+  return value === true || String(value).toLowerCase() === 'true';
+}
+
+function jsonOutput_(payload) {
+  return ContentService
+    .createTextOutput(JSON.stringify(payload))
+    .setMimeType(ContentService.MimeType.JSON);
+}

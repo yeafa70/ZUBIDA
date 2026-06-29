@@ -25,14 +25,15 @@
   var rightOffset = parseInt(attr('data-right', '16'), 10) || 16;
   var bottomOffset = parseInt(attr('data-bottom', '16'), 10) || 16;
   var startOpen = attr('data-open', 'false') === 'true';
+  var isOpen = false;
   var widgetOrigin = (function () {
     try { return new URL(widgetUrl, location.href).origin; } catch (err) { return '*'; }
   })();
 
   var params = new URLSearchParams();
-  ['knowledge', 'model', 'api', 'voice', 'text', 'brand', 'title'].forEach(function (key) {
+  ['knowledge', 'model', 'api', 'voice', 'text', 'brand', 'title', 'log-api'].forEach(function (key) {
     var value = attr('data-' + key, '');
-    if (value) params.set(key, value);
+    if (value) params.set(key.replace(/-([a-z])/g, function (_, ch) { return ch.toUpperCase(); }), value);
   });
   var iframeSrc = widgetUrl + (params.toString() ? (widgetUrl.indexOf('?') < 0 ? '?' : '&') + params.toString() : '');
 
@@ -95,15 +96,55 @@
       root.style.height = size.h + 'px';
       iframe.style.display = 'block';
       bubble.style.display = 'none';
+      if (!isOpen) trackEvent('avatar_open', {});
+      isOpen = true;
     } else {
       root.style.width = '64px';
       root.style.height = '64px';
       iframe.style.display = 'none';
       bubble.style.display = 'flex';
+      isOpen = false;
     }
   }
 
   bubble.addEventListener('click', function () { setOpen(true); });
+
+  function cleanTrackParams(params) {
+    var source = params || {};
+    var allowed = [
+      'input_method',
+      'question_category',
+      'question_length',
+      'matched_faq',
+      'has_answer',
+      'is_sensitive_removed',
+      'page_path',
+      'page_title'
+    ];
+    var out = {
+      input_method: '',
+      question_category: 'general',
+      question_length: 0,
+      matched_faq: '',
+      has_answer: false,
+      is_sensitive_removed: false
+    };
+    allowed.forEach(function (key) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) out[key] = source[key];
+    });
+    if (!out.page_path) out.page_path = location.pathname + location.search;
+    if (!out.page_title) out.page_title = document.title || '';
+    return out;
+  }
+
+  function trackEvent(eventName, params) {
+    if (!eventName || typeof window.gtag !== 'function') return;
+    try {
+      window.gtag('event', eventName, cleanTrackParams(params));
+    } catch (err) {
+      if (window.console) console.warn('[ZUBIDA AI widget] GA4 event failed', err);
+    }
+  }
 
   window.addEventListener('message', function (event) {
     if (widgetOrigin !== '*' && event.origin !== widgetOrigin) return;
@@ -111,6 +152,10 @@
     if (data.ns !== NS_FROM_WIDGET) return;
     if (data.type === 'close') setOpen(false);
     if (data.type === 'ready') return;
+    if (data.type === 'track') {
+      trackEvent(data.eventName, data.params || {});
+      return;
+    }
     if (data.type === 'error' && window.console) console.warn('[ZUBIDA AI widget]', data.message || data);
   });
 
