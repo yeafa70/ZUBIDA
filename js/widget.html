@@ -81,6 +81,7 @@ const MODEL_URL = CFG.get('model') || 'https://cdn.jsdelivr.net/gh/guansss/pixi-
 const KNOWLEDGE_URL = CFG.get('knowledge') || 'knowledge.js';
 const TTS_ENDPOINT = CFG.get('api') || (location.origin + '/api/tts');
 const NEURAL_VOICE = CFG.get('voice') || 'zh-TW-HsiaoChenNeural';
+const LOG_ENDPOINT = CFG.get('logApi') || '';
 const WELCOME_TEXT = CFG.get('text') || '您好！我是租必達 AI 設備租賃客服，可以用打字或語音詢問水冷扇、活動帳篷、發電機相關問題。';
 const PARENT_ORIGIN = (function(){
   try { return document.referrer ? new URL(document.referrer).origin : '*'; } catch (e) { return '*'; }
@@ -117,6 +118,7 @@ let mouthTarget = 0.7;
 let isSpeaking = false;
 let useAudioMouth = false;
 let lipIds = ['ParamMouthOpenY'];
+let lastQuestionMeta = null;
 
 const suggestions = [
   '租金怎麼算？',
@@ -130,6 +132,20 @@ function postToParent(type, payload) {
   try {
     window.parent.postMessage(Object.assign({ ns: 'avatar-widget', type: type }, payload || {}), PARENT_ORIGIN);
   } catch (e) {}
+}
+
+function trackAvatar(eventName, params) {
+  postToParent('track', {
+    eventName: eventName,
+    params: Object.assign({
+      input_method: 'text',
+      question_category: 'general',
+      question_length: 0,
+      matched_faq: '',
+      has_answer: false,
+      is_sensitive_removed: false
+    }, params || {})
+  });
 }
 
 function escapeHtml(text) {
@@ -164,6 +180,10 @@ function getKeywords(item) {
 }
 
 function findAnswer(question) {
+  return findAnswerInfo(question).answer;
+}
+
+function findAnswerInfo(question) {
   const qNorm = normalize(question);
   let best = null;
   let bestScore = 0;
@@ -180,7 +200,111 @@ function findAnswer(question) {
       best = item;
     }
   });
-  return best && best.a ? best.a : fallbackAnswer();
+  const matched = !!(best && best.a && bestScore > 0);
+  return {
+    answer: matched ? best.a : fallbackAnswer(),
+    matched: matched,
+    matchedFaq: matched ? String(best.q || '').slice(0, 80) : ''
+  };
+}
+
+function detectSensitive(text) {
+  const value = String(text || '');
+  const hasPhone = /(?:\+?886[-\s]?)?0?9\d{2}[-\s]?\d{3}[-\s]?\d{3}|0\d{1,2}[-\s]?\d{6,8}/.test(value);
+  const hasEmail = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(value);
+  const hasLineId = /(?:line|賴|line\s*id|id)[:：\s]*[A-Z0-9._-]{4,}/i.test(value);
+  return {
+    hasPhone: hasPhone,
+    hasEmail: hasEmail,
+    hasLineId: hasLineId,
+    isSensitive: hasPhone || hasEmail || hasLineId
+  };
+}
+
+function questionCategory(text) {
+  const value = String(text || '').toLowerCase();
+  if (/租金|價格|價錢|報價|費用|多少錢|收費|費率/.test(value)) return 'price';
+  if (/電話|line|賴|聯絡|聯繫|客服|怎麼找/.test(value)) return 'contact';
+  if (/地區|服務區|配送|運送|苗栗|竹南|頭份|新竹|桃園|台中|外縣市/.test(value)) return 'area';
+  if (/預約|下訂|檔期|日期|時間|排程|訂購|詢價/.test(value)) return 'booking';
+  if (/水冷扇|冷風扇|降溫|涼風|105l|60l|40l|7l|kolin|lapolo/.test(value)) return 'cooler';
+  if (/帳篷|帳逢|棚架|遮陽|遮雨|3\*3|3x3|3\*4\.5|3x4\.5/.test(value)) return 'tent';
+  if (/發電機|電力|瓦數|供電|插座|停電|電源/.test(value)) return 'generator';
+  if (/案例|市集|園遊會|宮廟|活動|婚禮|展場|工程|工地/.test(value)) return 'case';
+  return 'general';
+}
+
+function buildQuestionMeta(question, inputMethod, answerInfo) {
+  const sensitive = detectSensitive(question);
+  return {
+    input_method: inputMethod || 'text',
+    question_category: questionCategory(question),
+    question_length: String(question || '').length,
+    matched_faq: answerInfo && answerInfo.matched ? answerInfo.matchedFaq : '',
+    has_answer: !!(answerInfo && answerInfo.matched),
+    is_sensitive_removed: sensitive.isSensitive,
+    sensitive: sensitive
+  };
+}
+
+function gaParams(meta) {
+  return {
+    input_method: meta.input_method,
+    question_category: meta.question_category,
+    question_length: meta.question_length,
+    matched_faq: meta.matched_faq,
+    has_answer: meta.has_answer,
+    is_sensitive_removed: meta.is_sensitive_removed
+  };
+}
+
+function logQuestion(question, inputMethod, meta) {
+  if (!LOG_ENDPOINT) return;
+  try {
+    const now = new Date().toISOString();
+    const payload = {
+      timestamp: now,
+      source: 'zubida_avatar',
+      event_type: 'question_submit',
+      page_url: document.referrer || '',
+      widget_url: location.href,
+      input_method: inputMethod || 'text',
+      question_text: String(question || ''),
+      question_length: meta.question_length,
+      question_category: meta.question_category,
+      matched_faq: meta.matched_faq,
+      has_answer: meta.has_answer,
+      is_sensitive: meta.sensitive.isSensitive,
+      has_phone: meta.sensitive.hasPhone,
+      has_email: meta.sensitive.hasEmail,
+      has_line_id: meta.sensitive.hasLineId,
+      user_agent: navigator.userAgent || '',
+      created_at: now
+    };
+    const body = JSON.stringify(payload);
+    if (navigator.sendBeacon) {
+      const blob = new Blob([body], { type: 'text/plain;charset=UTF-8' });
+      if (navigator.sendBeacon(LOG_ENDPOINT, blob)) return;
+    }
+    fetch(LOG_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      keepalive: true,
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      body: body
+    }).catch(function(){});
+  } catch (e) {}
+}
+
+function currentTtsParams() {
+  return lastQuestionMeta ? gaParams(lastQuestionMeta) : {
+    input_method: 'text',
+    question_category: 'general',
+    question_length: 0,
+    matched_faq: '',
+    has_answer: false,
+    is_sensitive_removed: false
+  };
 }
 
 function applyMouth(value) {
@@ -280,6 +404,7 @@ function resetMicState() {
 
 function stopAllAudio() {
   speakSeq += 1;
+  const wasSpeaking = isSpeaking || !!currentAudio || (typeof speechSynthesis !== 'undefined' && speechSynthesis.speaking);
   try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
   try {
     if (currentAudio) {
@@ -303,6 +428,7 @@ function stopAllAudio() {
   } catch (e) {}
   resetMicState();
   stopMouth();
+  if (wasSpeaking) trackAvatar('avatar_tts_stop', currentTtsParams());
 }
 
 function pickVoice() {
@@ -330,9 +456,26 @@ async function speakNeural(text, seq) {
   const audioUrl = URL.createObjectURL(blob);
   const audio = new Audio(audioUrl);
   currentAudio = audio;
-  audio.onplay = function(){ if (seq === speakSeq && !ttsMuted) startMouth(true); };
-  audio.onended = function(){ stopMouth(); if (currentAudio === audio) currentAudio = null; currentSource = null; URL.revokeObjectURL(audioUrl); };
-  audio.onerror = function(){ stopMouth(); if (currentAudio === audio) currentAudio = null; currentSource = null; URL.revokeObjectURL(audioUrl); };
+  audio.onplay = function(){
+    if (seq === speakSeq && !ttsMuted) {
+      startMouth(true);
+      trackAvatar('avatar_tts_play', currentTtsParams());
+    }
+  };
+  audio.onended = function(){
+    stopMouth();
+    trackAvatar('avatar_tts_stop', currentTtsParams());
+    if (currentAudio === audio) currentAudio = null;
+    currentSource = null;
+    URL.revokeObjectURL(audioUrl);
+  };
+  audio.onerror = function(){
+    stopMouth();
+    trackAvatar('avatar_tts_stop', currentTtsParams());
+    if (currentAudio === audio) currentAudio = null;
+    currentSource = null;
+    URL.revokeObjectURL(audioUrl);
+  };
 
   audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
   const source = audioCtx.createMediaElementSource(audio);
@@ -378,14 +521,17 @@ function speakBrowser(text, seq) {
     if (seq !== speakSeq || ttsMuted) return;
     started = true;
     startMouth(false);
+    trackAvatar('avatar_tts_play', currentTtsParams());
   };
   utterance.onend = function(){
     clearTimeout(safetyTimer);
     stopMouth();
+    trackAvatar('avatar_tts_stop', currentTtsParams());
   };
   utterance.onerror = function(){
     clearTimeout(safetyTimer);
     stopMouth();
+    trackAvatar('avatar_tts_stop', currentTtsParams());
   };
   try {
     if (seq !== speakSeq || ttsMuted) return;
@@ -394,7 +540,12 @@ function speakBrowser(text, seq) {
       if (seq === speakSeq && !ttsMuted && !started && speechSynthesis.speaking) startMouth(false);
     }, 180);
     const estimatedMs = Math.min(12000, Math.max(2200, String(text).length * 140));
-    safetyTimer = setTimeout(stopMouth, estimatedMs);
+    safetyTimer = setTimeout(function() {
+      if (isSpeaking) {
+        stopMouth();
+        trackAvatar('avatar_tts_stop', currentTtsParams());
+      }
+    }, estimatedMs);
   } catch (e) {
     stopMouth();
   }
@@ -415,14 +566,19 @@ function speak(text) {
   }
 }
 
-function handleQuestion(question) {
+function handleQuestion(question, inputMethod) {
   const q = String(question || '').trim();
   if (!q) return;
   addMessage('user', q);
-  const answer = findAnswer(q);
+  const answerInfo = findAnswerInfo(q);
+  const meta = buildQuestionMeta(q, inputMethod || 'text', answerInfo);
+  lastQuestionMeta = meta;
+  trackAvatar('avatar_question_submit', gaParams(meta));
+  logQuestion(q, meta.input_method, meta);
+  trackAvatar(meta.has_answer ? 'avatar_answer_matched' : 'avatar_fallback_answer', gaParams(meta));
   setTimeout(function() {
-    addMessage('bot', answer);
-    speak(answer);
+    addMessage('bot', answerInfo.answer);
+    speak(answerInfo.answer);
   }, 280);
 }
 
@@ -433,7 +589,12 @@ function initSuggestions() {
     btn.type = 'button';
     btn.className = 'sugg';
     btn.textContent = text;
-    btn.addEventListener('click', function(){ handleQuestion(text); });
+    btn.addEventListener('click', function(){
+      const answerInfo = findAnswerInfo(text);
+      const meta = buildQuestionMeta(text, 'suggestion', answerInfo);
+      trackAvatar('avatar_suggestion_click', gaParams(meta));
+      handleQuestion(text, 'suggestion');
+    });
     els.suggestions.appendChild(btn);
   });
 }
@@ -530,6 +691,14 @@ function initSpeechRecognition() {
     listening = true;
     els.mic.classList.add('listening');
     els.mic.innerHTML = '<span>●</span><span>聆聽</span>';
+    trackAvatar('avatar_voice_start', {
+      input_method: 'voice',
+      question_category: 'general',
+      question_length: 0,
+      matched_faq: '',
+      has_answer: false,
+      is_sensitive_removed: false
+    });
   };
   recognition.onend = function() {
     listening = false;
@@ -546,7 +715,9 @@ function initSpeechRecognition() {
     const text = event.results && event.results[0] && event.results[0][0] ? event.results[0][0].transcript : '';
     if (text) {
       els.input.value = text;
-      handleQuestion(text);
+      const meta = buildQuestionMeta(text, 'voice', findAnswerInfo(text));
+      trackAvatar('avatar_voice_result', gaParams(meta));
+      handleQuestion(text, 'voice');
       els.input.value = '';
     }
   };
@@ -574,12 +745,13 @@ function initUI() {
 
   els.close.addEventListener('click', function(){
     stopAllAudio();
+    trackAvatar('avatar_close', currentTtsParams());
     postToParent('close');
   });
   els.send.addEventListener('click', function(){
     const question = els.input.value.trim();
     els.input.value = '';
-    handleQuestion(question);
+    handleQuestion(question, 'text');
     els.input.focus();
   });
   els.input.addEventListener('keydown', function(event) {
