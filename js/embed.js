@@ -1,15 +1,15 @@
 (function () {
     window.AvatarWidget = window.AvatarWidget || {};
 
-    // 1. 配置中心：精確讀取 HTML 上的 data 屬性作為基礎尺寸
+    // 1. 配置中心：精確讀取 HTML 上的 data 屬性
     const scriptTag = document.currentScript;
     const config = {
         widgetUrl: scriptTag.getAttribute('data-widget') || 'widget.html',
         model: scriptTag.getAttribute('data-model') || '',
         vrm: scriptTag.getAttribute('data-vrm') || '',
         engine: scriptTag.getAttribute('data-engine') || '2d',
-        baseWidth: parseInt(scriptTag.getAttribute('data-width')) || 320,
-        baseHeight: parseInt(scriptTag.getAttribute('data-height')) || 490,
+        baseWidth: parseInt(scriptTag.getAttribute('data-width')) || 360,
+        baseHeight: parseInt(scriptTag.getAttribute('data-height')) || 520,
         isOpenByDefault: scriptTag.getAttribute('data-open') === 'true'
     };
 
@@ -17,19 +17,19 @@
         try {
             if (document.getElementById('zubida-ai-avatar-container')) return;
 
-            // 注入完美的等比例縮放 RWD 樣式
-            injectResponsiveStyles();
+            // 注入物理尺寸精準定位樣式
+            injectStyles();
             createWidget();
         } catch (error) {
             console.error('[Avatar Widget Error]:', error);
         }
     }
 
-    function injectResponsiveStyles() {
+    function injectStyles() {
         const style = document.createElement('style');
-        style.id = 'zubida-avatar-perfect-scale';
+        style.id = 'zubida-avatar-fixed-rwd';
         style.innerHTML = `
-            /* 桌面版標準尺寸與定位 */
+            /* 桌面版：保持最完美的原始精緻外觀與完整對話框 */
             #zubida-ai-avatar-container {
                 position: fixed;
                 bottom: 20px;
@@ -40,9 +40,8 @@
                 box-shadow: 0 12px 32px rgba(0,0,0,0.15);
                 border-radius: 16px;
                 overflow: hidden;
-                transform-origin: bottom right; /* 設定等比例縮放的錨點為右下角 */
-                transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease;
                 background: transparent;
+                transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
             }
 
             #zubida-ai-avatar-iframe {
@@ -52,21 +51,22 @@
                 background: transparent !important;
             }
 
-            /* 【硬核關鍵】當螢幕寬度小於 768px（手機端）時，實施整體等比例縮放 */
+            /* 【硬核關鍵】手機版 RWD：放棄橫向縮放，改用「實體收納物理尺寸」 */
+            /* 調整手機版容器大小，既能容納完整的人物與文字框，又絕不吃滿 2/3 螢幕 */
             @media screen and (max-width: 768px) {
                 #zubida-ai-avatar-container {
-                    /* 將整體元件等比例縮小至 0.78 倍，內部文字框、對話框、人物會同步縮小，絕不壓扁 */
-                    transform: scale(0.78); 
-                    bottom: 12px;
-                    right: 12px;
-                    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+                    bottom: 10px;
+                    right: 10px;
+                    width: 290px;   /* 物理緊湊寬度：確保文字框不被截斷且不阻擋網頁 */
+                    height: 440px;  /* 物理緊湊高度：給予人物與輸入框最完美的防跑版空間 */
                 }
             }
 
-            /* 針對超小螢幕手機（如 iPhone SE）進行極限縮放，確保不佔用 2/3 版面 */
-            @media screen and (max-width: 380px) {
+            /* 超小螢幕手機特別優化 */
+            @media screen and (max-width: 360px) {
                 #zubida-ai-avatar-container {
-                    transform: scale(0.7); 
+                    width: 270px;
+                    height: 410px;
                 }
             }
         `;
@@ -80,7 +80,6 @@
         const iframe = document.createElement('iframe');
         iframe.id = 'zubida-ai-avatar-iframe';
         
-        // 解析並傳遞參數，確保 iframe 內部取得正確大小
         const srcParams = new URLSearchParams({
             model: config.model,
             vrm: config.vrm,
@@ -93,19 +92,14 @@
         container.appendChild(iframe);
         document.body.appendChild(container);
 
-        // 控制介面
+        // API 介面控管
         window.AvatarWidget.close = () => { 
-            container.style.transform = 'scale(0)';
             container.style.opacity = '0';
+            container.style.pointerEvents = 'none';
         };
         window.AvatarWidget.open = () => { 
             container.style.opacity = '1';
-            // 手機版與桌面版分流恢復縮放
-            if (window.innerWidth <= 768) {
-                container.style.transform = 'scale(0.78)';
-            } else {
-                container.style.transform = 'scale(1)';
-            }
+            container.style.pointerEvents = 'auto';
         };
     }
 
