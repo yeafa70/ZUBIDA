@@ -3,75 +3,479 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>租必達 AI 客服</title>
+<title>ZUBIDA 租必達 AI 設備租賃客服</title>
 <style>
-  :root{--brand:#1e3a8a;--brand2:#3b82f6;--accent:#f97316;--ink:#0f172a;--muted:#64748b}
+  :root{
+    --brand:#1e3a8a;
+    --brand2:#3b82f6;
+    --accent:#f59e0b;
+    --orange:#f97316;
+    --ink:#0f172a;
+    --muted:#64748b;
+    --line:rgba(148,163,184,.32);
+  }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;color:var(--ink)}
-  #card{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.96);border:1px solid rgba(148,163,184,.36);box-shadow:0 14px 38px rgba(15,23,42,.22)}
-  #head{position:absolute;left:0;right:0;top:0;height:55px;display:flex;align-items:center;gap:9px;padding:10px 46px 10px 13px;background:linear-gradient(135deg,#fff,#eff6ff);border-bottom:1px solid rgba(148,163,184,.22);z-index:8}
+  button,input{font:inherit}
+  #card{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.97);border:1px solid rgba(148,163,184,.36);box-shadow:0 14px 38px rgba(15,23,42,.22)}
+  #head{position:absolute;left:0;right:0;top:0;height:56px;display:flex;align-items:center;gap:9px;padding:10px 48px 10px 13px;background:linear-gradient(135deg,#fff,#eff6ff);border-bottom:1px solid rgba(148,163,184,.24);z-index:8}
   .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;display:grid;place-items:center;font-weight:900;box-shadow:0 5px 12px rgba(30,58,138,.22)}
   .title{font-size:14px;font-weight:900;line-height:1.12}.sub{font-size:11px;color:var(--muted);font-weight:700;margin-top:2px;white-space:nowrap}
-  #btn-close{position:absolute;right:10px;top:10px;width:33px;height:33px;border-radius:999px;border:2px solid #fff;background:var(--accent);color:#fff;font-size:18px;font-weight:900;z-index:15;cursor:pointer;box-shadow:0 5px 12px rgba(15,23,42,.24)}
-  #avatarWrap{position:absolute;right:8px;top:38px;width:92px;height:104px;z-index:5;pointer-events:none;overflow:hidden;filter:drop-shadow(0 8px 10px rgba(15,23,42,.18))}
-  #avatarFallback{position:absolute;inset:0;display:grid;place-items:center;font-size:76px}.avatar-canvas{position:absolute;right:0;bottom:-10px;width:120px!important;height:142px!important}
-  #chat{position:absolute;left:0;right:0;top:55px;bottom:104px;padding:10px 105px 8px 12px;overflow:auto;background:linear-gradient(180deg,#fff,#f8fafc)}
-  .msg{max-width:100%;border-radius:16px;padding:9px 11px;font-size:12.5px;line-height:1.48;margin-bottom:8px;word-break:break-word;white-space:pre-wrap;box-shadow:0 4px 12px rgba(15,23,42,.08)}
-  .bot{background:#f1f5f9;border:1px solid rgba(148,163,184,.22);color:var(--ink)}.user{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;margin-left:16px}
-  #suggestions{position:absolute;left:10px;right:10px;bottom:58px;display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;z-index:7;scrollbar-width:none}#suggestions::-webkit-scrollbar{display:none}
-  .sugg{appearance:none;flex:0 0 auto;border:1px solid rgba(30,58,138,.18);background:#fff;color:var(--brand);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 3px 9px rgba(15,23,42,.07)}
-  #dock{position:absolute;left:0;right:0;bottom:0;height:58px;padding:8px;background:rgba(255,255,255,.92);border-top:1px solid rgba(148,163,184,.25);backdrop-filter:blur(8px);z-index:10}
-  .row{display:flex;gap:6px;align-items:center}#type-input{flex:1;min-width:0;height:40px;border:1px solid rgba(148,163,184,.5);border-radius:999px;padding:0 12px;font-size:13px;outline:none;background:#fff;color:var(--ink)}
-  #type-input:focus{border-color:rgba(59,130,246,.75);box-shadow:0 0 0 3px rgba(59,130,246,.12)}.btn{height:40px;border:0;border-radius:999px;cursor:pointer;font-weight:900;flex:0 0 auto}
-  #btn-send{width:40px;background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;font-size:17px}#btn-mic{width:42px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;font-size:16px}
-  #btn-mic.listening{background:linear-gradient(135deg,#dc2626,#f97316);animation:pulse 1.1s infinite}#btn-mute{width:38px;background:#e2e8f0;color:#0f172a;font-size:15px}
+  #btn-close{position:absolute;right:10px;top:10px;width:33px;height:33px;border-radius:999px;border:0;background:var(--orange);color:#fff;font-size:18px;font-weight:900;z-index:15;cursor:pointer;box-shadow:0 5px 12px rgba(15,23,42,.22)}
+  #avatarWrap{position:absolute;right:8px;top:58px;width:108px;height:130px;z-index:5;pointer-events:none;overflow:hidden;filter:drop-shadow(0 8px 10px rgba(15,23,42,.18))}
+  #avatarFallback{position:absolute;inset:0;display:grid;place-items:center;font-size:62px;background:linear-gradient(180deg,#eff6ff,#fff7ed);border-radius:20px;border:1px solid rgba(59,130,246,.16)}
+  .avatar-canvas{position:absolute;right:0;bottom:-8px;width:128px!important;height:154px!important}
+  #chat{position:absolute;left:0;right:0;top:56px;bottom:116px;padding:10px 112px 8px 12px;overflow:auto;background:linear-gradient(180deg,#fff,#f8fafc);scrollbar-width:thin}
+  .msg{max-width:100%;border-radius:16px;padding:9px 11px;font-size:12.5px;line-height:1.5;margin-bottom:8px;word-break:break-word;white-space:pre-wrap;box-shadow:0 4px 12px rgba(15,23,42,.08)}
+  .bot{background:#f1f5f9;border:1px solid rgba(148,163,184,.22);color:var(--ink)}
+  .user{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;margin-left:18px}
+  #suggestions{position:absolute;left:10px;right:10px;bottom:58px;display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;z-index:7;scrollbar-width:none}
+  #suggestions::-webkit-scrollbar{display:none}
+  .sugg{appearance:none;flex:0 0 auto;border:1px solid rgba(30,58,138,.16);background:#fff;color:var(--brand);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 3px 9px rgba(15,23,42,.07)}
+  .sugg:hover{background:#eff6ff}
+  #dock{position:absolute;left:0;right:0;bottom:0;height:58px;padding:8px;background:rgba(255,255,255,.94);border-top:1px solid rgba(148,163,184,.25);backdrop-filter:blur(8px);z-index:10}
+  .row{display:flex;gap:6px;align-items:center}
+  #type-input{flex:1;min-width:0;height:40px;border:1px solid rgba(148,163,184,.5);border-radius:999px;padding:0 12px;font-size:13px;outline:none;background:#fff;color:var(--ink)}
+  #type-input:focus{border-color:rgba(59,130,246,.75);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+  .btn{height:40px;border:0;border-radius:999px;cursor:pointer;font-weight:900;flex:0 0 auto}
+  #btn-send{width:40px;background:linear-gradient(135deg,var(--accent),var(--orange));color:#fff;font-size:17px}
+  #btn-mic{min-width:48px;padding:0 10px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;font-size:13px;display:flex;gap:4px;align-items:center;justify-content:center}
+  #btn-mic.listening{background:linear-gradient(135deg,#dc2626,var(--orange));animation:pulse 1.1s infinite}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.45)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
-  @media(max-width:360px){#avatarWrap{width:82px;height:96px}.avatar-canvas{width:108px!important;height:132px!important}#chat{padding-right:96px}.msg{font-size:12px}.sugg{font-size:10.5px;padding:6px 8px}}
+  @media(max-width:360px){
+    #avatarWrap{width:92px;height:116px}
+    .avatar-canvas{width:112px!important;height:140px!important}
+    #chat{padding-right:98px}
+    .msg{font-size:12px}
+    .sugg{font-size:10.5px;padding:6px 8px}
+    #btn-mic span:last-child{display:none}
+  }
 </style>
 </head>
 <body>
-<section id="card" aria-label="租必達 AI 客服">
-  <header id="head"><div class="logo">租</div><div><div class="title">ZUBIDA 租必達</div><div class="sub">AI 設備租賃客服</div></div><button id="btn-close" type="button" aria-label="收合">×</button></header>
+<section id="card" aria-label="ZUBIDA 租必達 AI 設備租賃客服">
+  <header id="head">
+    <div class="logo">租</div>
+    <div>
+      <div class="title">ZUBIDA 租必達</div>
+      <div class="sub">AI 設備租賃客服</div>
+    </div>
+    <button id="btn-close" type="button" aria-label="收合">×</button>
+  </header>
   <div id="avatarWrap" aria-hidden="true"><div id="avatarFallback">👩‍💼</div></div>
-  <main id="chat" aria-live="polite"></main><div id="suggestions"></div>
-  <div id="dock"><div class="row"><input id="type-input" maxlength="200" placeholder="問水冷扇、帳篷、發電機…" aria-label="輸入問題"><button class="btn" id="btn-send" type="button" aria-label="送出">➤</button><button class="btn" id="btn-mic" type="button" aria-label="語音詢問">🎤</button><button class="btn" id="btn-mute" type="button" aria-label="切換語音">🔊</button></div></div>
+  <main id="chat" aria-live="polite"></main>
+  <div id="suggestions"></div>
+  <div id="dock">
+    <div class="row">
+      <input id="type-input" maxlength="220" placeholder="問水冷扇、帳篷、發電機…" aria-label="輸入問題">
+      <button class="btn" id="btn-send" type="button" aria-label="送出">➤</button>
+      <button class="btn" id="btn-mic" type="button" aria-label="語音詢問"><span>🎤</span><span>語音</span></button>
+    </div>
+  </div>
 </section>
 <script>
 (function(){
 'use strict';
-const CFG=new URLSearchParams(location.search);
-const MODEL_URL=CFG.get('model')||'https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json';
-const KNOWLEDGE_URL=CFG.get('knowledge')||'knowledge.js?v=202606-ai-compact-voice';
-const TTS_ENDPOINT=CFG.get('api')||'';
-const NEURAL_VOICE=CFG.get('voice')||'zh-TW-HsiaoChenNeural';
-const WELCOME_TEXT=CFG.get('text')||'您好！我是租必達 AI 客服，可以用打字或語音，快速詢問水冷扇、活動帳篷、發電機。';
-const els={avatarWrap:document.getElementById('avatarWrap'),avatarFallback:document.getElementById('avatarFallback'),chat:document.getElementById('chat'),suggestions:document.getElementById('suggestions'),input:document.getElementById('type-input'),send:document.getElementById('btn-send'),mic:document.getElementById('btn-mic'),mute:document.getElementById('btn-mute'),close:document.getElementById('btn-close')};
-let app=null,live2dModel=null,muted=false,neuralDisabled=!TTS_ENDPOINT,speaking=false,mouthTimer=null,recognition=null,listening=false,audio=null;
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-const defaultSuggestions=['租金怎麼算？','出租哪些設備？','水冷扇適合哪裡？','發電機怎麼挑？'];
-function post(type,payload){try{window.parent.postMessage(Object.assign({ns:'avatar-widget',type:type},payload||{}),'*')}catch(e){}}
-function escapeHtml(text){return String(text||'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
-function addMessage(role,text){const div=document.createElement('div');div.className='msg '+(role==='user'?'user':'bot');div.innerHTML=escapeHtml(text);els.chat.appendChild(div);els.chat.scrollTop=els.chat.scrollHeight}
-function normalize(text){return String(text||'').toLowerCase().replace(/[？?，,。！!\\s]+/g,'')}
-function fallbackAnswer(){return '這個問題我先幫您記下來。租金、檔期、配送與設備數量會依活動地點、日期與現場條件不同，建議直接來電 0920-633-116 或加入 LINE，租必達會協助您快速評估。'}
-function getKeywords(item){const list=[];if(item.q)list.push(item.q);if(item.kw)String(item.kw).split(/\\s+/).forEach(k=>{if(k)list.push(k)});return list}
-function findAnswer(q){const qNorm=normalize(q),kb=window.KB||[];for(const item of kb){for(const raw of getKeywords(item)){const kw=normalize(raw);if(!kw)continue;if(qNorm.indexOf(kw)!==-1||kw.indexOf(qNorm)!==-1)return item.a||fallbackAnswer()}}return fallbackAnswer()}
-function setMouth(value){if(!live2dModel||!live2dModel.internalModel||!live2dModel.internalModel.coreModel)return;try{const core=live2dModel.internalModel.coreModel;if(typeof core.setParameterValueById==='function')core.setParameterValueById('ParamMouthOpenY',value);else if(typeof core.setParamFloat==='function')core.setParamFloat('ParamMouthOpenY',value)}catch(e){}}
-function startMouth(){speaking=true;clearInterval(mouthTimer);mouthTimer=setInterval(()=>setMouth(speaking?(0.14+Math.random()*0.72):0),90)}
-function stopMouth(){speaking=false;clearInterval(mouthTimer);mouthTimer=null;setMouth(0)}
-function pickVoice(){const voices=speechSynthesis.getVoices?speechSynthesis.getVoices():[];return voices.find(v=>/zh[-_]TW|zh_TW|Taiwan|曉|Yating|Han/i.test((v.lang||'')+' '+(v.name||'')))||voices.find(v=>/^zh/i.test(v.lang||''))||null}
-async function speakNeural(text){if(!TTS_ENDPOINT||neuralDisabled)throw new Error('no neural tts endpoint');const sep=TTS_ENDPOINT.indexOf('?')<0?'?':'&';const url=TTS_ENDPOINT+sep+'voice='+encodeURIComponent(NEURAL_VOICE)+'&text='+encodeURIComponent(text);const resp=await fetch(url);if(!resp.ok)throw new Error('http '+resp.status);const blob=await resp.blob();if(blob.size<500)throw new Error('audio too small');if(audio){try{audio.pause()}catch(e){}}audio=new Audio(URL.createObjectURL(blob));audio.onplay=startMouth;audio.onended=stopMouth;audio.onerror=stopMouth;await audio.play()}
-function speakBrowser(text){if(!('speechSynthesis'in window))return;try{speechSynthesis.cancel()}catch(e){}const u=new SpeechSynthesisUtterance(text);const voice=pickVoice();if(voice)u.voice=voice;u.lang='zh-TW';u.rate=1.02;u.pitch=1.04;u.onstart=startMouth;u.onend=stopMouth;u.onerror=stopMouth;try{speechSynthesis.speak(u)}catch(e){stopMouth()}}
-function speak(text){if(muted)return;if(live2dModel&&live2dModel.motion){try{live2dModel.motion('Tap')}catch(e){}}if(TTS_ENDPOINT&&!neuralDisabled){speakNeural(text).catch(err=>{if(/http 4|http 5|Failed to fetch|NetworkError|Load failed|no neural/i.test(String(err&&err.message||err)))neuralDisabled=true;speakBrowser(text)})}else{speakBrowser(text)}}
-function handleQuestion(q){q=String(q||'').trim();if(!q)return;addMessage('user',q);const answer=findAnswer(q);setTimeout(()=>{addMessage('bot',answer);speak(answer)},360)}
-function initSuggestions(){els.suggestions.innerHTML='';defaultSuggestions.forEach(text=>{const btn=document.createElement('button');btn.type='button';btn.className='sugg';btn.textContent=text;btn.addEventListener('click',()=>handleQuestion(text));els.suggestions.appendChild(btn)})}
-function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}
-async function bootLive2D(){try{await loadScript('https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js');await loadScript('https://cdn.jsdelivr.net/npm/pixi.js@6.5.10/dist/browser/pixi.min.js');await loadScript('https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/index.min.js');app=new PIXI.Application({width:els.avatarWrap.clientWidth||92,height:els.avatarWrap.clientHeight||104,transparent:true,autoDensity:true,antialias:true,resolution:Math.min(window.devicePixelRatio||1,2)});app.view.className='avatar-canvas';els.avatarWrap.appendChild(app.view);live2dModel=await PIXI.live2d.Live2DModel.from(MODEL_URL);app.stage.addChild(live2dModel);fitModel();els.avatarFallback.style.display='none'}catch(e){console.warn('[ZUBIDA AI] Live2D 載入失敗，改用備援人物圖示。',e);els.avatarFallback.style.display='grid';post('error',{message:'Live2D 載入失敗，已使用備援人物圖示。'})}}
-function fitModel(){if(!app||!live2dModel)return;const w=els.avatarWrap.clientWidth||92,h=els.avatarWrap.clientHeight||104;app.renderer.resize(w,h);const scale=Math.min(w/live2dModel.width*1.15,h/live2dModel.height*1.28);live2dModel.scale.set(scale);live2dModel.x=(w-live2dModel.width)/2+2;live2dModel.y=h-live2dModel.height+18}
-function initSpeechRecognition(){if(!SR){els.mic.title='此瀏覽器不支援語音辨識';return}recognition=new SR();recognition.lang='zh-TW';recognition.continuous=false;recognition.interimResults=false;recognition.onstart=()=>{listening=true;els.mic.classList.add('listening');els.mic.textContent='…';addMessage('bot','我正在聽，請說出您的租賃問題。')};recognition.onend=()=>{listening=false;els.mic.classList.remove('listening');els.mic.textContent='🎤'};recognition.onerror=()=>{listening=false;els.mic.classList.remove('listening');els.mic.textContent='🎤';addMessage('bot','語音辨識暫時無法使用，您也可以直接打字詢問。')};recognition.onresult=(event)=>{const text=event.results&&event.results[0]&&event.results[0][0]?event.results[0][0].transcript:'';handleQuestion(text)}}
-function loadKnowledge(done){if(Array.isArray(window.KB)){done();return}const s=document.createElement('script');s.src=KNOWLEDGE_URL;s.onload=done;s.onerror=()=>{window.KB=[];done();post('error',{message:'knowledge.js 載入失敗。'})};document.head.appendChild(s)}
-function initUI(){initSuggestions();initSpeechRecognition();els.close.addEventListener('click',()=>post('close'));els.send.addEventListener('click',()=>{const q=els.input.value.trim();els.input.value='';handleQuestion(q);els.input.focus()});els.input.addEventListener('keydown',(event)=>{if(event.key==='Enter'&&!event.isComposing){event.preventDefault();els.send.click()}});els.mic.addEventListener('click',()=>{if(!recognition){addMessage('bot','此瀏覽器暫不支援語音辨識，請改用打字詢問。');return}try{if(listening)recognition.stop();else recognition.start()}catch(e){addMessage('bot','語音功能正在準備中，請稍後再試，或先用打字詢問。')}});els.mute.addEventListener('click',()=>{muted=!muted;els.mute.textContent=muted?'🔇':'🔊';if(muted&&'speechSynthesis'in window){try{speechSynthesis.cancel()}catch(e){}if(audio){try{audio.pause()}catch(e){}}stopMouth()}});window.addEventListener('message',(event)=>{const d=event.data||{};if(d.ns!=='avatar-widget-host')return;if(d.type==='say'){const text=String(d.text||'').slice(0,600);addMessage('bot',text);speak(text)}});addMessage('bot',WELCOME_TEXT);post('ready')}
-window.addEventListener('resize',fitModel);loadKnowledge(()=>{initUI();bootLive2D()});if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=function(){}}
+
+const CFG = new URLSearchParams(location.search);
+const MODEL_URL = CFG.get('model') || 'https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json';
+const KNOWLEDGE_URL = CFG.get('knowledge') || 'knowledge.js';
+const TTS_ENDPOINT = CFG.get('api') || (location.origin + '/api/tts');
+const NEURAL_VOICE = CFG.get('voice') || 'zh-TW-HsiaoChenNeural';
+const WELCOME_TEXT = CFG.get('text') || '您好！我是租必達 AI 設備租賃客服，可以用打字或語音詢問水冷扇、活動帳篷、發電機相關問題。';
+const PARENT_ORIGIN = (function(){
+  try { return document.referrer ? new URL(document.referrer).origin : '*'; } catch (e) { return '*'; }
+})();
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+const els = {
+  avatarWrap: document.getElementById('avatarWrap'),
+  avatarFallback: document.getElementById('avatarFallback'),
+  chat: document.getElementById('chat'),
+  suggestions: document.getElementById('suggestions'),
+  input: document.getElementById('type-input'),
+  send: document.getElementById('btn-send'),
+  mic: document.getElementById('btn-mic'),
+  close: document.getElementById('btn-close')
+};
+
+let app = null;
+let live2dModel = null;
+let neuralDisabled = false;
+let recognition = null;
+let listening = false;
+let ttsMuted = false;
+let currentAudio = null;
+let audioCtx = null;
+let analyser = null;
+let audioMouth = 0;
+let mouthValue = 0;
+let mouthTarget = 0.7;
+let isSpeaking = false;
+let useAudioMouth = false;
+
+const suggestions = [
+  '租金怎麼算？',
+  '出租哪些設備？',
+  '水冷扇適合哪裡？',
+  '發電機怎麼挑？',
+  '帳篷適合哪些活動？'
+];
+
+function postToParent(type, payload) {
+  try {
+    window.parent.postMessage(Object.assign({ ns: 'avatar-widget', type: type }, payload || {}), PARENT_ORIGIN);
+  } catch (e) {}
+}
+
+function escapeHtml(text) {
+  return String(text || '').replace(/[&<>"']/g, function(ch) {
+    return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
+  });
+}
+
+function addMessage(role, text) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+  div.innerHTML = escapeHtml(text);
+  els.chat.appendChild(div);
+  els.chat.scrollTop = els.chat.scrollHeight;
+}
+
+function normalize(text) {
+  return String(text || '').toLowerCase().replace(/[，。！？?！\s、,.]/g, '');
+}
+
+function fallbackAnswer() {
+  return '這題我可以先協助初步判斷，但實際租借仍建議由租必達確認檔期、數量與現場條件。您可以直接來電 0920-633-116，或使用 LINE 線上諮詢，提供活動地點、日期、設備需求與數量，我們會更快協助評估。';
+}
+
+function getKeywords(item) {
+  const list = [];
+  if (item.q) list.push(item.q);
+  if (item.kw) String(item.kw).split(/\s+/).forEach(function(keyword) {
+    if (keyword) list.push(keyword);
+  });
+  return list;
+}
+
+function findAnswer(question) {
+  const qNorm = normalize(question);
+  let best = null;
+  let bestScore = 0;
+  const kb = Array.isArray(window.KB) ? window.KB : [];
+  kb.forEach(function(item) {
+    let score = 0;
+    getKeywords(item).forEach(function(raw) {
+      const kw = normalize(raw);
+      if (!kw) return;
+      if (qNorm.indexOf(kw) !== -1 || kw.indexOf(qNorm) !== -1) score += Math.min(kw.length, 8);
+    });
+    if (score > bestScore) {
+      bestScore = score;
+      best = item;
+    }
+  });
+  return best && best.a ? best.a : fallbackAnswer();
+}
+
+function setMouth(value) {
+  if (!live2dModel || !live2dModel.internalModel || !live2dModel.internalModel.coreModel) return;
+  try {
+    const core = live2dModel.internalModel.coreModel;
+    if (typeof core.setParameterValueById === 'function') core.setParameterValueById('ParamMouthOpenY', value);
+    else if (typeof core.setParamFloat === 'function') core.setParamFloat('ParamMouthOpenY', value);
+  } catch (e) {}
+}
+
+function computeMouth() {
+  if (isSpeaking && useAudioMouth) {
+    mouthValue += (audioMouth - mouthValue) * 0.5;
+  } else if (isSpeaking) {
+    mouthTarget = Math.random() * 0.55 + 0.35;
+    mouthValue = 0.12 + 0.65 * mouthTarget * Math.abs(Math.sin(performance.now() / 115));
+  } else {
+    mouthValue = Math.max(0, mouthValue - 0.18);
+  }
+  return Math.max(0, Math.min(1, mouthValue));
+}
+
+function animateMouth() {
+  setMouth(computeMouth());
+  requestAnimationFrame(animateMouth);
+}
+requestAnimationFrame(animateMouth);
+
+function stopSpeaking() {
+  try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
+  if (currentAudio) {
+    try { currentAudio.pause(); } catch (e) {}
+    currentAudio = null;
+  }
+  isSpeaking = false;
+  useAudioMouth = false;
+  audioMouth = 0;
+  setMouth(0);
+}
+
+function pickVoice() {
+  const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+  return voices.find(function(v){ return /zh[-_]TW|Taiwan|Hsiao|Yating|Han/i.test((v.lang || '') + ' ' + (v.name || '')); }) ||
+    voices.find(function(v){ return /^zh/i.test(v.lang || ''); }) ||
+    null;
+}
+
+if ('speechSynthesis' in window) {
+  speechSynthesis.onvoiceschanged = function(){ pickVoice(); };
+}
+
+async function speakNeural(text) {
+  if (!TTS_ENDPOINT || neuralDisabled) throw new Error('neural tts disabled');
+  const sep = TTS_ENDPOINT.indexOf('?') < 0 ? '?' : '&';
+  const resp = await fetch(TTS_ENDPOINT + sep + 'voice=' + encodeURIComponent(NEURAL_VOICE) + '&text=' + encodeURIComponent(text), { cache: 'no-store' });
+  if (!resp.ok) throw new Error('tts http ' + resp.status);
+  const blob = await resp.blob();
+  if (!blob || blob.size < 500) throw new Error('tts audio too small');
+
+  stopSpeaking();
+  const audioUrl = URL.createObjectURL(blob);
+  const audio = new Audio(audioUrl);
+  currentAudio = audio;
+  audio.onended = function(){ isSpeaking = false; useAudioMouth = false; audioMouth = 0; URL.revokeObjectURL(audioUrl); };
+  audio.onerror = function(){ isSpeaking = false; useAudioMouth = false; audioMouth = 0; URL.revokeObjectURL(audioUrl); };
+
+  audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  const source = audioCtx.createMediaElementSource(audio);
+  analyser = audioCtx.createAnalyser();
+  analyser.fftSize = 256;
+  source.connect(analyser);
+  analyser.connect(audioCtx.destination);
+  const data = new Uint8Array(analyser.frequencyBinCount);
+
+  function updateAudioMouth() {
+    if (!isSpeaking || !useAudioMouth || !analyser) return;
+    analyser.getByteTimeDomainData(data);
+    let sum = 0;
+    for (let i = 0; i < data.length; i += 1) {
+      const v = (data[i] - 128) / 128;
+      sum += v * v;
+    }
+    audioMouth = Math.min(1, Math.sqrt(sum / data.length) * 4.2);
+    requestAnimationFrame(updateAudioMouth);
+  }
+
+  useAudioMouth = true;
+  isSpeaking = true;
+  await audio.play();
+  updateAudioMouth();
+}
+
+function speakBrowser(text) {
+  if (ttsMuted || !('speechSynthesis' in window)) return;
+  stopSpeaking();
+  const utterance = new SpeechSynthesisUtterance(text);
+  const voice = pickVoice();
+  if (voice) utterance.voice = voice;
+  utterance.lang = 'zh-TW';
+  utterance.rate = 1.02;
+  utterance.pitch = 1.04;
+  utterance.onstart = function(){ isSpeaking = true; useAudioMouth = false; };
+  utterance.onend = function(){ isSpeaking = false; useAudioMouth = false; audioMouth = 0; };
+  utterance.onerror = function(){ isSpeaking = false; useAudioMouth = false; audioMouth = 0; };
+  try { speechSynthesis.speak(utterance); } catch (e) { utterance.onerror(); }
+}
+
+function speak(text) {
+  if (ttsMuted) return;
+  if (live2dModel && live2dModel.motion) {
+    try { live2dModel.motion('Tap'); } catch (e) {}
+  }
+  if (!neuralDisabled && TTS_ENDPOINT) {
+    speakNeural(text).catch(function(err) {
+      if (window.console) console.info('[ZUBIDA AI] neural TTS fallback:', err && err.message ? err.message : err);
+      neuralDisabled = true;
+      speakBrowser(text);
+    });
+  } else {
+    speakBrowser(text);
+  }
+}
+
+function handleQuestion(question) {
+  const q = String(question || '').trim();
+  if (!q) return;
+  addMessage('user', q);
+  const answer = findAnswer(q);
+  setTimeout(function() {
+    addMessage('bot', answer);
+    speak(answer);
+  }, 280);
+}
+
+function initSuggestions() {
+  els.suggestions.innerHTML = '';
+  suggestions.forEach(function(text) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'sugg';
+    btn.textContent = text;
+    btn.addEventListener('click', function(){ handleQuestion(text); });
+    els.suggestions.appendChild(btn);
+  });
+}
+
+function loadScript(src) {
+  return new Promise(function(resolve, reject) {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+async function bootLive2D() {
+  try {
+    await loadScript('https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js');
+    await loadScript('https://cdn.jsdelivr.net/npm/pixi.js@6.5.10/dist/browser/pixi.min.js');
+    await loadScript('https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/cubism4.min.js');
+    app = new PIXI.Application({
+      width: els.avatarWrap.clientWidth || 108,
+      height: els.avatarWrap.clientHeight || 130,
+      transparent: true,
+      autoDensity: true,
+      antialias: true,
+      resolution: Math.min(window.devicePixelRatio || 1, 2)
+    });
+    app.view.className = 'avatar-canvas';
+    els.avatarWrap.appendChild(app.view);
+    const Live2DModel = PIXI.live2d.Live2DModel;
+    try { Live2DModel.registerTicker(PIXI.Ticker); } catch (e) {}
+    live2dModel = await Live2DModel.from(MODEL_URL);
+    try { if (PIXI.live2d.SoundManager) PIXI.live2d.SoundManager.volume = 0; } catch (e) {}
+    app.stage.addChild(live2dModel);
+    fitModel();
+    els.avatarFallback.style.display = 'none';
+    postToParent('ready');
+  } catch (err) {
+    if (window.console) console.warn('[ZUBIDA AI] Live2D fallback:', err && err.message ? err.message : err);
+    els.avatarFallback.style.display = 'grid';
+    postToParent('ready');
+  }
+}
+
+function fitModel() {
+  if (!app || !live2dModel) return;
+  const w = els.avatarWrap.clientWidth || 108;
+  const h = els.avatarWrap.clientHeight || 130;
+  app.renderer.resize(w, h);
+  const scale = Math.min(w / live2dModel.width * 1.18, h / live2dModel.height * 1.32);
+  live2dModel.scale.set(scale);
+  live2dModel.x = (w - live2dModel.width) / 2 + 2;
+  live2dModel.y = h - live2dModel.height + 16;
+}
+
+function initSpeechRecognition() {
+  if (!SR) {
+    els.mic.title = '此瀏覽器不支援語音辨識，可改用打字詢問。';
+    return;
+  }
+  recognition = new SR();
+  recognition.lang = 'zh-TW';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.onstart = function() {
+    listening = true;
+    els.mic.classList.add('listening');
+    els.mic.innerHTML = '<span>●</span><span>聆聽</span>';
+  };
+  recognition.onend = function() {
+    listening = false;
+    els.mic.classList.remove('listening');
+    els.mic.innerHTML = '<span>🎤</span><span>語音</span>';
+  };
+  recognition.onerror = function() {
+    listening = false;
+    els.mic.classList.remove('listening');
+    els.mic.innerHTML = '<span>🎤</span><span>語音</span>';
+    addMessage('bot', '語音辨識沒有成功，可以再按一次語音，或直接用打字詢問。');
+  };
+  recognition.onresult = function(event) {
+    const text = event.results && event.results[0] && event.results[0][0] ? event.results[0][0].transcript : '';
+    if (text) {
+      els.input.value = text;
+      handleQuestion(text);
+      els.input.value = '';
+    }
+  };
+}
+
+function loadKnowledge(done) {
+  if (Array.isArray(window.KB)) {
+    done();
+    return;
+  }
+  const script = document.createElement('script');
+  script.src = KNOWLEDGE_URL;
+  script.onload = done;
+  script.onerror = function() {
+    window.KB = [];
+    done();
+    postToParent('error', { message: 'knowledge.js 載入失敗，已使用預設回覆。' });
+  };
+  document.head.appendChild(script);
+}
+
+function initUI() {
+  initSuggestions();
+  initSpeechRecognition();
+
+  els.close.addEventListener('click', function(){ postToParent('close'); });
+  els.send.addEventListener('click', function(){
+    const question = els.input.value.trim();
+    els.input.value = '';
+    handleQuestion(question);
+    els.input.focus();
+  });
+  els.input.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && !event.isComposing) {
+      event.preventDefault();
+      els.send.click();
+    }
+  });
+  els.mic.addEventListener('click', function(){
+    if (!recognition) {
+      addMessage('bot', '這個瀏覽器目前不支援語音辨識，可以直接用打字詢問。');
+      return;
+    }
+    try {
+      if (listening) recognition.stop();
+      else recognition.start();
+    } catch (e) {
+      addMessage('bot', '語音辨識啟動失敗，可以再試一次，或改用打字詢問。');
+    }
+  });
+  window.addEventListener('message', function(event) {
+    const data = event.data || {};
+    if (data.ns !== 'avatar-widget-host') return;
+    if (data.type === 'say') {
+      const text = String(data.text || '').slice(0, 600);
+      if (text) {
+        addMessage('bot', text);
+        speak(text);
+      }
+    }
+  });
+
+  addMessage('bot', WELCOME_TEXT);
+}
+
+window.addEventListener('resize', fitModel);
+loadKnowledge(function(){
+  initUI();
+  bootLive2D();
+});
+
 })();
 </script>
 </body>
