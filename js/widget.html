@@ -22,10 +22,10 @@
   .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;display:grid;place-items:center;font-weight:900;box-shadow:0 5px 12px rgba(30,58,138,.22)}
   .title{font-size:14px;font-weight:900;line-height:1.12}.sub{font-size:11px;color:var(--muted);font-weight:700;margin-top:2px;white-space:nowrap}
   #btn-close{position:absolute;right:10px;top:10px;width:33px;height:33px;border-radius:999px;border:0;background:var(--orange);color:#fff;font-size:18px;font-weight:900;z-index:15;cursor:pointer;box-shadow:0 5px 12px rgba(15,23,42,.22)}
-  #avatarWrap{position:absolute;right:10px;top:88px;width:108px;height:154px;z-index:6;pointer-events:none;overflow:visible;filter:drop-shadow(0 8px 10px rgba(15,23,42,.18))}
+  #avatarWrap{position:absolute;right:10px;top:112px;width:104px;height:150px;z-index:6;pointer-events:none;overflow:visible;filter:drop-shadow(0 8px 10px rgba(15,23,42,.18))}
   #avatarFallback{position:absolute;inset:0;display:grid;place-items:center;font-size:58px;background:linear-gradient(180deg,#eff6ff,#fff7ed);border-radius:20px;border:1px solid rgba(59,130,246,.16)}
   .avatar-canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
-  #chat{position:absolute;left:0;right:0;top:56px;bottom:116px;padding:10px 118px 8px 12px;overflow:auto;background:linear-gradient(180deg,#fff,#f8fafc);scrollbar-width:thin}
+  #chat{position:absolute;left:0;right:0;top:56px;bottom:116px;padding:10px 116px 8px 12px;overflow:auto;background:linear-gradient(180deg,#fff,#f8fafc);scrollbar-width:thin}
   .msg{max-width:100%;border-radius:16px;padding:9px 11px;font-size:12.5px;line-height:1.5;margin-bottom:8px;word-break:break-word;white-space:pre-wrap;box-shadow:0 4px 12px rgba(15,23,42,.08)}
   .bot{background:#f1f5f9;border:1px solid rgba(148,163,184,.22);color:var(--ink)}
   .user{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;margin-left:18px}
@@ -43,7 +43,7 @@
   #btn-mic.listening{background:linear-gradient(135deg,#dc2626,var(--orange));animation:pulse 1.1s infinite}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.45)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
   @media(max-width:480px){
-    #avatarWrap{right:10px;top:96px;width:104px;height:150px}
+    #avatarWrap{right:10px;top:112px;width:104px;height:150px}
     #chat{padding-right:116px}
     .msg{font-size:12px}
     .sugg{font-size:10.5px;padding:6px 8px}
@@ -181,12 +181,36 @@ function findAnswer(question) {
 }
 
 function setMouth(value) {
-  if (!live2dModel || !live2dModel.internalModel || !live2dModel.internalModel.coreModel) return;
+  if (!live2dModel) return;
   try {
-    const core = live2dModel.internalModel.coreModel;
-    if (typeof core.setParameterValueById === 'function') core.setParameterValueById('ParamMouthOpenY', value);
-    else if (typeof core.setParamFloat === 'function') core.setParamFloat('ParamMouthOpenY', value);
+    if (live2dModel.internalModel && live2dModel.internalModel.coreModel) {
+      const core = live2dModel.internalModel.coreModel;
+      if (typeof core.setParameterValueById === 'function') {
+        core.setParameterValueById('ParamMouthOpenY', value);
+        return;
+      }
+      if (typeof core.setParamFloat === 'function') {
+        core.setParamFloat('ParamMouthOpenY', value);
+        return;
+      }
+    }
+    if (live2dModel.internalModel && typeof live2dModel.internalModel.setParameterValueById === 'function') {
+      live2dModel.internalModel.setParameterValueById('ParamMouthOpenY', value);
+    }
   } catch (e) {}
+}
+
+function startMouth(useAudio) {
+  isSpeaking = true;
+  useAudioMouth = !!useAudio;
+  if (!useAudioMouth) audioMouth = 0;
+}
+
+function stopMouth() {
+  isSpeaking = false;
+  useAudioMouth = false;
+  audioMouth = 0;
+  setMouth(0);
 }
 
 function computeMouth() {
@@ -213,10 +237,7 @@ function stopSpeaking() {
     try { currentAudio.pause(); } catch (e) {}
     currentAudio = null;
   }
-  isSpeaking = false;
-  useAudioMouth = false;
-  audioMouth = 0;
-  setMouth(0);
+  stopMouth();
 }
 
 function pickVoice() {
@@ -242,8 +263,9 @@ async function speakNeural(text) {
   const audioUrl = URL.createObjectURL(blob);
   const audio = new Audio(audioUrl);
   currentAudio = audio;
-  audio.onended = function(){ isSpeaking = false; useAudioMouth = false; audioMouth = 0; URL.revokeObjectURL(audioUrl); };
-  audio.onerror = function(){ isSpeaking = false; useAudioMouth = false; audioMouth = 0; URL.revokeObjectURL(audioUrl); };
+  audio.onplay = function(){ startMouth(true); };
+  audio.onended = function(){ stopMouth(); URL.revokeObjectURL(audioUrl); };
+  audio.onerror = function(){ stopMouth(); URL.revokeObjectURL(audioUrl); };
 
   audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
   const source = audioCtx.createMediaElementSource(audio);
@@ -265,9 +287,8 @@ async function speakNeural(text) {
     requestAnimationFrame(updateAudioMouth);
   }
 
-  useAudioMouth = true;
-  isSpeaking = true;
   await audio.play();
+  startMouth(true);
   updateAudioMouth();
 }
 
@@ -280,10 +301,30 @@ function speakBrowser(text) {
   utterance.lang = 'zh-TW';
   utterance.rate = 1.02;
   utterance.pitch = 1.04;
-  utterance.onstart = function(){ isSpeaking = true; useAudioMouth = false; };
-  utterance.onend = function(){ isSpeaking = false; useAudioMouth = false; audioMouth = 0; };
-  utterance.onerror = function(){ isSpeaking = false; useAudioMouth = false; audioMouth = 0; };
-  try { speechSynthesis.speak(utterance); } catch (e) { utterance.onerror(); }
+  let started = false;
+  let safetyTimer = null;
+  utterance.onstart = function(){
+    started = true;
+    startMouth(false);
+  };
+  utterance.onend = function(){
+    clearTimeout(safetyTimer);
+    stopMouth();
+  };
+  utterance.onerror = function(){
+    clearTimeout(safetyTimer);
+    stopMouth();
+  };
+  try {
+    speechSynthesis.speak(utterance);
+    setTimeout(function(){
+      if (!started && speechSynthesis.speaking) startMouth(false);
+    }, 180);
+    const estimatedMs = Math.min(12000, Math.max(2200, String(text).length * 140));
+    safetyTimer = setTimeout(stopMouth, estimatedMs);
+  } catch (e) {
+    stopMouth();
+  }
 }
 
 function speak(text) {
@@ -367,6 +408,7 @@ async function bootLive2D() {
     }
     const Live2DModel = PIXI.live2d.Live2DModel;
     try { Live2DModel.registerTicker(PIXI.Ticker); } catch (e) {}
+    try { if (PIXI.live2d.SoundManager) PIXI.live2d.SoundManager.volume = 0; } catch (e) {}
     if (!live2dModel) {
       live2dModel = await Live2DModel.from(MODEL_URL);
       try { if (PIXI.live2d.SoundManager) PIXI.live2d.SoundManager.volume = 0; } catch (e) {}
@@ -395,10 +437,10 @@ function fitModel() {
   const bounds = live2dModel.getLocalBounds ? live2dModel.getLocalBounds() : { x: 0, y: 0, width: 1000, height: 1000 };
   const baseW = bounds.width || 1000;
   const baseH = bounds.height || 1000;
-  const scale = Math.min(w / baseW * 2.15, h / baseH * 2.15);
+  const scale = Math.min(w / baseW * 2.0, h / baseH * 2.0);
   live2dModel.scale.set(scale);
   live2dModel.x = w / 2 - (bounds.x + baseW / 2) * scale + 4;
-  live2dModel.y = h * 1.05 - (bounds.y + baseH * 0.62) * scale;
+  live2dModel.y = h * 1.28 - (bounds.y + baseH * 0.62) * scale;
 }
 
 function initSpeechRecognition() {
