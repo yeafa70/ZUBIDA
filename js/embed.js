@@ -1,15 +1,13 @@
 (function () {
     window.AvatarWidget = window.AvatarWidget || {};
 
-    // 1. 配置中心：強制將語音與模型參數校正回原作者的開源核心與自然聲線
+    // 1. 配置中心：採用相對路徑進行同源對接，徹底根除 Network error 跨網域錯誤
     const scriptTag = document.currentScript;
     const config = {
-        // 直連原作者部署在 Vercel 的 widget 本體，確保內部的 2D/3D 渲染與對嘴完全正常
-        widgetUrl: 'https://ai-avatar-bot-two.vercel.app/widget.html',
-        // 直連原作者的神經語音後端，借用微軟 Edge 頂級自然聲線
-        apiUrl: 'https://ai-avatar-bot-two.vercel.app/api/tts',
-        voiceName: 'zh-TW-HsiaoChenNeural', // 曉臻自然女聲
-        modelUrl: 'https://ai-avatar-bot-two.vercel.app/pics/Haru.model3.json', // 原始精美 2D 角色皮
+        widgetUrl: scriptTag.getAttribute('data-widget') || 'widget.html',
+        model: scriptTag.getAttribute('data-model') || 'pics/Haru.model3.json',
+        knowledge: scriptTag.getAttribute('data-knowledge') || 'knowledge.js',
+        engine: scriptTag.getAttribute('data-engine') || '2d',
         baseWidth: 360,
         baseHeight: 520
     };
@@ -18,17 +16,18 @@
         try {
             if (document.getElementById('zubida-ai-avatar-container')) return;
 
-            injectCoreStyles();
-            createPerfectIframe();
+            // 注入完全遵循開源標準的物理寬高與手機版自適應樣式
+            injectStyles();
+            createWidget();
         } catch (error) {
             console.error('[Zubida AI Avatar Error]:', error);
         }
     }
 
-    // 2. 完美的物理尺寸收納（徹底解決手機版佔用 2/3 螢幕的問題）
-    function injectCoreStyles() {
+    // 2. 注入原作者最引以為傲的右下角自適應彈出樣式（手機版不擋 2/3 版面）
+    function injectStyles() {
         const style = document.createElement('style');
-        style.id = 'zubida-avatar-core-style';
+        style.id = 'zubida-avatar-core-rwd';
         style.innerHTML = `
             #zubida-ai-avatar-container {
                 position: fixed;
@@ -41,7 +40,8 @@
                 border-radius: 16px;
                 overflow: hidden;
                 background: transparent;
-                transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease;
+                transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease;
+                transform-origin: bottom right;
             }
 
             #zubida-ai-avatar-iframe {
@@ -51,19 +51,20 @@
                 background: transparent !important;
             }
 
-            /* 【手機端 RWD 限制】縮小實體尺寸，文字框、輸入框、角色完美等比例內縮，絕不吃滿版面 */
+            /* 【手機端最佳化】當螢幕小於 768px 時，自動縮小物理框架尺寸，確保不遮擋水冷扇動線 */
             @media screen and (max-width: 768px) {
                 #zubida-ai-avatar-container {
-                    bottom: 12px;
-                    right: 12px;
+                    bottom: 15px;
+                    right: 15px;
                     width: 300px !important;  
                     height: 450px !important; 
                 }
             }
 
+            /* 極小螢幕手機防線 */
             @media screen and (max-width: 380px) {
                 #zubida-ai-avatar-container {
-                    width: 280px !important;
+                    width: 275px !important;
                     height: 410px !important;
                 }
             }
@@ -71,32 +72,38 @@
         document.head.appendChild(style);
     }
 
-    // 3. 建立並強行注入原作者的「神經語音大腦與皮膚參數」
-    function createPerfectIframe() {
+    // 3. 建立並透過同源 URL Params 餵給 widget.html
+    function createWidget() {
         const container = document.createElement('div');
         container.id = 'zubida-ai-avatar-container';
 
         const iframe = document.createElement('iframe');
         iframe.id = 'zubida-ai-avatar-iframe';
         
-        // 關鍵：將模型、API、聲音參數透過網址傳遞給原作者的 Vercel 核心
+        // 建立乾淨的內部通訊參數鏈
         const srcParams = new URLSearchParams({
-            model: config.modelUrl,
-            api: config.apiUrl,
-            voice: config.voiceName,
+            model: config.model,
+            knowledge: config.knowledge,
+            engine: config.engine,
             origin: window.location.origin
         });
         
+        // 使用同源的絕對/相對路徑
         iframe.src = `${config.widgetUrl}?${srcParams.toString()}`;
-        // 賦予跨網域自動播放語音與麥克風權限
-        iframe.allow = "microphone; autoplay; encrypted-media"; 
+        iframe.allow = "microphone; autoplay"; 
 
         container.appendChild(iframe);
         document.body.appendChild(container);
 
-        // API 控制項
-        window.AvatarWidget.close = () => { container.style.display = 'none'; };
-        window.AvatarWidget.open = () => { container.style.display = 'block'; };
+        // 完美對接原作者公開的 window 控管 API
+        window.AvatarWidget.close = () => { 
+            container.style.transform = 'scale(0)';
+            container.style.opacity = '0';
+        };
+        window.AvatarWidget.open = () => { 
+            container.style.transform = 'scale(1)';
+            container.style.opacity = '1';
+        };
     }
 
     if (document.readyState === 'loading') {
