@@ -107,11 +107,14 @@ let recognition = null;
 let listening = false;
 let ttsMuted = false;
 let currentAudio = null;
+let currentSource = null;
+let speakSeq = 0;
 let audioCtx = null;
 let analyser = null;
 let audioMouth = 0;
 let mouthValue = 0;
 let mouthTarget = 0.7;
+let mouthActive = false;
 let isSpeaking = false;
 let useAudioMouth = false;
 
@@ -201,12 +204,14 @@ function setMouth(value) {
 }
 
 function startMouth(useAudio) {
+  mouthActive = true;
   isSpeaking = true;
   useAudioMouth = !!useAudio;
   if (!useAudioMouth) audioMouth = 0;
 }
 
 function stopMouth() {
+  mouthActive = false;
   isSpeaking = false;
   useAudioMouth = false;
   audioMouth = 0;
@@ -226,10 +231,20 @@ function computeMouth() {
 }
 
 function animateMouth() {
-  setMouth(computeMouth());
+  if (!installMouthTicker.installed) setMouth(computeMouth());
   requestAnimationFrame(animateMouth);
 }
 requestAnimationFrame(animateMouth);
+
+function installMouthTicker() {
+  if (!app || installMouthTicker.installed) return;
+  installMouthTicker.installed = true;
+  app.ticker.add(function() {
+    if (!live2dModel) return;
+    if (mouthActive) setMouth(computeMouth());
+    else setMouth(0);
+  });
+}
 
 function stopSpeaking() {
   try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
@@ -237,6 +252,42 @@ function stopSpeaking() {
     try { currentAudio.pause(); } catch (e) {}
     currentAudio = null;
   }
+  stopMouth();
+  mouthActive = false;
+}
+
+function resetMicState() {
+  listening = false;
+  if (els.mic) {
+    els.mic.classList.remove('listening');
+    els.mic.innerHTML = '<span>🎤</span><span>語音</span>';
+  }
+}
+
+function stopAllAudio() {
+  speakSeq += 1;
+  try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
+  try {
+    if (currentAudio) {
+      currentAudio.onplay = null;
+      currentAudio.onended = null;
+      currentAudio.onerror = null;
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      currentAudio = null;
+    }
+  } catch (e) {}
+  try {
+    if (currentSource) {
+      currentSource.onended = null;
+      currentSource.stop();
+      currentSource = null;
+    }
+  } catch (e) {}
+  try {
+    if (recognition && listening) recognition.stop();
+  } catch (e) {}
+  resetMicState();
   stopMouth();
 }
 
@@ -251,24 +302,27 @@ if ('speechSynthesis' in window) {
   speechSynthesis.onvoiceschanged = function(){ pickVoice(); };
 }
 
-async function speakNeural(text) {
+async function speakNeural(text, seq) {
   if (!TTS_ENDPOINT || neuralDisabled) throw new Error('neural tts disabled');
   const sep = TTS_ENDPOINT.indexOf('?') < 0 ? '?' : '&';
   const resp = await fetch(TTS_ENDPOINT + sep + 'voice=' + encodeURIComponent(NEURAL_VOICE) + '&text=' + encodeURIComponent(text), { cache: 'no-store' });
+  if (seq !== speakSeq || ttsMuted) return;
   if (!resp.ok) throw new Error('tts http ' + resp.status);
   const blob = await resp.blob();
+  if (seq !== speakSeq || ttsMuted) return;
   if (!blob || blob.size < 500) throw new Error('tts audio too small');
 
   stopSpeaking();
   const audioUrl = URL.createObjectURL(blob);
   const audio = new Audio(audioUrl);
   currentAudio = audio;
-  audio.onplay = function(){ startMouth(true); };
-  audio.onended = function(){ stopMouth(); URL.revokeObjectURL(audioUrl); };
-  audio.onerror = function(){ stopMouth(); URL.revokeObjectURL(audioUrl); };
+  audio.onplay = function(){ if (seq === speakSeq && !ttsMuted) startMouth(true); };
+  audio.onended = function(){ stopMouth(); if (currentAudio === audio) currentAudio = null; currentSource = null; URL.revokeObjectURL(audioUrl); };
+  audio.onerror = function(){ stopMouth(); if (currentAudio === audio) currentAudio = null; currentSource = null; URL.revokeObjectURL(audioUrl); };
 
   audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
   const source = audioCtx.createMediaElementSource(audio);
+  currentSource = source;
   analyser = audioCtx.createAnalyser();
   analyser.fftSize = 256;
   source.connect(analyser);
@@ -287,14 +341,17 @@ async function speakNeural(text) {
     requestAnimationFrame(updateAudioMouth);
   }
 
+  if (seq !== speakSeq || ttsMuted) return;
   await audio.play();
+  if (seq !== speakSeq || ttsMuted) return;
   startMouth(true);
   updateAudioMouth();
 }
 
-function speakBrowser(text) {
+function speakBrowser(text, seq) {
   if (ttsMuted || !('speechSynthesis' in window)) return;
   stopSpeaking();
+  if (seq !== speakSeq || ttsMuted) return;
   const utterance = new SpeechSynthesisUtterance(text);
   const voice = pickVoice();
   if (voice) utterance.voice = voice;
@@ -304,6 +361,7 @@ function speakBrowser(text) {
   let started = false;
   let safetyTimer = null;
   utterance.onstart = function(){
+    if (seq !== speakSeq || ttsMuted) return;
     started = true;
     startMouth(false);
   };
@@ -316,9 +374,10 @@ function speakBrowser(text) {
     stopMouth();
   };
   try {
+    if (seq !== speakSeq || ttsMuted) return;
     speechSynthesis.speak(utterance);
     setTimeout(function(){
-      if (!started && speechSynthesis.speaking) startMouth(false);
+      if (seq === speakSeq && !ttsMuted && !started && speechSynthesis.speaking) startMouth(false);
     }, 180);
     const estimatedMs = Math.min(12000, Math.max(2200, String(text).length * 140));
     safetyTimer = setTimeout(stopMouth, estimatedMs);
@@ -329,17 +388,16 @@ function speakBrowser(text) {
 
 function speak(text) {
   if (ttsMuted) return;
-  if (live2dModel && live2dModel.motion) {
-    try { live2dModel.motion('Tap'); } catch (e) {}
-  }
+  const seq = ++speakSeq;
   if (!neuralDisabled && TTS_ENDPOINT) {
-    speakNeural(text).catch(function(err) {
+    speakNeural(text, seq).catch(function(err) {
+      if (seq !== speakSeq || ttsMuted) return;
       if (window.console) console.info('[ZUBIDA AI] neural TTS fallback:', err && err.message ? err.message : err);
       neuralDisabled = true;
-      speakBrowser(text);
+      speakBrowser(text, seq);
     });
   } else {
-    speakBrowser(text);
+    speakBrowser(text, seq);
   }
 }
 
@@ -389,6 +447,7 @@ async function bootLive2D() {
     }
     if (app && live2dModel) {
       live2dBooted = true;
+      installMouthTicker();
       fitModel();
       els.avatarFallback.style.display = 'none';
       postToParent('ready');
@@ -414,6 +473,7 @@ async function bootLive2D() {
       try { if (PIXI.live2d.SoundManager) PIXI.live2d.SoundManager.volume = 0; } catch (e) {}
       app.stage.addChild(live2dModel);
     }
+    installMouthTicker();
     fitModel();
     els.avatarFallback.style.display = 'none';
     live2dBooted = true;
@@ -498,7 +558,10 @@ function initUI() {
   initSuggestions();
   initSpeechRecognition();
 
-  els.close.addEventListener('click', function(){ postToParent('close'); });
+  els.close.addEventListener('click', function(){
+    stopAllAudio();
+    postToParent('close');
+  });
   els.send.addEventListener('click', function(){
     const question = els.input.value.trim();
     els.input.value = '';
