@@ -1,138 +1,139 @@
-/* =====================================================================
- * embed.js — ZUBIDA AI 人物語音助理嵌入載入器
- * - 建立右下角 iframe widget
- * - 支援 data-width / data-height / data-bottom / data-open
- * - 預設收合，避免擋住手機畫面
- * ===================================================================== */
 (function () {
-  'use strict';
+    // 1. 確保全域變數不衝突，建立防禦性命名空間
+    window.AvatarWidget = window.AvatarWidget || {};
 
-  var me = document.currentScript || (function () {
-    var scripts = document.getElementsByTagName('script');
-    for (var i = scripts.length - 1; i >= 0; i -= 1) {
-      if (/embed\.js(\?|$)/.test(scripts[i].src || '')) return scripts[i];
-    }
-    return null;
-  })();
-
-  function attr(name, fallback) {
-    if (!me) return fallback;
-    var v = me.getAttribute(name);
-    return v === null || v === '' ? fallback : v;
-  }
-
-  var base = me ? me.src.replace(/[^/]*$/, '') : '';
-  var widgetUrl = attr('data-widget', base + 'widget.html');
-
-  var expandedWidth = parseInt(attr('data-width', '280'), 10) || 280;
-  var expandedHeight = parseInt(attr('data-height', '390'), 10) || 390;
-  var bottomOffset = parseInt(attr('data-bottom', '16'), 10) || 16;
-  var rightOffset = parseInt(attr('data-right', '16'), 10) || 16;
-  var startOpen = attr('data-open', 'false') === 'true';
-
-  var widgetOrigin = (function () {
-    try { return new URL(widgetUrl, location.href).origin; }
-    catch (err) { return '*'; }
-  })();
-
-  var cfg = new URLSearchParams();
-  ['knowledge', 'model', 'text'].forEach(function (key) {
-    var value = attr('data-' + key, '');
-    if (value) cfg.set(key, value);
-  });
-
-  var iframeSrc = widgetUrl + (cfg.toString() ? (widgetUrl.indexOf('?') < 0 ? '?' : '&') + cfg.toString() : '');
-
-  var style = document.createElement('style');
-  style.textContent =
-    '#avatar-widget-root{position:fixed;right:' + rightOffset + 'px;bottom:' + bottomOffset + 'px;z-index:2147483000;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}' +
-    '#avatar-widget-root .aw-bubble{transition:transform .15s,box-shadow .15s;}' +
-    '#avatar-widget-root .aw-bubble:hover{transform:scale(1.06);}' +
-    '#avatar-widget-root .aw-bubble:active{transform:scale(.96);}' +
-    '#avatar-widget-root .aw-bubble::after{content:"";position:absolute;inset:0;border-radius:50%;animation:awpulse 2.3s ease-out infinite;pointer-events:none;}' +
-    '@keyframes awpulse{0%{box-shadow:0 0 0 0 rgba(30,58,138,.45);}70%{box-shadow:0 0 0 14px rgba(30,58,138,0);}100%{box-shadow:0 0 0 0 rgba(30,58,138,0);}}' +
-    '@media (max-width:480px){#avatar-widget-root{right:12px!important;bottom:14px!important;}}';
-  (document.head || document.documentElement).appendChild(style);
-
-  var root = document.createElement('div');
-  root.id = 'avatar-widget-root';
-
-  var iframe = document.createElement('iframe');
-  iframe.src = iframeSrc;
-  iframe.title = '租必達 AI 人物語音助理';
-  iframe.setAttribute('allow', 'microphone; autoplay');
-  iframe.setAttribute('allowtransparency', 'true');
-  iframe.style.cssText = 'width:100%;height:100%;border:0;background:transparent;color-scheme:normal;display:block;';
-
-  var bubble = document.createElement('button');
-  bubble.type = 'button';
-  bubble.className = 'aw-bubble';
-  bubble.setAttribute('aria-label', '開啟租必達 AI 助理');
-  bubble.innerHTML = '<span style="font-size:25px;line-height:1">💬</span>';
-  bubble.style.cssText = [
-    'position:absolute','right:0','bottom:0','width:62px','height:62px',
-    'border:0','border-radius:999px','cursor:pointer',
-    'background:linear-gradient(135deg,#1e3a8a,#3b82f6)','color:#fff',
-    'box-shadow:0 10px 24px rgba(15,23,42,.28)',
-    'display:none','align-items:center','justify-content:center'
-  ].join(';');
-
-  root.appendChild(iframe);
-  root.appendChild(bubble);
-  (document.body || document.documentElement).appendChild(root);
-
-  function getOpenSize() {
-    var vw = window.innerWidth || document.documentElement.clientWidth || 360;
-    var vh = window.innerHeight || document.documentElement.clientHeight || 640;
-    return {
-      w: Math.min(expandedWidth, Math.max(270, vw - 24)),
-      h: Math.min(expandedHeight, Math.max(340, vh - 110))
+    // 2. 配置中心：定義預設值與行動端極限邊界
+    const config = {
+        scriptTag: document.currentScript,
+        widgetUrl: document.currentScript.getAttribute('data-widget') || 'widget.html',
+        model: document.currentScript.getAttribute('data-model') || '',
+        vrm: document.currentScript.getAttribute('data-vrm') || '',
+        engine: document.currentScript.getAttribute('data-engine') || '2d',
+        isOpenByDefault: document.currentScript.getAttribute('data-open') === 'true'
     };
-  }
 
-  function setOpen(open) {
-    if (open) {
-      var size = getOpenSize();
-      root.style.width = size.w + 'px';
-      root.style.height = size.h + 'px';
-      iframe.style.display = 'block';
-      bubble.style.display = 'none';
+    // 3. 主初始化流程（附帶 Try-Catch 錯誤處理）
+    function init() {
+        try {
+            // 防止重複初始化
+            if (document.getElementById('zubida-ai-avatar-container')) {
+                console.warn('[Avatar Widget] 偵測到重複載入，已終止初始化。');
+                return;
+            }
+
+            // 注入 RWD 專用樣式表（徹底解決手機版佔用 2/3 版面的問題）
+            injectStyles();
+
+            // 建立元件容器與 Iframe
+            createWidgetElements();
+
+        } catch (error) {
+            console.error('[Avatar Widget 初始化失敗]:', error);
+        }
+    }
+
+    // 4. 核心樣式注入（利用 CSS 權重壓制內部樣式）
+    function injectStyles() {
+        const style = document.createElement('style');
+        style.id = 'zubida-avatar-rwd-styles';
+        style.innerHTML = `
+            /* 桌面版預設樣式：右下角固定位置 */
+            #zubida-ai-avatar-container {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 380px;
+                height: 550px;
+                z-index: 999999;
+                transition: all 0.3s ease-in-out;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+                border-radius: 12px;
+                overflow: hidden;
+            }
+
+            #zubida-ai-avatar-iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+                background: transparent;
+            }
+
+            /* 【核心修正】行動端 RWD 斷點：針對手機版進行等比例縮小與位置校正 */
+            @media screen and (max-width: 768px) {
+                #zubida-ai-avatar-container {
+                    bottom: 10px;
+                    right: 10px;
+                    width: 280px;  /* 縮小寬度，避免吃滿版面 */
+                    height: 420px; /* 縮小高度 */
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                }
+                
+                /* 若使用者仍覺得太大，啟用下方縮放機制確保內部元件不跑版 */
+                #zubida-ai-avatar-container.mini-mode {
+                    width: 240px;
+                    height: 360px;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // 5. 節點實作
+    function createWidgetElements() {
+        const container = document.createElement('div');
+        container.id = 'zubida-ai-avatar-container';
+        
+        // 若設定為預設不展開，可在此加入收合 class
+        if (!config.isOpenByDefault) {
+            container.style.height = '80px'; // 僅留對話泡泡高度
+        }
+
+        const iframe = document.createElement('iframe');
+        iframe.id = 'zubida-ai-avatar-iframe';
+        
+        // 組裝帶有參數的 URL，傳遞給內部 widget.html
+        const srcParams = new URLSearchParams({
+            model: config.model,
+            vrm: config.vrm,
+            engine: config.engine,
+            origin: window.location.origin
+        });
+        iframe.src = `${config.widgetUrl}?${srcParams.toString()}`;
+        
+        // 允許麥克風權限（語音輸入必要）
+        iframe.allow = "microphone"; 
+
+        container.appendChild(iframe);
+        document.body.appendChild(container);
+
+        // 註冊對外 API 供宿主網站呼叫
+        window.AvatarWidget.close = () => { container.style.display = 'none'; };
+        window.AvatarWidget.open = () => { container.style.display = 'block'; };
+    }
+
+    // 6. 監聽來自 Iframe 內部的收折通知 (postMessage 防禦性宣告)
+    window.addEventListener('message', function (event) {
+        // 僅處理來自同源或指定小工具的事件
+        if (event.data && typeof event.data === 'object') {
+            const container = document.getElementById('zubida-ai-avatar-container');
+            if (!container) return;
+
+            if (event.data.type === 'AVATAR_MINIMIZE') {
+                // 變更為縮小狀態（例如只留右下角圖示）
+                container.style.height = '90px';
+                container.style.width = '90px';
+            } else if (event.data.type === 'AVATAR_MAXIMIZE') {
+                // 恢復 RWD 預設大小
+                container.removeAttribute('style');
+                container.style.position = 'fixed';
+            }
+        }
+    });
+
+    // 啟動
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
     } else {
-      root.style.width = '62px';
-      root.style.height = '62px';
-      iframe.style.display = 'none';
-      bubble.style.display = 'flex';
+        init();
     }
-  }
-
-  bubble.addEventListener('click', function () { setOpen(true); });
-
-  window.addEventListener('message', function (event) {
-    if (widgetOrigin !== '*' && event.origin !== widgetOrigin) return;
-    var data = event.data || {};
-    if (data.ns !== 'avatar-widget') return;
-    if (data.type === 'close') setOpen(false);
-    if (data.type === 'error' && window.console) console.warn('[ZUBIDA AI widget]', data.message || data);
-  });
-
-  window.addEventListener('resize', function () {
-    if (iframe.style.display !== 'none') setOpen(true);
-  });
-
-  setOpen(startOpen);
-
-  window.AvatarWidget = {
-    open: function () { setOpen(true); },
-    close: function () { setOpen(false); },
-    say: function (text) {
-      setOpen(true);
-      if (iframe.contentWindow) {
-        iframe.contentWindow.postMessage({
-          ns: 'avatar-widget-host',
-          type: 'say',
-          text: String(text || '').slice(0, 600)
-        }, widgetOrigin);
-      }
-    }
-  };
 })();
