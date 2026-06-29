@@ -38,7 +38,8 @@
 
   var style = document.createElement('style');
   style.textContent =
-    '#zubida-avatar-root{position:fixed;right:' + rightOffset + 'px;bottom:' + bottomOffset + 'px;z-index:2147483000;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}' +
+    '#zubida-avatar-root{position:fixed;right:' + rightOffset + 'px;bottom:' + bottomOffset + 'px;z-index:2147483000;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;pointer-events:none;}' +
+    '#zubida-avatar-root iframe,#zubida-avatar-root .zaw-bubble{pointer-events:auto;}' +
     '#zubida-avatar-root .zaw-bubble{transition:transform .16s,box-shadow .16s;}' +
     '#zubida-avatar-root .zaw-bubble:hover{transform:scale(1.06);box-shadow:0 14px 28px rgba(30,58,138,.36);}' +
     '#zubida-avatar-root .zaw-bubble:active{transform:scale(.96);}' +
@@ -56,7 +57,7 @@
   iframe.title = 'ZUBIDA 租必達 AI 設備租賃客服';
   iframe.setAttribute('allow', 'microphone; autoplay');
   iframe.setAttribute('allowtransparency', 'true');
-  iframe.style.cssText = 'width:100%;height:100%;border:0;background:transparent;color-scheme:normal;display:block;';
+  iframe.style.cssText = 'width:100%;height:100%;border:0;background:transparent;color-scheme:normal;display:block;pointer-events:auto;';
 
   var bubble = document.createElement('button');
   bubble.type = 'button';
