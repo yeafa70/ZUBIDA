@@ -1,19 +1,17 @@
 (function () {
     window.AvatarWidget = window.AvatarWidget || {};
 
-    // 1. 配置中心：精確讀取原作者定義的 data-* 屬性與預設自然聲線
+    // 1. 配置中心：強制將語音與模型參數校正回原作者的開源核心與自然聲線
     const scriptTag = document.currentScript;
     const config = {
-        widgetUrl: scriptTag.getAttribute('data-widget') || 'widget.html',
-        model: scriptTag.getAttribute('data-model') || '',
-        vrm: scriptTag.getAttribute('data-vrm') || '',
-        engine: scriptTag.getAttribute('data-engine') || '2d',
-        // 【肉】神經語音核心端點：若未指定則自動導向原作者主站或您部署的端點
-        api: scriptTag.getAttribute('data-api') || 'https://ai-avatar-bot-two.vercel.app/api/tts',
-        voice: scriptTag.getAttribute('data-voice') || 'zh-TW-HsiaoChenNeural', // 預設高自然度曉臻女聲
-        baseWidth: parseInt(scriptTag.getAttribute('data-width')) || 360,
-        baseHeight: parseInt(scriptTag.getAttribute('data-height')) || 520,
-        isOpenByDefault: scriptTag.getAttribute('data-open') === 'true'
+        // 直連原作者部署在 Vercel 的 widget 本體，確保內部的 2D/3D 渲染與對嘴完全正常
+        widgetUrl: 'https://ai-avatar-bot-two.vercel.app/widget.html',
+        // 直連原作者的神經語音後端，借用微軟 Edge 頂級自然聲線
+        apiUrl: 'https://ai-avatar-bot-two.vercel.app/api/tts',
+        voiceName: 'zh-TW-HsiaoChenNeural', // 曉臻自然女聲
+        modelUrl: 'https://ai-avatar-bot-two.vercel.app/pics/Haru.model3.json', // 原始精美 2D 角色皮
+        baseWidth: 360,
+        baseHeight: 520
     };
 
     function init() {
@@ -21,13 +19,13 @@
             if (document.getElementById('zubida-ai-avatar-container')) return;
 
             injectCoreStyles();
-            createPerfectWidget();
+            createPerfectIframe();
         } catch (error) {
             console.error('[Zubida AI Avatar Error]:', error);
         }
     }
 
-    // 2. 注入原作者開源標準的「右下角懸浮與彈出收合樣式」
+    // 2. 完美的物理尺寸收納（徹底解決手機版佔用 2/3 螢幕的問題）
     function injectCoreStyles() {
         const style = document.createElement('style');
         style.id = 'zubida-avatar-core-style';
@@ -43,8 +41,7 @@
                 border-radius: 16px;
                 overflow: hidden;
                 background: transparent;
-                transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease, width 0.3s ease, height 0.3s ease;
-                transform-origin: bottom right;
+                transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease;
             }
 
             #zubida-ai-avatar-iframe {
@@ -54,64 +51,52 @@
                 background: transparent !important;
             }
 
-            /* 【手機端極致最佳化】比照原作者開源 RWD，限定最大邊界，確保不吃滿 2/3 畫面 */
+            /* 【手機端 RWD 限制】縮小實體尺寸，文字框、輸入框、角色完美等比例內縮，絕不吃滿版面 */
             @media screen and (max-width: 768px) {
                 #zubida-ai-avatar-container {
-                    bottom: 15px;
-                    right: 15px;
-                    width: 310px !important;  /* 緊湊防擠壓寬度 */
-                    height: 460px !important; /* 緊湊防擠壓高度 */
+                    bottom: 12px;
+                    right: 12px;
+                    width: 300px !important;  
+                    height: 450px !important; 
                 }
             }
 
-            @media screen and (max-width: 375px) {
+            @media screen and (max-width: 380px) {
                 #zubida-ai-avatar-container {
-                    width: 285px !important;
-                    height: 420px !important;
+                    width: 280px !important;
+                    height: 410px !important;
                 }
             }
         `;
         document.head.appendChild(style);
     }
 
-    // 3. 建立網頁元件與 URL 參數鏈結（這步錯了，語音就會死板）
-    function createPerfectWidget() {
+    // 3. 建立並強行注入原作者的「神經語音大腦與皮膚參數」
+    function createPerfectIframe() {
         const container = document.createElement('div');
         container.id = 'zubida-ai-avatar-container';
 
         const iframe = document.createElement('iframe');
         iframe.id = 'zubida-ai-avatar-iframe';
         
-        // 【核心關鍵】必須將 data-api 與 data-voice 透過 URL 參數餵給內層的 widget.html 核心
+        // 關鍵：將模型、API、聲音參數透過網址傳遞給原作者的 Vercel 核心
         const srcParams = new URLSearchParams({
-            model: config.model,
-            vrm: config.vrm,
-            engine: config.engine,
-            api: config.api,
-            voice: config.voice,
+            model: config.modelUrl,
+            api: config.apiUrl,
+            voice: config.voiceName,
             origin: window.location.origin
         });
         
         iframe.src = `${config.widgetUrl}?${srcParams.toString()}`;
-        iframe.allow = "microphone; autoplay"; // 賦予麥克風與語音自動播放權限
+        // 賦予跨網域自動播放語音與麥克風權限
+        iframe.allow = "microphone; autoplay; encrypted-media"; 
 
         container.appendChild(iframe);
         document.body.appendChild(container);
 
-        // 4. 對外暴露與原作者完全對接的 window.AvatarWidget 控制 API
-        window.AvatarWidget.close = () => { 
-            container.style.transform = 'scale(0)';
-            container.style.opacity = '0';
-        };
-        window.AvatarWidget.open = () => { 
-            container.style.transform = 'scale(1)';
-            container.style.opacity = '1';
-        };
-        window.AvatarWidget.say = (text) => {
-            if (iframe.contentWindow) {
-                iframe.contentWindow.postMessage({ type: 'AVATAR_SAY', text: text }, '*');
-            }
-        };
+        // API 控制項
+        window.AvatarWidget.close = () => { container.style.display = 'none'; };
+        window.AvatarWidget.open = () => { container.style.display = 'block'; };
     }
 
     if (document.readyState === 'loading') {
