@@ -1,134 +1,109 @@
+/* ZUBIDA compact AI customer-service widget loader */
 (function () {
-    window.AvatarWidget = window.AvatarWidget || {};
-
-    // 1. 【租必達專屬大腦】直接內置 FAQ，徹底解決內容變成原創教學文字的問題
-    const zubidaFaq = [
-        {
-            q: "請問租金怎麼算？",
-            kw: ["租金", "多少錢", "價格", "報價", "費用"],
-            a: "您好！租必達提供水冷扇、活動帳篷與發電機出租。租金會根據您租借的品項、數量、活動天數以及進退場的載運距離來綜合評估。歡迎您直接撥打服務專線 0920-633-116，或點擊上方 LINE 線上諮詢，提供我們活動日期與地點，我們將為您提供最快速準確的專屬報價！"
-        },
-        {
-            q: "服務地區有哪些？桃園新竹台中可以送嗎？",
-            kw: ["地區", "桃園", "新竹", "台中", "苗栗", "服務範圍", "送"],
-            a: "您好！租必達以苗栗竹南為據點，主要服務苗栗市、竹南鎮、頭份市、新竹市、新竹縣、桃園與台中部分活動場地。外縣市的客戶也不用擔心，只要您提早提供活動日期、地點、需要的設備品項與數量，我們都會依據當天檔期與配送條件全力為您評估協助！"
-        },
-        {
-            q: "可以同時租帳篷、水冷扇跟發電機嗎？",
-            kw: ["同時", "混搭", "多項", "一起", "配套"],
-            a: "可以的！這正是租必達的專業優勢。戶外活動最怕遮陽、降溫與供電分開規劃導致現場拉線混亂。我們可以協助您將活動帳篷、水冷扇的位置與發電機的電力配置、延長線安全距離一起做整合討論，讓您少一點設備焦慮，多一點活動掌控感！"
-        },
-        {
-            q: "詢價前需要準備什麼資料？",
-            kw: ["準備", "資料", "詢價", "填表"],
-            a: "為了能快速為您評估檔期並報價，建議您提供：活動具體日期、活動地點（縣市鄉鎮）、需要的設備品項與數量、現場是否有既有電源，以及進退場的限制條件。資料越齊全，專人回覆報價的速度就越快喔！"
-        }
-    ];
-
-    // 2. 配置中心：回歸本地最安全的同源載入，直連網際網路公開免金鑰的 Microsoft Edge TTS 端點
-    const config = {
-        widgetUrl: 'js/widget.html',
-        modelUrl: 'pics/Haru.model3.json',
-        // 直連完全公開、無跨網域限制的微軟神經語音端點，徹底解決 GitHub Pages 無法執行後端 API 的死音硬傷
-        ttsUrl: 'https://api.tts.quest/v3/voicevox/synthesis', 
-        voiceName: 'zh-TW-HsiaoChenNeural', // 曉臻高自然度女聲
-        baseWidth: 360,
-        baseHeight: 520
-    };
-
-    function init() {
-        try {
-            if (document.getElementById('zubida-ai-avatar-container')) return;
-
-            injectCoreStyles();
-            createPerfectWidget();
-        } catch (error) {
-            console.error('[Zubida AI Avatar Error]:', error);
-        }
+  'use strict';
+  var me = document.currentScript || (function () {
+    var scripts = document.getElementsByTagName('script');
+    for (var i = scripts.length - 1; i >= 0; i -= 1) {
+      if (/embed\.js(\?|$)/.test(scripts[i].src || '')) return scripts[i];
     }
+    return null;
+  })();
+  function attr(name, fallback) {
+    if (!me) return fallback;
+    var value = me.getAttribute(name);
+    return value === null || value === '' ? fallback : value;
+  }
+  var base = me ? me.src.replace(/[^/]*$/, '') : '';
+  var widgetUrl = attr('data-widget', base + 'widget.html');
+  var expandedWidth = parseInt(attr('data-width', '292'), 10) || 292;
+  var expandedHeight = parseInt(attr('data-height', '330'), 10) || 330;
+  var rightOffset = parseInt(attr('data-right', '16'), 10) || 16;
+  var bottomOffset = parseInt(attr('data-bottom', '16'), 10) || 16;
+  var startOpen = attr('data-open', 'true') === 'true';
+  var widgetOrigin = (function () { try { return new URL(widgetUrl, location.href).origin; } catch (err) { return '*'; } })();
 
-    // 3. 注入完美的 RWD 縮放樣式，手機端自動等比例內縮 25%，絕不擋水冷扇動線
-    function injectCoreStyles() {
-        const style = document.createElement('style');
-        style.id = 'zubida-avatar-perfect-rwd-style';
-        style.innerHTML = `
-            #zubida-ai-avatar-container {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                width: ${config.baseWidth}px;
-                height: ${config.baseHeight}px;
-                z-index: 999999;
-                box-shadow: 0 12px 36px rgba(0,0,0,0.15);
-                border-radius: 16px;
-                overflow: hidden;
-                background: transparent;
-                transform-origin: bottom right;
-                transition: transform 0.3s ease, opacity 0.3s ease;
-            }
+  var cfg = new URLSearchParams();
+  ['knowledge','model','api','voice','text','brand','title'].forEach(function (key) {
+    var value = attr('data-' + key, '');
+    if (value) cfg.set(key, value);
+  });
+  var iframeSrc = widgetUrl + (cfg.toString() ? (widgetUrl.indexOf('?') < 0 ? '?' : '&') + cfg.toString() : '');
 
-            #zubida-ai-avatar-iframe {
-                width: 100% !important;
-                height: 100% !important;
-                border: none !important;
-                background: transparent !important;
-            }
+  var style = document.createElement('style');
+  style.textContent =
+    '#zubida-avatar-root{position:fixed;right:' + rightOffset + 'px;bottom:' + bottomOffset + 'px;z-index:2147483000;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}' +
+    '#zubida-avatar-root .zaw-bubble{transition:transform .16s,box-shadow .16s;}' +
+    '#zubida-avatar-root .zaw-bubble:hover{transform:scale(1.06);}' +
+    '#zubida-avatar-root .zaw-bubble:active{transform:scale(.96);}' +
+    '#zubida-avatar-root .zaw-bubble::after{content:"";position:absolute;inset:0;border-radius:50%;animation:zawpulse 2.4s ease-out infinite;pointer-events:none;}' +
+    '@keyframes zawpulse{0%{box-shadow:0 0 0 0 rgba(30,58,138,.42);}70%{box-shadow:0 0 0 14px rgba(30,58,138,0);}100%{box-shadow:0 0 0 0 rgba(30,58,138,0);}}' +
+    '@media (max-width:480px){#zubida-avatar-root{right:12px!important;bottom:14px!important;}}';
+  (document.head || document.documentElement).appendChild(style);
 
-            /* 手機版行動端等比例縮小，確保完美的原始形狀，且不會佔滿 2/3 版面 */
-            @media screen and (max-width: 768px) {
-                #zubida-ai-avatar-container {
-                    transform: scale(0.75);
-                    bottom: 10px;
-                    right: 10px;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
+  var root = document.createElement('div');
+  root.id = 'zubida-avatar-root';
 
-    // 4. 建立視窗並透過通訊鏈，將租必達 FAQ 強行覆蓋進去
-    function createPerfectWidget() {
-        const container = document.createElement('div');
-        container.id = 'zubida-ai-avatar-container';
+  var iframe = document.createElement('iframe');
+  iframe.src = iframeSrc;
+  iframe.title = '租必達 AI 客服助理';
+  iframe.setAttribute('allow', 'microphone; autoplay');
+  iframe.setAttribute('allowtransparency', 'true');
+  iframe.style.cssText = 'width:100%;height:100%;border:0;background:transparent;color-scheme:normal;display:block;';
 
-        const iframe = document.createElement('iframe');
-        iframe.id = 'zubida-ai-avatar-iframe';
-        
-        const srcParams = new URLSearchParams({
-            model: config.modelUrl,
-            engine: '2d',
-            voice: config.voiceName,
-            origin: window.location.origin
-        });
-        
-        iframe.src = `${config.widgetUrl}?${srcParams.toString()}`;
-        iframe.allow = "microphone; autoplay"; 
+  var bubble = document.createElement('button');
+  bubble.type = 'button';
+  bubble.className = 'zaw-bubble';
+  bubble.setAttribute('aria-label', '開啟租必達 AI 客服');
+  bubble.innerHTML = '<span style="font-size:26px;line-height:1">💬</span>';
+  bubble.style.cssText = [
+    'position:absolute','right:0','bottom:0','width:62px','height:62px',
+    'border:0','border-radius:999px','cursor:pointer',
+    'background:linear-gradient(135deg,#1e3a8a,#3b82f6)','color:#fff',
+    'box-shadow:0 10px 24px rgba(15,23,42,.28)',
+    'display:none','align-items:center','justify-content:center'
+  ].join(';');
 
-        container.appendChild(iframe);
-        document.body.appendChild(container);
+  root.appendChild(iframe);
+  root.appendChild(bubble);
+  (document.body || document.documentElement).appendChild(root);
 
-        // 【硬核關鍵防禦】當內層 widget 載入完成後，主動把租必達的 FAQ 語料推送進去，洗掉原創教學文字
-        iframe.addEventListener('load', function() {
-            setTimeout(() => {
-                if (iframe.contentWindow) {
-                    // 同步灌入知識庫
-                    iframe.contentWindow.postMessage({
-                        type: 'UPDATE_KNOWLEDGE',
-                        knowledge: zubidaFaq
-                    }, '*');
-                    console.log('[Zubida AI] 租必達專屬 FAQ 語料大腦已成功強制灌入。');
-                }
-            }, 500);
-        });
-
-        // 對外控管 API
-        window.AvatarWidget.close = () => { container.style.display = 'none'; };
-        window.AvatarWidget.open = () => { container.style.display = 'block'; };
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+  function getOpenSize() {
+    var vw = window.innerWidth || document.documentElement.clientWidth || 360;
+    var vh = window.innerHeight || document.documentElement.clientHeight || 640;
+    return { w: Math.min(expandedWidth, Math.max(268, vw - 24)), h: Math.min(expandedHeight, Math.max(308, vh - 96)) };
+  }
+  function setOpen(open) {
+    if (open) {
+      var size = getOpenSize();
+      root.style.width = size.w + 'px';
+      root.style.height = size.h + 'px';
+      iframe.style.display = 'block';
+      bubble.style.display = 'none';
     } else {
-        init();
+      root.style.width = '62px';
+      root.style.height = '62px';
+      iframe.style.display = 'none';
+      bubble.style.display = 'flex';
     }
+  }
+  bubble.addEventListener('click', function () { setOpen(true); });
+  window.addEventListener('message', function (event) {
+    if (widgetOrigin !== '*' && event.origin !== widgetOrigin) return;
+    var data = event.data || {};
+    if (data.ns !== 'avatar-widget') return;
+    if (data.type === 'close') setOpen(false);
+    if (data.type === 'error' && window.console) console.warn('[ZUBIDA AI widget]', data.message || data);
+  });
+  window.addEventListener('resize', function () { if (iframe.style.display !== 'none') setOpen(true); });
+  setOpen(startOpen);
+  window.AvatarWidget = {
+    open: function () { setOpen(true); },
+    close: function () { setOpen(false); },
+    say: function (text) {
+      setOpen(true);
+      if (iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ ns: 'avatar-widget-host', type: 'say', text: String(text || '').slice(0, 600) }, widgetOrigin);
+      }
+    }
+  };
 })();

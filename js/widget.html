@@ -3,359 +3,75 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>租必達 AI 人物語音助理</title>
+<title>租必達 AI 客服</title>
 <style>
-  :root{
-    --brand:#1e3a8a; --brand2:#3b82f6; --accent:#f97316;
-    --ink:#0f172a; --muted:#64748b; --surface:rgba(255,255,255,.95);
-  }
+  :root{--brand:#1e3a8a;--brand2:#3b82f6;--accent:#f97316;--ink:#0f172a;--muted:#64748b}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;color:var(--ink)}
-  #stage{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,rgba(239,246,255,.96),rgba(255,255,255,.96));border:1px solid rgba(148,163,184,.35);box-shadow:0 14px 38px rgba(15,23,42,.22)}
-  #avatar-zone{position:absolute;left:0;right:0;top:0;height:56%;overflow:hidden;background:radial-gradient(circle at 50% 35%,rgba(59,130,246,.22),transparent 42%)}
-  #avatar-fallback{position:absolute;inset:0;display:grid;place-items:center;font-size:70px;filter:drop-shadow(0 10px 12px rgba(15,23,42,.18))}
-  #bubble{position:absolute;left:10px;right:10px;top:10px;background:var(--surface);border:1px solid rgba(148,163,184,.35);border-radius:16px;padding:10px 12px;font-size:13px;line-height:1.48;box-shadow:0 8px 22px rgba(15,23,42,.12);opacity:0;transform:translateY(-6px);transition:.2s;z-index:5;max-height:118px;overflow:auto}
-  #bubble.show{opacity:1;transform:none}
-  #btn-close{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:999px;border:2px solid #fff;background:var(--accent);color:#fff;font-size:18px;font-weight:900;z-index:10;cursor:pointer;box-shadow:0 4px 12px rgba(15,23,42,.25)}
-  #suggestions{position:absolute;left:8px;right:8px;bottom:84px;display:flex;flex-wrap:wrap;gap:5px;justify-content:center;z-index:7}
-  #suggestions .sg-label{width:100%;font-size:11px;color:var(--muted);font-weight:900;text-align:center;margin-bottom:1px}
-  .sugg{appearance:none;border:1px solid rgba(30,58,138,.18);background:#fff;color:var(--brand);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 3px 9px rgba(15,23,42,.08)}
-  #control{position:absolute;left:0;right:0;bottom:0;padding:8px;background:rgba(255,255,255,.88);border-top:1px solid rgba(148,163,184,.25);z-index:8;backdrop-filter:blur(8px)}
-  .input-row{display:flex;gap:6px;margin-bottom:7px}
-  #type-input{flex:1;min-width:0;height:36px;border:1px solid rgba(148,163,184,.5);border-radius:999px;padding:0 12px;font-size:13px;outline:none;background:#fff;color:var(--ink)}
-  #type-input:focus{border-color:rgba(59,130,246,.75);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
-  .ctrl{height:36px;border:0;border-radius:999px;cursor:pointer;font-weight:900}
-  #btn-send{width:42px;background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;font-size:17px}
-  .action-row{display:flex;gap:6px;align-items:center}
-  #btn-mic{flex:1;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:0 10px}
-  #btn-mic.listening{background:linear-gradient(135deg,#dc2626,#f97316);animation:pulse 1.1s infinite}
-  #btn-mute{width:42px;background:#e2e8f0;color:#0f172a}
-  .quick-link{flex:1;text-align:center;text-decoration:none;background:#06C755;color:#fff;border-radius:999px;height:36px;line-height:36px;font-size:12px;font-weight:900}
+  #card{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.96);border:1px solid rgba(148,163,184,.36);box-shadow:0 14px 38px rgba(15,23,42,.22)}
+  #head{position:absolute;left:0;right:0;top:0;height:55px;display:flex;align-items:center;gap:9px;padding:10px 46px 10px 13px;background:linear-gradient(135deg,#fff,#eff6ff);border-bottom:1px solid rgba(148,163,184,.22);z-index:8}
+  .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;display:grid;place-items:center;font-weight:900;box-shadow:0 5px 12px rgba(30,58,138,.22)}
+  .title{font-size:14px;font-weight:900;line-height:1.12}.sub{font-size:11px;color:var(--muted);font-weight:700;margin-top:2px;white-space:nowrap}
+  #btn-close{position:absolute;right:10px;top:10px;width:33px;height:33px;border-radius:999px;border:2px solid #fff;background:var(--accent);color:#fff;font-size:18px;font-weight:900;z-index:15;cursor:pointer;box-shadow:0 5px 12px rgba(15,23,42,.24)}
+  #avatarWrap{position:absolute;right:8px;top:38px;width:92px;height:104px;z-index:5;pointer-events:none;overflow:hidden;filter:drop-shadow(0 8px 10px rgba(15,23,42,.18))}
+  #avatarFallback{position:absolute;inset:0;display:grid;place-items:center;font-size:76px}.avatar-canvas{position:absolute;right:0;bottom:-10px;width:120px!important;height:142px!important}
+  #chat{position:absolute;left:0;right:0;top:55px;bottom:104px;padding:10px 105px 8px 12px;overflow:auto;background:linear-gradient(180deg,#fff,#f8fafc)}
+  .msg{max-width:100%;border-radius:16px;padding:9px 11px;font-size:12.5px;line-height:1.48;margin-bottom:8px;word-break:break-word;white-space:pre-wrap;box-shadow:0 4px 12px rgba(15,23,42,.08)}
+  .bot{background:#f1f5f9;border:1px solid rgba(148,163,184,.22);color:var(--ink)}.user{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;margin-left:16px}
+  #suggestions{position:absolute;left:10px;right:10px;bottom:58px;display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;z-index:7;scrollbar-width:none}#suggestions::-webkit-scrollbar{display:none}
+  .sugg{appearance:none;flex:0 0 auto;border:1px solid rgba(30,58,138,.18);background:#fff;color:var(--brand);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 3px 9px rgba(15,23,42,.07)}
+  #dock{position:absolute;left:0;right:0;bottom:0;height:58px;padding:8px;background:rgba(255,255,255,.92);border-top:1px solid rgba(148,163,184,.25);backdrop-filter:blur(8px);z-index:10}
+  .row{display:flex;gap:6px;align-items:center}#type-input{flex:1;min-width:0;height:40px;border:1px solid rgba(148,163,184,.5);border-radius:999px;padding:0 12px;font-size:13px;outline:none;background:#fff;color:var(--ink)}
+  #type-input:focus{border-color:rgba(59,130,246,.75);box-shadow:0 0 0 3px rgba(59,130,246,.12)}.btn{height:40px;border:0;border-radius:999px;cursor:pointer;font-weight:900;flex:0 0 auto}
+  #btn-send{width:40px;background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;font-size:17px}#btn-mic{width:42px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;font-size:16px}
+  #btn-mic.listening{background:linear-gradient(135deg,#dc2626,#f97316);animation:pulse 1.1s infinite}#btn-mute{width:38px;background:#e2e8f0;color:#0f172a;font-size:15px}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.45)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
-  @media(max-width:360px){
-    #avatar-zone{height:52%}
-    .sugg{font-size:10.5px;padding:5px 7px}
-    #bubble{font-size:12px;max-height:104px}
-  }
+  @media(max-width:360px){#avatarWrap{width:82px;height:96px}.avatar-canvas{width:108px!important;height:132px!important}#chat{padding-right:96px}.msg{font-size:12px}.sugg{font-size:10.5px;padding:6px 8px}}
 </style>
 </head>
 <body>
-  <div id="stage">
-    <div id="avatar-zone"><div id="avatar-fallback" aria-hidden="true">👩‍💼</div></div>
-    <div id="bubble"></div>
-    <button id="btn-close" type="button" aria-label="收合助理">×</button>
-    <div id="suggestions"></div>
-    <div id="control">
-      <div class="input-row">
-        <input id="type-input" maxlength="200" placeholder="打字問租賃問題…" aria-label="輸入設備諮詢">
-        <button class="ctrl" id="btn-send" type="button" aria-label="送出問題">➤</button>
-      </div>
-      <div class="action-row">
-        <button class="ctrl" id="btn-mic" type="button" aria-label="開始語音諮詢">🎤 語音詢問</button>
-        <button class="ctrl" id="btn-mute" type="button" aria-label="切換語音播放">🔊</button>
-        <a class="quick-link" href="https://lin.ee/XM7224r" target="_blank" rel="noopener">LINE</a>
-      </div>
-    </div>
-  </div>
-
+<section id="card" aria-label="租必達 AI 客服">
+  <header id="head"><div class="logo">租</div><div><div class="title">ZUBIDA 租必達</div><div class="sub">AI 設備租賃客服</div></div><button id="btn-close" type="button" aria-label="收合">×</button></header>
+  <div id="avatarWrap" aria-hidden="true"><div id="avatarFallback">👩‍💼</div></div>
+  <main id="chat" aria-live="polite"></main><div id="suggestions"></div>
+  <div id="dock"><div class="row"><input id="type-input" maxlength="200" placeholder="問水冷扇、帳篷、發電機…" aria-label="輸入問題"><button class="btn" id="btn-send" type="button" aria-label="送出">➤</button><button class="btn" id="btn-mic" type="button" aria-label="語音詢問">🎤</button><button class="btn" id="btn-mute" type="button" aria-label="切換語音">🔊</button></div></div>
+</section>
 <script>
 (function(){
-  'use strict';
-
-  const CFG = new URLSearchParams(location.search);
-  const MODEL_URL = CFG.get('model') || 'https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json';
-  const KNOWLEDGE_URL = CFG.get('knowledge') || 'knowledge.js?v=202606-ai-live2d-fix';
-  const WELCOME_TEXT = CFG.get('text') || '您好，我是租必達 AI 助理。可以用打字或語音問我水冷扇、活動帳篷、發電機相關問題。';
-
-  const els = {
-    zone: document.getElementById('avatar-zone'),
-    fallback: document.getElementById('avatar-fallback'),
-    bubble: document.getElementById('bubble'),
-    suggestions: document.getElementById('suggestions'),
-    input: document.getElementById('type-input'),
-    send: document.getElementById('btn-send'),
-    mic: document.getElementById('btn-mic'),
-    mute: document.getElementById('btn-mute'),
-    close: document.getElementById('btn-close')
-  };
-
-  let app = null, live2dModel = null, speaking = false, mouthTimer = null;
-  let muted = false, recognition = null, listening = false;
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-  const defaultSuggestions = [
-    '請問租金怎麼算？',
-    '有出租哪些設備？',
-    '水冷扇適合哪裡？',
-    '發電機怎麼挑？'
-  ];
-
-  function post(type, payload){
-    try { window.parent.postMessage(Object.assign({ns:'avatar-widget', type:type}, payload||{}), '*'); } catch(e){}
-  }
-
-  function showBubble(text, hold){
-    els.bubble.textContent = text;
-    els.bubble.classList.add('show');
-    clearTimeout(showBubble._t);
-    showBubble._t = setTimeout(() => els.bubble.classList.remove('show'), hold || 7600);
-  }
-
-  function normalize(text){
-    return String(text || '').toLowerCase().replace(/[？?，,。！!\s]+/g,'');
-  }
-
-  function fallbackAnswer(){
-    return '這個問題我先幫您記下來。租金、檔期、配送與設備數量會依活動地點、日期與現場條件不同，建議直接來電 0920-633-116 或加入 LINE，租必達會協助您快速評估。';
-  }
-
-  function getKeywords(item){
-    const list = [];
-    if (item.q) list.push(item.q);
-    if (item.kw) String(item.kw).split(/\s+/).forEach(k => { if(k) list.push(k); });
-    return list;
-  }
-
-  function findAnswer(q){
-    const qNorm = normalize(q);
-    const kb = window.KB || [];
-    for (const item of kb){
-      for (const raw of getKeywords(item)){
-        const kw = normalize(raw);
-        if (!kw) continue;
-        if (qNorm.indexOf(kw) !== -1 || kw.indexOf(qNorm) !== -1) return item.a || fallbackAnswer();
-      }
-    }
-    return fallbackAnswer();
-  }
-
-  function startMouth(){
-    speaking = true;
-    clearInterval(mouthTimer);
-    mouthTimer = setInterval(() => {
-      const v = speaking ? (0.15 + Math.random() * 0.75) : 0;
-      setMouth(v);
-    }, 90);
-  }
-
-  function stopMouth(){
-    speaking = false;
-    clearInterval(mouthTimer);
-    mouthTimer = null;
-    setMouth(0);
-  }
-
-  function setMouth(value){
-    if (!live2dModel || !live2dModel.internalModel || !live2dModel.internalModel.coreModel) return;
-    try {
-      const core = live2dModel.internalModel.coreModel;
-      if (typeof core.setParameterValueById === 'function') core.setParameterValueById('ParamMouthOpenY', value);
-      else if (typeof core.setParamFloat === 'function') core.setParamFloat('ParamMouthOpenY', value);
-    } catch(e){}
-  }
-
-  function pickVoice(){
-    const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
-    return voices.find(v => /zh[-_]TW|zh_TW|Taiwan|曉|Yating|Han/i.test((v.lang||'') + ' ' + (v.name||'')))
-      || voices.find(v => /^zh/i.test(v.lang || ''))
-      || null;
-  }
-
-  function speak(text){
-    showBubble(text, 9000);
-    if (muted || !('speechSynthesis' in window)) return;
-
-    try { speechSynthesis.cancel(); } catch(e){}
-    const u = new SpeechSynthesisUtterance(text);
-    const voice = pickVoice();
-    if (voice) u.voice = voice;
-    u.lang = 'zh-TW';
-    u.rate = 1.02;
-    u.pitch = 1.04;
-    u.onstart = startMouth;
-    u.onend = stopMouth;
-    u.onerror = stopMouth;
-
-    // 部分手機需要使用者手勢後才允許播放；由按鈕事件觸發時通常可播放。
-    try { speechSynthesis.speak(u); }
-    catch(e){ stopMouth(); }
-  }
-
-  function handleQuestion(q){
-    q = String(q || '').trim();
-    if (!q) return;
-    showBubble('您問：' + q, 2500);
-    setTimeout(() => speak(findAnswer(q)), 480);
-  }
-
-  function initSuggestions(){
-    els.suggestions.innerHTML = '<div class="sg-label">👋 我能為您解答：</div>';
-    defaultSuggestions.forEach(text => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'sugg';
-      btn.textContent = text;
-      btn.addEventListener('click', () => handleQuestion(text));
-      els.suggestions.appendChild(btn);
-    });
-  }
-
-  function loadScript(src){
-    return new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = src;
-      s.onload = resolve;
-      s.onerror = reject;
-      document.head.appendChild(s);
-    });
-  }
-
-  async function bootLive2D(){
-    try{
-      await loadScript('https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js');
-      await loadScript('https://cdn.jsdelivr.net/npm/pixi.js@6.5.10/dist/browser/pixi.min.js');
-      await loadScript('https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/index.min.js');
-
-      app = new PIXI.Application({
-        width: els.zone.clientWidth || 280,
-        height: els.zone.clientHeight || 210,
-        transparent: true,
-        autoDensity: true,
-        antialias: true,
-        resolution: Math.min(window.devicePixelRatio || 1, 2)
-      });
-      app.view.className = 'avatar-canvas';
-      app.view.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
-      els.zone.appendChild(app.view);
-
-      live2dModel = await PIXI.live2d.Live2DModel.from(MODEL_URL);
-      app.stage.addChild(live2dModel);
-      fitModel();
-
-      els.fallback.style.display = 'none';
-      if (live2dModel.motion) {
-        try { live2dModel.motion('Idle'); } catch(e){}
-      }
-    } catch(e) {
-      console.warn('[ZUBIDA AI] Live2D 載入失敗，改用備援人物圖示。', e);
-      post('error', {message:'Live2D 載入失敗，已改用備援人物圖示。'});
-      els.fallback.style.display = 'grid';
-    }
-  }
-
-  function fitModel(){
-    if (!app || !live2dModel) return;
-    const w = els.zone.clientWidth || 280;
-    const h = els.zone.clientHeight || 210;
-    app.renderer.resize(w, h);
-
-    const scale = Math.min(w / live2dModel.width * 0.82, h / live2dModel.height * 1.08);
-    live2dModel.scale.set(scale);
-    live2dModel.x = (w - live2dModel.width) / 2;
-    live2dModel.y = h - live2dModel.height + 22;
-  }
-
-  function initSpeechRecognition(){
-    if (!SR) {
-      els.mic.textContent = '🎤 不支援';
-      els.mic.disabled = false;
-      return;
-    }
-    recognition = new SR();
-    recognition.lang = 'zh-TW';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-
-    recognition.onstart = () => {
-      listening = true;
-      els.mic.classList.add('listening');
-      els.mic.textContent = '聆聽中…';
-      showBubble('我正在聽，請說出您的租賃問題。', 4000);
-    };
-    recognition.onend = () => {
-      listening = false;
-      els.mic.classList.remove('listening');
-      els.mic.textContent = '🎤 語音詢問';
-    };
-    recognition.onerror = () => {
-      listening = false;
-      els.mic.classList.remove('listening');
-      els.mic.textContent = '🎤 語音詢問';
-      showBubble('語音辨識暫時無法使用，您也可以直接打字詢問。', 5000);
-    };
-    recognition.onresult = (event) => {
-      const text = event.results && event.results[0] && event.results[0][0] ? event.results[0][0].transcript : '';
-      handleQuestion(text);
-    };
-  }
-
-  function loadKnowledge(done){
-    if (Array.isArray(window.KB)) { done(); return; }
-    const s = document.createElement('script');
-    s.src = KNOWLEDGE_URL;
-    s.onload = done;
-    s.onerror = () => { window.KB = []; done(); post('error', {message:'knowledge.js 載入失敗。'}); };
-    document.head.appendChild(s);
-  }
-
-  function initUI(){
-    initSuggestions();
-    initSpeechRecognition();
-
-    els.close.addEventListener('click', () => post('close'));
-
-    els.send.addEventListener('click', () => {
-      const q = els.input.value.trim();
-      els.input.value = '';
-      handleQuestion(q);
-      els.input.focus();
-    });
-
-    els.input.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' && !event.isComposing) {
-        event.preventDefault();
-        els.send.click();
-      }
-    });
-
-    els.mic.addEventListener('click', () => {
-      if (!recognition) { showBubble('此瀏覽器暫不支援語音辨識，請改用打字詢問。', 5000); return; }
-      try {
-        if (listening) recognition.stop();
-        else recognition.start();
-      } catch(e) {
-        showBubble('語音功能正在準備中，請稍後再試，或先用打字詢問。', 5000);
-      }
-    });
-
-    els.mute.addEventListener('click', () => {
-      muted = !muted;
-      els.mute.textContent = muted ? '🔇' : '🔊';
-      if (muted && 'speechSynthesis' in window) speechSynthesis.cancel();
-      if (muted) stopMouth();
-    });
-
-    window.addEventListener('message', (event) => {
-      const d = event.data || {};
-      if (d.ns !== 'avatar-widget-host') return;
-      if (d.type === 'say') speak(String(d.text || '').slice(0, 600));
-    });
-
-    // 歡迎語只顯示，不自動朗讀，避免手機瀏覽器封鎖自動播放。
-    showBubble(WELCOME_TEXT, 7000);
-    post('ready');
-  }
-
-  window.addEventListener('resize', fitModel);
-
-  loadKnowledge(() => {
-    initUI();
-    bootLive2D();
-  });
-
-  if ('speechSynthesis' in window) {
-    speechSynthesis.onvoiceschanged = function(){};
-  }
+'use strict';
+const CFG=new URLSearchParams(location.search);
+const MODEL_URL=CFG.get('model')||'https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json';
+const KNOWLEDGE_URL=CFG.get('knowledge')||'knowledge.js?v=202606-ai-compact-voice';
+const TTS_ENDPOINT=CFG.get('api')||'';
+const NEURAL_VOICE=CFG.get('voice')||'zh-TW-HsiaoChenNeural';
+const WELCOME_TEXT=CFG.get('text')||'您好！我是租必達 AI 客服，可以用打字或語音，快速詢問水冷扇、活動帳篷、發電機。';
+const els={avatarWrap:document.getElementById('avatarWrap'),avatarFallback:document.getElementById('avatarFallback'),chat:document.getElementById('chat'),suggestions:document.getElementById('suggestions'),input:document.getElementById('type-input'),send:document.getElementById('btn-send'),mic:document.getElementById('btn-mic'),mute:document.getElementById('btn-mute'),close:document.getElementById('btn-close')};
+let app=null,live2dModel=null,muted=false,neuralDisabled=!TTS_ENDPOINT,speaking=false,mouthTimer=null,recognition=null,listening=false,audio=null;
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const defaultSuggestions=['租金怎麼算？','出租哪些設備？','水冷扇適合哪裡？','發電機怎麼挑？'];
+function post(type,payload){try{window.parent.postMessage(Object.assign({ns:'avatar-widget',type:type},payload||{}),'*')}catch(e){}}
+function escapeHtml(text){return String(text||'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function addMessage(role,text){const div=document.createElement('div');div.className='msg '+(role==='user'?'user':'bot');div.innerHTML=escapeHtml(text);els.chat.appendChild(div);els.chat.scrollTop=els.chat.scrollHeight}
+function normalize(text){return String(text||'').toLowerCase().replace(/[？?，,。！!\\s]+/g,'')}
+function fallbackAnswer(){return '這個問題我先幫您記下來。租金、檔期、配送與設備數量會依活動地點、日期與現場條件不同，建議直接來電 0920-633-116 或加入 LINE，租必達會協助您快速評估。'}
+function getKeywords(item){const list=[];if(item.q)list.push(item.q);if(item.kw)String(item.kw).split(/\\s+/).forEach(k=>{if(k)list.push(k)});return list}
+function findAnswer(q){const qNorm=normalize(q),kb=window.KB||[];for(const item of kb){for(const raw of getKeywords(item)){const kw=normalize(raw);if(!kw)continue;if(qNorm.indexOf(kw)!==-1||kw.indexOf(qNorm)!==-1)return item.a||fallbackAnswer()}}return fallbackAnswer()}
+function setMouth(value){if(!live2dModel||!live2dModel.internalModel||!live2dModel.internalModel.coreModel)return;try{const core=live2dModel.internalModel.coreModel;if(typeof core.setParameterValueById==='function')core.setParameterValueById('ParamMouthOpenY',value);else if(typeof core.setParamFloat==='function')core.setParamFloat('ParamMouthOpenY',value)}catch(e){}}
+function startMouth(){speaking=true;clearInterval(mouthTimer);mouthTimer=setInterval(()=>setMouth(speaking?(0.14+Math.random()*0.72):0),90)}
+function stopMouth(){speaking=false;clearInterval(mouthTimer);mouthTimer=null;setMouth(0)}
+function pickVoice(){const voices=speechSynthesis.getVoices?speechSynthesis.getVoices():[];return voices.find(v=>/zh[-_]TW|zh_TW|Taiwan|曉|Yating|Han/i.test((v.lang||'')+' '+(v.name||'')))||voices.find(v=>/^zh/i.test(v.lang||''))||null}
+async function speakNeural(text){if(!TTS_ENDPOINT||neuralDisabled)throw new Error('no neural tts endpoint');const sep=TTS_ENDPOINT.indexOf('?')<0?'?':'&';const url=TTS_ENDPOINT+sep+'voice='+encodeURIComponent(NEURAL_VOICE)+'&text='+encodeURIComponent(text);const resp=await fetch(url);if(!resp.ok)throw new Error('http '+resp.status);const blob=await resp.blob();if(blob.size<500)throw new Error('audio too small');if(audio){try{audio.pause()}catch(e){}}audio=new Audio(URL.createObjectURL(blob));audio.onplay=startMouth;audio.onended=stopMouth;audio.onerror=stopMouth;await audio.play()}
+function speakBrowser(text){if(!('speechSynthesis'in window))return;try{speechSynthesis.cancel()}catch(e){}const u=new SpeechSynthesisUtterance(text);const voice=pickVoice();if(voice)u.voice=voice;u.lang='zh-TW';u.rate=1.02;u.pitch=1.04;u.onstart=startMouth;u.onend=stopMouth;u.onerror=stopMouth;try{speechSynthesis.speak(u)}catch(e){stopMouth()}}
+function speak(text){if(muted)return;if(live2dModel&&live2dModel.motion){try{live2dModel.motion('Tap')}catch(e){}}if(TTS_ENDPOINT&&!neuralDisabled){speakNeural(text).catch(err=>{if(/http 4|http 5|Failed to fetch|NetworkError|Load failed|no neural/i.test(String(err&&err.message||err)))neuralDisabled=true;speakBrowser(text)})}else{speakBrowser(text)}}
+function handleQuestion(q){q=String(q||'').trim();if(!q)return;addMessage('user',q);const answer=findAnswer(q);setTimeout(()=>{addMessage('bot',answer);speak(answer)},360)}
+function initSuggestions(){els.suggestions.innerHTML='';defaultSuggestions.forEach(text=>{const btn=document.createElement('button');btn.type='button';btn.className='sugg';btn.textContent=text;btn.addEventListener('click',()=>handleQuestion(text));els.suggestions.appendChild(btn)})}
+function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}
+async function bootLive2D(){try{await loadScript('https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js');await loadScript('https://cdn.jsdelivr.net/npm/pixi.js@6.5.10/dist/browser/pixi.min.js');await loadScript('https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/index.min.js');app=new PIXI.Application({width:els.avatarWrap.clientWidth||92,height:els.avatarWrap.clientHeight||104,transparent:true,autoDensity:true,antialias:true,resolution:Math.min(window.devicePixelRatio||1,2)});app.view.className='avatar-canvas';els.avatarWrap.appendChild(app.view);live2dModel=await PIXI.live2d.Live2DModel.from(MODEL_URL);app.stage.addChild(live2dModel);fitModel();els.avatarFallback.style.display='none'}catch(e){console.warn('[ZUBIDA AI] Live2D 載入失敗，改用備援人物圖示。',e);els.avatarFallback.style.display='grid';post('error',{message:'Live2D 載入失敗，已使用備援人物圖示。'})}}
+function fitModel(){if(!app||!live2dModel)return;const w=els.avatarWrap.clientWidth||92,h=els.avatarWrap.clientHeight||104;app.renderer.resize(w,h);const scale=Math.min(w/live2dModel.width*1.15,h/live2dModel.height*1.28);live2dModel.scale.set(scale);live2dModel.x=(w-live2dModel.width)/2+2;live2dModel.y=h-live2dModel.height+18}
+function initSpeechRecognition(){if(!SR){els.mic.title='此瀏覽器不支援語音辨識';return}recognition=new SR();recognition.lang='zh-TW';recognition.continuous=false;recognition.interimResults=false;recognition.onstart=()=>{listening=true;els.mic.classList.add('listening');els.mic.textContent='…';addMessage('bot','我正在聽，請說出您的租賃問題。')};recognition.onend=()=>{listening=false;els.mic.classList.remove('listening');els.mic.textContent='🎤'};recognition.onerror=()=>{listening=false;els.mic.classList.remove('listening');els.mic.textContent='🎤';addMessage('bot','語音辨識暫時無法使用，您也可以直接打字詢問。')};recognition.onresult=(event)=>{const text=event.results&&event.results[0]&&event.results[0][0]?event.results[0][0].transcript:'';handleQuestion(text)}}
+function loadKnowledge(done){if(Array.isArray(window.KB)){done();return}const s=document.createElement('script');s.src=KNOWLEDGE_URL;s.onload=done;s.onerror=()=>{window.KB=[];done();post('error',{message:'knowledge.js 載入失敗。'})};document.head.appendChild(s)}
+function initUI(){initSuggestions();initSpeechRecognition();els.close.addEventListener('click',()=>post('close'));els.send.addEventListener('click',()=>{const q=els.input.value.trim();els.input.value='';handleQuestion(q);els.input.focus()});els.input.addEventListener('keydown',(event)=>{if(event.key==='Enter'&&!event.isComposing){event.preventDefault();els.send.click()}});els.mic.addEventListener('click',()=>{if(!recognition){addMessage('bot','此瀏覽器暫不支援語音辨識，請改用打字詢問。');return}try{if(listening)recognition.stop();else recognition.start()}catch(e){addMessage('bot','語音功能正在準備中，請稍後再試，或先用打字詢問。')}});els.mute.addEventListener('click',()=>{muted=!muted;els.mute.textContent=muted?'🔇':'🔊';if(muted&&'speechSynthesis'in window){try{speechSynthesis.cancel()}catch(e){}if(audio){try{audio.pause()}catch(e){}}stopMouth()}});window.addEventListener('message',(event)=>{const d=event.data||{};if(d.ns!=='avatar-widget-host')return;if(d.type==='say'){const text=String(d.text||'').slice(0,600);addMessage('bot',text);speak(text)}});addMessage('bot',WELCOME_TEXT);post('ready')}
+window.addEventListener('resize',fitModel);loadKnowledge(()=>{initUI();bootLive2D()});if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=function(){}}
 })();
 </script>
 </body>
