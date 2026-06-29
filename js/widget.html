@@ -22,9 +22,9 @@
   .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;display:grid;place-items:center;font-weight:900;box-shadow:0 5px 12px rgba(30,58,138,.22)}
   .title{font-size:14px;font-weight:900;line-height:1.12}.sub{font-size:11px;color:var(--muted);font-weight:700;margin-top:2px;white-space:nowrap}
   #btn-close{position:absolute;right:10px;top:10px;width:33px;height:33px;border-radius:999px;border:0;background:var(--orange);color:#fff;font-size:18px;font-weight:900;z-index:15;cursor:pointer;box-shadow:0 5px 12px rgba(15,23,42,.22)}
-  #avatarWrap{position:absolute;right:8px;top:58px;width:108px;height:130px;z-index:5;pointer-events:none;overflow:hidden;filter:drop-shadow(0 8px 10px rgba(15,23,42,.18))}
+  #avatarWrap{position:absolute;right:12px;top:68px;width:112px;height:138px;z-index:6;pointer-events:none;overflow:visible;filter:drop-shadow(0 8px 10px rgba(15,23,42,.18))}
   #avatarFallback{position:absolute;inset:0;display:grid;place-items:center;font-size:62px;background:linear-gradient(180deg,#eff6ff,#fff7ed);border-radius:20px;border:1px solid rgba(59,130,246,.16)}
-  .avatar-canvas{position:absolute;right:0;bottom:-8px;width:128px!important;height:154px!important}
+  .avatar-canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
   #chat{position:absolute;left:0;right:0;top:56px;bottom:116px;padding:10px 112px 8px 12px;overflow:auto;background:linear-gradient(180deg,#fff,#f8fafc);scrollbar-width:thin}
   .msg{max-width:100%;border-radius:16px;padding:9px 11px;font-size:12.5px;line-height:1.5;margin-bottom:8px;word-break:break-word;white-space:pre-wrap;box-shadow:0 4px 12px rgba(15,23,42,.08)}
   .bot{background:#f1f5f9;border:1px solid rgba(148,163,184,.22);color:var(--ink)}
@@ -42,9 +42,8 @@
   #btn-mic{min-width:48px;padding:0 10px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;font-size:13px;display:flex;gap:4px;align-items:center;justify-content:center}
   #btn-mic.listening{background:linear-gradient(135deg,#dc2626,var(--orange));animation:pulse 1.1s infinite}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.45)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
-  @media(max-width:360px){
-    #avatarWrap{width:92px;height:116px}
-    .avatar-canvas{width:112px!important;height:140px!important}
+  @media(max-width:480px){
+    #avatarWrap{right:10px;top:66px;width:104px;height:132px}
     #chat{padding-right:98px}
     .msg{font-size:12px}
     .sugg{font-size:10.5px;padding:6px 8px}
@@ -101,6 +100,8 @@ const els = {
 
 let app = null;
 let live2dModel = null;
+let live2dBooting = false;
+let live2dBooted = false;
 let neuralDisabled = false;
 let recognition = null;
 let listening = false;
@@ -335,44 +336,69 @@ function loadScript(src) {
 }
 
 async function bootLive2D() {
+  if (live2dBooting || live2dBooted) return;
+  live2dBooting = true;
   try {
+    els.avatarFallback.style.display = 'grid';
     await loadScript('https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js');
     await loadScript('https://cdn.jsdelivr.net/npm/pixi.js@6.5.10/dist/browser/pixi.min.js');
     await loadScript('https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/cubism4.min.js');
-    app = new PIXI.Application({
-      width: els.avatarWrap.clientWidth || 108,
-      height: els.avatarWrap.clientHeight || 130,
-      transparent: true,
-      autoDensity: true,
-      antialias: true,
-      resolution: Math.min(window.devicePixelRatio || 1, 2)
-    });
-    app.view.className = 'avatar-canvas';
-    els.avatarWrap.appendChild(app.view);
+    if (app && app.view && app.view.parentNode !== els.avatarWrap) {
+      els.avatarWrap.appendChild(app.view);
+    }
+    if (app && live2dModel) {
+      live2dBooted = true;
+      fitModel();
+      els.avatarFallback.style.display = 'none';
+      postToParent('ready');
+      return;
+    }
+    if (!app) {
+      app = new PIXI.Application({
+        width: els.avatarWrap.clientWidth || 112,
+        height: els.avatarWrap.clientHeight || 138,
+        transparent: true,
+        autoDensity: true,
+        antialias: true,
+        resolution: Math.min(window.devicePixelRatio || 1, 2)
+      });
+      app.view.className = 'avatar-canvas';
+      if (!app.view.parentNode) els.avatarWrap.appendChild(app.view);
+    }
     const Live2DModel = PIXI.live2d.Live2DModel;
     try { Live2DModel.registerTicker(PIXI.Ticker); } catch (e) {}
-    live2dModel = await Live2DModel.from(MODEL_URL);
-    try { if (PIXI.live2d.SoundManager) PIXI.live2d.SoundManager.volume = 0; } catch (e) {}
-    app.stage.addChild(live2dModel);
+    if (!live2dModel) {
+      live2dModel = await Live2DModel.from(MODEL_URL);
+      try { if (PIXI.live2d.SoundManager) PIXI.live2d.SoundManager.volume = 0; } catch (e) {}
+      app.stage.addChild(live2dModel);
+    }
     fitModel();
     els.avatarFallback.style.display = 'none';
+    live2dBooted = true;
     postToParent('ready');
   } catch (err) {
     if (window.console) console.warn('[ZUBIDA AI] Live2D fallback:', err && err.message ? err.message : err);
     els.avatarFallback.style.display = 'grid';
     postToParent('ready');
+  } finally {
+    live2dBooting = false;
   }
 }
 
 function fitModel() {
   if (!app || !live2dModel) return;
-  const w = els.avatarWrap.clientWidth || 108;
-  const h = els.avatarWrap.clientHeight || 130;
+  const wrap = els.avatarWrap;
+  const w = wrap.clientWidth || 112;
+  const h = wrap.clientHeight || 138;
+  if (!w || !h) return;
   app.renderer.resize(w, h);
-  const scale = Math.min(w / live2dModel.width * 1.18, h / live2dModel.height * 1.32);
+  const bounds = live2dModel.getLocalBounds ? live2dModel.getLocalBounds() : { x: 0, y: 0, width: 1000, height: 1000 };
+  const baseW = bounds.width || 1000;
+  const baseH = bounds.height || 1000;
+  const scale = Math.min(w / baseW * 2.1, h / baseH * 2.1);
   live2dModel.scale.set(scale);
-  live2dModel.x = (w - live2dModel.width) / 2 + 2;
-  live2dModel.y = h - live2dModel.height + 16;
+  live2dModel.x = w / 2 - (bounds.x + baseW / 2) * scale;
+  live2dModel.y = h * 0.78 - (bounds.y + baseH * 0.55) * scale;
 }
 
 function initSpeechRecognition() {
