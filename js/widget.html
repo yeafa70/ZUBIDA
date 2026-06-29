@@ -114,9 +114,9 @@ let analyser = null;
 let audioMouth = 0;
 let mouthValue = 0;
 let mouthTarget = 0.7;
-let mouthActive = false;
 let isSpeaking = false;
 let useAudioMouth = false;
+let lipIds = ['ParamMouthOpenY'];
 
 const suggestions = [
   '租金怎麼算？',
@@ -183,39 +183,48 @@ function findAnswer(question) {
   return best && best.a ? best.a : fallbackAnswer();
 }
 
-function setMouth(value) {
+function applyMouth(value) {
   if (!live2dModel) return;
+  const mouth = Math.max(0, Math.min(1, Number(value) || 0));
   try {
-    if (live2dModel.internalModel && live2dModel.internalModel.coreModel) {
-      const core = live2dModel.internalModel.coreModel;
-      if (typeof core.setParameterValueById === 'function') {
-        core.setParameterValueById('ParamMouthOpenY', value);
+    const internal = live2dModel.internalModel;
+    const core = internal && internal.coreModel;
+    lipIds.forEach(function(id) {
+      if (core && typeof core.setParameterValueById === 'function') {
+        core.setParameterValueById(id, mouth);
         return;
       }
-      if (typeof core.setParamFloat === 'function') {
-        core.setParamFloat('ParamMouthOpenY', value);
+      if (core && typeof core.setParamFloat === 'function') {
+        core.setParamFloat(id, mouth);
         return;
       }
-    }
-    if (live2dModel.internalModel && typeof live2dModel.internalModel.setParameterValueById === 'function') {
-      live2dModel.internalModel.setParameterValueById('ParamMouthOpenY', value);
-    }
+      if (internal && typeof internal.setParameterValueById === 'function') {
+        internal.setParameterValueById(id, mouth);
+        return;
+      }
+      if (internal && typeof internal.addParameterValueById === 'function') {
+        internal.addParameterValueById(id, mouth);
+      }
+    });
   } catch (e) {}
 }
 
+function setMouth(value) {
+  applyMouth(value);
+}
+
 function startMouth(useAudio) {
-  mouthActive = true;
   isSpeaking = true;
   useAudioMouth = !!useAudio;
   if (!useAudioMouth) audioMouth = 0;
 }
 
 function stopMouth() {
-  mouthActive = false;
   isSpeaking = false;
   useAudioMouth = false;
   audioMouth = 0;
-  setMouth(0);
+  mouthValue = 0;
+  applyMouth(0);
 }
 
 function computeMouth() {
@@ -231,7 +240,7 @@ function computeMouth() {
 }
 
 function animateMouth() {
-  if (!installMouthTicker.installed) setMouth(computeMouth());
+  if (!installMouthTicker.installed) applyMouth(computeMouth());
   requestAnimationFrame(animateMouth);
 }
 requestAnimationFrame(animateMouth);
@@ -241,8 +250,14 @@ function installMouthTicker() {
   installMouthTicker.installed = true;
   app.ticker.add(function() {
     if (!live2dModel) return;
-    if (mouthActive) setMouth(computeMouth());
-    else setMouth(0);
+    if (isSpeaking) {
+      const target = useAudioMouth ? audioMouth : (0.18 + Math.random() * 0.72);
+      mouthValue += (target - mouthValue) * 0.35;
+      applyMouth(mouthValue);
+    } else {
+      mouthValue += (0 - mouthValue) * 0.35;
+      applyMouth(mouthValue);
+    }
   });
 }
 
@@ -253,7 +268,6 @@ function stopSpeaking() {
     currentAudio = null;
   }
   stopMouth();
-  mouthActive = false;
 }
 
 function resetMicState() {
