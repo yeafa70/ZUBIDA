@@ -197,23 +197,19 @@ gtag('config', 'G-F5CL3D5FT1', {
   document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('rentalForm');
     if (form) {
-      // 監聽按鈕點擊，而不是監聽 form submit，這樣絕對不會跟原本的 js/main.js 打架
-      const submitBtn = document.getElementById('submitButton');
-      if (submitBtn) {
-        submitBtn.addEventListener('click', function() {
-          // 當使用者點擊「送出詢問表單」按鈕的一瞬間，立刻發射訊號
-          gtag('event', 'purchase', {
-            transaction_id: 'ZUBIDA_' + new Date().getTime(),
-            value: 0.00,
-            currency: 'TWD',
-            items: [{
-              item_name: '活動設備線上詢價',
-              quantity: 1
-            }]
-          });
-          console.log('【系統提示】GA4 purchase 訊號已強制發射！');
+      // 只要表單被觸發送出（不管是按哪顆按鈕、或跳出成功訊息前），立刻對 GA4 發射
+      form.addEventListener('submit', function() {
+        gtag('event', 'purchase', {
+          transaction_id: 'ZUBIDA_' + new Date().getTime(),
+          value: 0.00,
+          currency: 'TWD',
+          items: [{
+            item_name: '活動設備線上詢價',
+            quantity: 1
+          }]
         });
-      }
+        console.log('【系統提示】GA4 purchase 表單事件已成功發射！');
+      });
     }
   });
 </script>
