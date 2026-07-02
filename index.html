@@ -198,7 +198,7 @@ gtag('config', 'G-F5CL3D5FT1', {
     const form = document.getElementById('rentalForm');
     if (form) {
       // 監聽按鈕點擊，而不是監聽 form submit，這樣絕對不會跟原本的 js/main.js 打架
-      const submitBtn = document.getElementById('submitBtn');
+      const submitBtn = document.getElementById('submitButton');
       if (submitBtn) {
         submitBtn.addEventListener('click', function() {
           // 當使用者點擊「送出詢問表單」按鈕的一瞬間，立刻發射訊號
