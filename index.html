@@ -386,14 +386,15 @@ gtag('config', 'G-F5CL3D5FT1', {
   data-open="false"
   data-log-api="https://script.google.com/macros/s/AKfycbw6sS6qFtJUgIzg0rs3vuSBv7eb8LHnoEKOOwVMtHiJAbDnq35sAMLaweF5RnZgMqAg/exec"
   data-text="您好！我是租必達 AI 設備租賃客服，可以用打字或語音詢問水冷扇、活動帳篷、發電機相關問題。">
-</script>
+</script> 
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('rentalForm');
-    if (form) {
-      // 只要表單被觸發送出（不管是按哪顆按鈕、或跳出成功訊息前），立刻對 GA4 發射
-      form.addEventListener('submit', function() {
+    // 直接鎖定你網頁上那顆 type="submit" 的送出表單按鈕
+    const submitBtn = document.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', function() {
+        // 在滑鼠點下去的瞬間，千分之一秒內強制發射 purchase 訊號
         gtag('event', 'purchase', {
           transaction_id: 'ZUBIDA_' + new Date().getTime(),
           value: 0.00,
@@ -403,12 +404,11 @@ gtag('config', 'G-F5CL3D5FT1', {
             quantity: 1
           }]
         });
-        console.log('【系統提示】GA4 purchase 表單事件已成功發射！');
+        console.log('【系統提示】滑鼠已點擊，GA4 purchase 訊號強制發射！');
       });
     }
   });
 </script>
 
-</body>
 
 </body>
